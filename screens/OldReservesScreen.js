@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, ScrollView} from 'react-native';
 import {
     Container,
     Header,
@@ -16,32 +16,69 @@ import {
     Icon,
     Text,
     List,
-
+    Accordion
 } from 'native-base';
 
 
-export default class OldReservesScreen extends Component {
+const MyPost = (props) => {
+    return (
+        <Card style={[styles.post]}>
+            <CardItem header style={{backgroundColor: props.myColor}}>
+                <Body>
+                    <Text style={styles.titleText}>{props.title}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{backgroundColor: props.myColor}}>
+                <Body>
+                    <Text style={styles.contentText}>{props.content}</Text>
+                </Body>
+            </CardItem>
+        </Card>
+    )
+}
+
+export default class OldReserveScreen extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            question: {}
+            array: [
+                {title: "چهارشنبه 1398/8/1", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "شنبه 1398/8/5", content: "رزرو نوبت با دکتر حسینی متخصص گوارش"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+            ]
         }
+
+    }
+
+    renderList(value, index) {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                            myColor='rgba(218,19,20,0.74)'/>
+                </View>
+            )
     }
 
     onBackPressed() {
         this.props.navigation.goBack()
     }
 
-    render() {
 
+    render() {
         return (
             <Container>
-                <Header span style={{backgroundColor: '#23b9b9'}}>
+                <Header hasTabs span style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => this.onBackPressed()}>
-                            <Icon style={styles.headerMenuIcon} name='arrow-back'
-                                  onPress={() => this.onBackPressed()}/>
+                            {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
+                            {/*      onPress={() => this.onBackPressed()}/>*/}
                         </Button>
                     </Left>
                     <Body>
@@ -49,7 +86,13 @@ export default class OldReservesScreen extends Component {
                     </Body>
                 </Header>
                 <Content>
-
+                    <View style={styles.container}>
+                        <ScrollView>
+                            {this.state.array.map((value, index) =>
+                                this.renderList(value, index)
+                            )}
+                        </ScrollView>
+                    </View>
                 </Content>
             </Container>
 
@@ -58,7 +101,7 @@ export default class OldReservesScreen extends Component {
 
 }
 
-OldReservesScreen.navigationOptions = {
+OldReserveScreen.navigationOptions = {
     header: null,
     title: 'نوبت های قبلی',
     headerStyle: {
@@ -124,4 +167,22 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#23b9b9'
     },
+    post: {
+        margin: 5,
+        flex: 0,
+        backgroundColor: '#e4e4e4'
+    },
+    titleText: {
+        color:'#fff',
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        fontWeight: 'bold'
+    },
+    contentText: {
+        color:'#fff',
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        marginTop: 5,
+        fontSize: 15
+    }
 });

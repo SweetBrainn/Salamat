@@ -10,24 +10,36 @@ import GuidScreen from "./screens/GuidScreen";
 import NoticeScreen from "./screens/NoticeScreen"
 import MoreInfo from "./screens/MoreInfo";
 import SearchMedicalCenter from "./screens/SearchMedicalCenter";
-import ShowReservesScreen from  "./screens/ShowReservesScreen"
+import ShowReservesScreen from "./screens/ShowReservesScreen"
 import InboxScreen from "./screens/InboxScreen"
 import MedicalFilesScreen from "./screens/MedicalFilesScreen"
 import OldReservesScreen from "./screens/OldReservesScreen";
+import ChatScreen from "./screens/MyChatScreen"
 
 
+const ChatStackNavigator = createStackNavigator({
+    InboxScreen: {screen: InboxScreen},
+    ChatScreen: {screen: ChatScreen}
+},{
+    defaultNavigationOptions:{
+        header:null
+    }
+});
 const GuidStackNavigator = createStackNavigator({
     GuideScreen: {screen: GuidScreen},
     MoreInfo: {screen: MoreInfo}
 })
 const HistoryStackNavigator = createStackNavigator({
     HistoryScreen: {screen: HistoryScreen},
-    InboxScreen:{screen:InboxScreen},
-    MedicalFilesScreen:{screen:MedicalFilesScreen},
-    ShowReservesScreen:{screen:ShowReservesScreen},
-    OldReservesScreen:{screen:OldReservesScreen}
-},{
-    initialRouteName:'HistoryScreen'
+    InboxScreen: ChatStackNavigator,
+    MedicalFilesScreen: {screen: MedicalFilesScreen},
+    ShowReservesScreen: {screen: ShowReservesScreen},
+    OldReservesScreen: {screen: OldReservesScreen}
+}, {
+    initialRouteName: 'HistoryScreen',
+    defaultNavigationOptions:{
+        header:null
+    }
 });
 const AppDrawerNavigator = createDrawerNavigator({
     SplashScreen: {screen: SplashScreen},
@@ -47,7 +59,5 @@ const AppDrawerNavigator = createDrawerNavigator({
     drawerCloseRoute: 'DrawerClose',
     drawerToggleRoute: 'DrawerToggle'
 });
-
-
 export default createAppContainer(AppDrawerNavigator);
 

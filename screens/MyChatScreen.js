@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Modal} from 'react-native';
+import {StyleSheet, View, Image, ScrollView} from 'react-native';
+import {ChatScreen} from 'react-native-easy-chat-ui'
+
 import {
     Container,
     Header,
@@ -16,37 +18,39 @@ import {
     Icon,
     Text,
     List,
-
+    ListItem,
+    Thumbnail
 } from 'native-base';
 
-
-export default class MedicalFilesScreen extends Component {
+export default class MyChatScreen extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            isVisible: false, //state of modal default false
-        }
+        this.state = {}
     }
 
     onBackPressed() {
         this.props.navigation.goBack()
     }
 
+
     render() {
 
         return (
             <Container>
-                <Header hasTabs span style={{backgroundColor: '#23b9b9'}}>
+                <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => this.onBackPressed()}>
-                            {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
-                            {/*      onPress={() => this.onBackPressed()}/>*/}
+                            <Icon style={styles.headerMenuIcon} name='arrow-back'
+                                  onPress={() => this.onBackPressed()}/>
                         </Button>
                     </Left>
                     <Body>
-                        <Title style={styles.headerText}>نسخه های من</Title>
+                        <Title style={styles.headerText}>{(this.props.navigation.getParam('Contact'))}</Title>
                     </Body>
+                    <Right>
+                        <Icon name='user' type='FontAwesome' style={{color:'#fff'}}/>
+                    </Right>
                 </Header>
                 <Content>
 
@@ -58,9 +62,9 @@ export default class MedicalFilesScreen extends Component {
 
 }
 
-MedicalFilesScreen.navigationOptions = {
+MyChatScreen.navigationOptions = {
     header: null,
-    title: 'نسخه های من',
+    title: '',
     headerStyle: {
         backgroundColor: '#23b9b9'
     },
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         padding: 5,
-        fontSize: 20,
+        fontSize: 15,
         color: '#fff',
 
     },
@@ -124,4 +128,17 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#23b9b9'
     },
+    titleText: {
+        color: '#fff',
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        fontWeight: 'bold'
+    },
+    contentText: {
+        color: '#fff',
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        marginTop: 5,
+        fontSize: 15
+    }
 });

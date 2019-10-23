@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, ScrollView} from 'react-native';
 import {
     Container,
     Header,
@@ -16,16 +16,61 @@ import {
     Icon,
     Text,
     List,
-
+    Accordion
 } from 'native-base';
 
 
+const MyPost = (props) => {
+    return (
+        <Card style={[styles.post]}>
+            <CardItem header style={{backgroundColor: props.myColor}}>
+                <Body>
+                    <Text style={styles.titleText}>{props.title}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{backgroundColor: props.myColor}}>
+                <Body>
+                    <Text style={styles.contentText}>{props.content}</Text>
+                </Body>
+            </CardItem>
+        </Card>
+    )
+}
 
 export default class ShowReservesScreen extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            question: {}
+            array: [
+                {title: "چهارشنبه 1398/8/1", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "شنبه 1398/8/5", content: "رزرو نوبت با دکتر حسینی متخصص گوارش"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+            ]
+        }
+
+    }
+
+    renderList(value, index) {
+        if (index < 4) {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                            myColor='#28E652'/>
+                </View>
+            )
+        } else {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                            myColor='#fff'/>
+                </View>
+            )
         }
     }
 
@@ -33,16 +78,16 @@ export default class ShowReservesScreen extends Component {
         this.props.navigation.goBack()
     }
 
-    render() {
 
+    render() {
         return (
             <Container>
                 <Header span style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => this.onBackPressed()}>
-                            <Icon style={styles.headerMenuIcon} name='arrow-back'
-                                  onPress={() => this.onBackPressed()}/>
+                            {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
+                            {/*      onPress={() => this.onBackPressed()}/>*/}
                         </Button>
                     </Left>
                     <Body>
@@ -50,7 +95,13 @@ export default class ShowReservesScreen extends Component {
                     </Body>
                 </Header>
                 <Content>
-
+                    <View style={styles.container}>
+                        <ScrollView>
+                            {this.state.array.map((value, index) =>
+                                this.renderList(value, index)
+                            )}
+                        </ScrollView>
+                    </View>
                 </Content>
             </Container>
 
@@ -78,26 +129,26 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     headerMenuIcon: {
-        padding:5,
+        padding: 5,
         color: '#fff',
     },
     headerText: {
-        padding:5,
+        padding: 5,
         fontSize: 20,
         color: '#fff',
 
     },
     questionName: {
-        alignSelf:'flex-start',
-        justifyContent:'center',
-        alignContent:'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        alignContent: 'center',
         textAlign: 'right',
         fontSize: 10
     },
     questionInfo: {
-        alignSelf:'flex-start',
-        justifyContent:'center',
-        alignContent:'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        alignContent: 'center',
         textAlign: 'right',
         fontSize: 10
     },
@@ -110,19 +161,35 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         elevation: 8
     },
-    header:{
+    header: {
         backgroundColor: "#23b9b9",
-        height:150,
+        height: 150,
     },
-    body:{
-        marginTop:40,
+    body: {
+        marginTop: 40,
     },
     bodyContent: {
         flex: 1,
-        margin:10,
+        margin: 10,
         alignItems: 'center',
-        padding:10,
+        padding: 10,
         borderWidth: 2,
         borderColor: '#23b9b9'
     },
+    post: {
+        margin: 5,
+        flex: 0,
+        backgroundColor: '#e4e4e4'
+    },
+    titleText: {
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        fontWeight: 'bold'
+    },
+    contentText: {
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        marginTop: 5,
+        fontSize: 15
+    }
 });
