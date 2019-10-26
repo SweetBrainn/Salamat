@@ -16,7 +16,7 @@ import MedicalFilesScreen from "./screens/MedicalFilesScreen"
 import OldReservesScreen from "./screens/OldReservesScreen";
 import ChatScreen from "./screens/MyChatScreen"
 import GetVerificationCodeScreen from "./screens/GetVerificationCodeScreen";
-
+import VerifyScreen from "./screens/VerifyScreen";
 
 const ChatStackNavigator = createStackNavigator({
     InboxScreen: { screen: InboxScreen },
@@ -53,11 +53,13 @@ const AppDrawerNavigator = createDrawerNavigator({
     GuideScreen: GuidStackNavigator,
     InfoScreen: { screen: NoticeScreen },
     SearchMedicalCenterScreen: { screen: SearchMedicalCenter },
-    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen}
+    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
+    VerifyScreen:{screen:VerifyScreen}
 
 }, {
-        // initialRouteName: 'SplashScreen',
-        initialRouteName:'GetVerificationCodeScreen',
+        initialRouteName: 'SplashScreen',
+        // initialRouteName:'GetVerificationCodeScreen',
+        // initialRouteName:'VerifyScreen',
         contentComponent: SideMenu,
         drawerPosition: 'left',
         drawerOpenRoute: 'DrawerOpen',
