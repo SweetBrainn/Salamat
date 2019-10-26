@@ -80,7 +80,7 @@ export default class InboxScreen extends Component {
 
         return (
             <Container>
-                <Header hasTabs span style={{backgroundColor: '#23b9b9'}}>
+                <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => this.onBackPressed()}>
@@ -89,7 +89,7 @@ export default class InboxScreen extends Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title style={styles.headerText}>پیام ها</Title>
+                        {/* <Title style={styles.headerText}>پیام ها</Title> */}
                     </Body>
                 </Header>
                 <Content>

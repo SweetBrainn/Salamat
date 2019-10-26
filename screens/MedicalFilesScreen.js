@@ -36,7 +36,7 @@ export default class MedicalFilesScreen extends Component {
 
         return (
             <Container>
-                <Header hasTabs span style={{backgroundColor: '#23b9b9'}}>
+                <Header transparent style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => this.onBackPressed()}>
@@ -45,7 +45,7 @@ export default class MedicalFilesScreen extends Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title style={styles.headerText}>نسخه های من</Title>
+                        {/* <Title style={styles.headerText}>نسخه های من</Title> */}
                     </Body>
                 </Header>
                 <Content>

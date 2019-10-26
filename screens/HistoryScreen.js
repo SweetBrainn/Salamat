@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Platform, StatusBar} from 'react-native';
-import {Container, Header, Title, Content, Footer, FooterTab, Button, Tabs, Tab, TabHeading, Icon, Text} from 'native-base';
+import React, { Component } from 'react';
+import { StyleSheet, View, Platform, StatusBar } from 'react-native';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Tabs, Tab, TabHeading, Icon, Text,Left,Right } from 'native-base';
 import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
 import MedicalFilesScreen from "./MedicalFilesScreen";
@@ -16,34 +16,31 @@ export default class HistoryScreen extends Component {
                 ref={(ref) => {
                     this._drawer = ref
                 }}
-                content={<SideMenu navigator/>}
+                content={<SideMenu navigator />}
                 onClose={() => this.closeDrawer()}
             >
                 <Container>
-                    <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
-                        {/*<Left>*/}
-                        {/*    <Button transparent style={styles.headerMenuIcon}*/}
-                        {/*            onPress={() => this.props.navigation.openDrawer()}>*/}
-                        {/*        <Icon style={styles.headerMenuIcon} name='menu'*/}
-                        {/*              onPress={() => this.props.navigation.openDrawer()}/>*/}
-                        {/*    </Button>*/}
-                        {/*</Left>*/}
-                        {/*<Right>*/}
-                        {/*    <Text style={styles.headerText}>پرونده شخصی</Text>*/}
-                        {/*</Right>*/}
+                    <Header hasTabs style={{ backgroundColor: '#23b9b9' }}>
+                        <Left>
+                            <Button transparent style={styles.headerMenuIcon}
+                                onPress={() => this.props.navigation.openDrawer()}>
+                                <Icon style={styles.headerMenuIcon} name='menu'
+                                    onPress={() => this.props.navigation.openDrawer()} />
+                            </Button>
+                        </Left>
+                        <Right>
+                        <Text style={styles.headerText}>پرونده شخصی</Text>
+                        </Right>
                     </Header>
                     <Tabs>
-                        <Tab heading={ <TabHeading><Text style={{fontSize:10}}>نسخه های من</Text></TabHeading>}>
+                        <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>نسخه ها</Text></TabHeading>}>
                             <MedicalFilesScreen />
                         </Tab>
-                        <Tab heading={ <TabHeading><Text style={{fontSize:10}}>نوبت های من</Text></TabHeading>}>
+                        <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>نوبت ها</Text></TabHeading>}>
                             <ShowReservesScreen />
                         </Tab>
-                        <Tab heading={ <TabHeading><Text style={{fontSize:10}}>پیام ها</Text></TabHeading>}>
+                        <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>پیام ها</Text></TabHeading>}>
                             <InboxScreen />
-                        </Tab>
-                        <Tab heading={ <TabHeading><Text style={{fontSize:10}}>نوبت های قبلی</Text></TabHeading>}>
-                            <OldReserveScreen/>
                         </Tab>
                     </Tabs>
                     {/*<Content padder style={styles.content}>*/}

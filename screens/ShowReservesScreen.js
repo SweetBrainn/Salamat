@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
+
 import {
     Container,
     Header,
@@ -16,19 +17,19 @@ import {
     Icon,
     Text,
     List,
-    Accordion
+
 } from 'native-base';
 
 
 const MyPost = (props) => {
     return (
         <Card style={[styles.post]}>
-            <CardItem header style={{backgroundColor: props.myColor}}>
+            <CardItem header style={{ backgroundColor: props.myColor }}>
                 <Body>
                     <Text style={styles.titleText}>{props.title}</Text>
                 </Body>
             </CardItem>
-            <CardItem style={{backgroundColor: props.myColor}}>
+            <CardItem style={{ backgroundColor: props.myColor }}>
                 <Body>
                     <Text style={styles.contentText}>{props.content}</Text>
                 </Body>
@@ -36,41 +37,21 @@ const MyPost = (props) => {
         </Card>
     )
 }
-
 export default class ShowReservesScreen extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             array: [
-                {title: "چهارشنبه 1398/8/1", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "شنبه 1398/8/5", content: "رزرو نوبت با دکتر حسینی متخصص گوارش"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
+                { title: "چهارشنبه 1398/8/1", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "شنبه 1398/8/5", content: "رزرو نوبت با دکتر حسینی متخصص گوارش" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
+                { title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب" },
             ]
-        }
-
-    }
-
-    renderList(value, index) {
-        if (index < 4) {
-            return (
-                <View key={index}>
-                    <MyPost title={value.title} content={value.content}
-                            myColor='#28E652'/>
-                </View>
-            )
-        } else {
-            return (
-                <View key={index}>
-                    <MyPost title={value.title} content={value.content}
-                            myColor='#fff'/>
-                </View>
-            )
         }
     }
 
@@ -78,20 +59,39 @@ export default class ShowReservesScreen extends Component {
         this.props.navigation.goBack()
     }
 
+    renderList(value, index) {
+        if (index <= 3) {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                        myColor='#50d177' />
+                </View>
+            )
+        } else {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                        myColor='#909090' />
+                </View>
+            )
+        }
+
+    }
 
     render() {
+
         return (
             <Container>
-                <Header span style={{backgroundColor: '#23b9b9'}}>
-                    <Left>
+                <Header transparent style={{ backgroundColor: '#23b9b9' }}>
+                    {/* <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => this.onBackPressed()}>
-                            {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
-                            {/*      onPress={() => this.onBackPressed()}/>*/}
+                            <Icon style={styles.headerMenuIcon} name='arrow-back'
+                                  onPress={() => this.onBackPressed()}/>
                         </Button>
-                    </Left>
+                    </Left> */}
                     <Body>
-                        <Title style={styles.headerText}>نوبت های رزرو شده</Title>
+                        {/* <Title style={styles.headerText}>نوبت های رزرو شده</Title> */}
                     </Body>
                 </Header>
                 <Content>
@@ -177,16 +177,18 @@ const styles = StyleSheet.create({
         borderColor: '#23b9b9'
     },
     post: {
-        margin: 5,
+        margin: 2,
         flex: 0,
         backgroundColor: '#e4e4e4'
     },
     titleText: {
+        color: '#fff',
         textAlign: 'left',
         alignSelf: 'flex-end',
         fontWeight: 'bold'
     },
     contentText: {
+        color: '#fff',
         textAlign: 'left',
         alignSelf: 'flex-end',
         marginTop: 5,
