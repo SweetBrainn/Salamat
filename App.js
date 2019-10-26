@@ -32,6 +32,8 @@ const GuidStackNavigator = createStackNavigator({
 const HistoryStackNavigator = createStackNavigator({
     HistoryScreen: {screen: HistoryScreen},
     InboxScreen: ChatStackNavigator,
+    // InboxScreen:{screen:InboxScreen},
+    ChatScreen:{screen:ChatScreen},
     MedicalFilesScreen: {screen: MedicalFilesScreen},
     ShowReservesScreen: {screen: ShowReservesScreen},
     OldReservesScreen: {screen: OldReservesScreen}

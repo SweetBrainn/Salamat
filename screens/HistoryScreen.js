@@ -40,7 +40,7 @@ export default class HistoryScreen extends Component {
                             <ShowReservesScreen />
                         </Tab>
                         <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>پیام ها</Text></TabHeading>}>
-                            <InboxScreen />
+                            <InboxScreen myNavigator={this.props.navigation}/>
                         </Tab>
                     </Tabs>
                     {/*<Content padder style={styles.content}>*/}

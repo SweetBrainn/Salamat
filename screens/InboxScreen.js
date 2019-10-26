@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Image, ScrollView } from 'react-native';
 import {
     Container,
     Header,
@@ -24,14 +24,14 @@ import {
 const ChatList = (props) => {
     return (
         <List>
-            <ListItem avatar style={{padding: 2}}>
+            <ListItem avatar style={{ padding: 2 }}>
                 <Body>
-                    <Text style={{textAlign: 'right', borderColor: '#fff'}}>{props.name}</Text>
-                    <Text style={{textAlign: 'right', borderColor: '#fff'}} note
-                          numberOfLines={1}>{props.message}</Text>
+                    <Text style={{ textAlign: 'right', borderColor: '#fff' }}>{props.name}</Text>
+                    <Text style={{ textAlign: 'right', borderColor: '#fff' }} note
+                        numberOfLines={1}>{props.message}</Text>
                 </Body>
                 <Right>
-                    <Icon name='user' type='FontAwesome5' style={{color: '#b4b4b4'}}/>
+                    <Icon name='user' type='FontAwesome5' style={{ color: '#b4b4b4' }} />
                 </Right>
 
             </ListItem>
@@ -48,70 +48,46 @@ export default class InboxScreen extends Component {
                     senderImage: '',
                     lastMessage: 'نوبت امروز شما 15 دقیقه با تاخیر شروع می شود'
                 },
-                {senderName: 'دکتر رضایی', senderImage: '', lastMessage: 'نوبت امروز شما کنسل شده است'},
-                {senderName: 'دکتر علیزاده', senderImage: '', lastMessage: 'دفترچه بیمه فراموش نشود'},
-                {senderName: 'دکتر محمدی', senderImage: '', lastMessage: 'نسخه قبلی پزشک خود را همراه خود بیاورید'},
+                { senderName: 'دکتر رضایی', senderImage: '', lastMessage: 'نوبت امروز شما کنسل شده است' },
+                { senderName: 'دکتر علیزاده', senderImage: '', lastMessage: 'دفترچه بیمه فراموش نشود' },
+                { senderName: 'دکتر محمدی', senderImage: '', lastMessage: 'نسخه قبلی پزشک خود را همراه خود بیاورید' },
                 {
                     senderName: 'دکتر ضیایی',
                     senderImage: '',
                     lastMessage: 'نوبت امروز شما 25 دقیقه با تاخیر شروع می شود'
                 },
-            ]
+            ],
+            navigator: this.props.myNavigator
         }
     }
-
-    onBackPressed() {
-        this.props.navigation.getParam('navigationObject').navigate('HistoryScreen')
-    }
-
-    myNavigate() {
-        this.props.navigation.navigate('ChatScreen')
-    }
-
-    renderList(value, index) {
-        return (
-            <View key={index}>
-                <ChatList name={value.senderName} message={value.lastMessage}/>
-            </View>
-        )
+    myNavigate(index) {
+        this.state.navigator.navigate('ChatScreen', { Contact: this.state.chatDetails[index].senderName })
     }
 
     render() {
 
         return (
             <Container>
-                <Header style={{backgroundColor: '#23b9b9'}}>
-                    <Left>
-                        <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.onBackPressed()}>
-                            {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
-                            {/*      onPress={() => this.onBackPressed()}/>*/}
-                        </Button>
-                    </Left>
-                    <Body>
-                        {/* <Title style={styles.headerText}>پیام ها</Title> */}
-                    </Body>
-                </Header>
+                <Header style={{ backgroundColor: '#23b9b9' }} />
                 <Content>
 
                     <ScrollView>
                         <List>
                             {this.state.chatDetails.map((value, index) =>
-                                // this.renderList(value, index)
                                 <View key={index}>
 
-                                    <ListItem avatar style={{padding: 2}}
-                                              onPress={() => this.props.navigation.navigate('ChatScreen', {Contact: this.state.chatDetails[index].senderName})}>
+                                    <ListItem avatar style={{ padding: 2 }}
+                                        onPress={() => this.myNavigate(index)}>
                                         <Body>
                                             <Text style={{
                                                 textAlign: 'right',
                                                 borderColor: '#fff'
                                             }}>{value.senderName}</Text>
-                                            <Text style={{textAlign: 'right', borderColor: '#fff'}} note
-                                                  numberOfLines={1}>{value.lastMessage}</Text>
+                                            <Text style={{ textAlign: 'right', borderColor: '#fff' }} note
+                                                numberOfLines={1}>{value.lastMessage}</Text>
                                         </Body>
                                         <Right>
-                                            <Icon name='user' type='FontAwesome5' style={{color: '#b4b4b4'}}/>
+                                            <Icon name='user' type='FontAwesome5' style={{ color: '#b4b4b4' }} />
                                         </Right>
 
                                     </ListItem>
