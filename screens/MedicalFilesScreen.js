@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Modal} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Modal, ScrollView } from 'react-native';
 import {
     Container,
     Header,
@@ -19,27 +19,64 @@ import {
 
 } from 'native-base';
 
-
+const MyPost = (props) => {
+    return (
+        <Card style={[styles.post]}>
+            <CardItem header style={{ backgroundColor: props.myColor }}>
+                <Body>
+                    <Text style={styles.titleText}>{props.title}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{ backgroundColor: props.myColor }}>
+                <Body>
+                    <Text style={styles.contentText}>{props.content}</Text>
+                </Body>
+            </CardItem>
+        </Card>
+    )
+}
 export default class MedicalFilesScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isVisible: false, //state of modal default false
+            array: [
+                { title: "چهارشنبه 1398/8/1", content: "نسخه شماره 1" },
+                { title: "شنبه 1398/8/5", content: "نسخه شماره 2" },
+                { title: "جمعه 1398/8/7", content: "نسخه شماره 3" },
+            ]
         }
     }
 
     onBackPressed() {
         this.props.navigation.goBack()
     }
+    renderList(value, index) {
+        if (index <= 3) {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                        myColor='#fff' />
+                </View>
+            )
+        } else {
+            return (
+                <View key={index}>
+                    <MyPost title={value.title} content={value.content}
+                        myColor='#fff' />
+                </View>
+            )
+        }
+
+    }
 
     render() {
 
         return (
             <Container>
-                <Header transparent style={{backgroundColor: '#23b9b9'}}>
+                <Header transparent style={{ backgroundColor: '#23b9b9' }}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.onBackPressed()}>
+                            onPress={() => this.onBackPressed()}>
                             {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
                             {/*      onPress={() => this.onBackPressed()}/>*/}
                         </Button>
@@ -49,7 +86,11 @@ export default class MedicalFilesScreen extends Component {
                     </Body>
                 </Header>
                 <Content>
-
+                    <ScrollView>
+                        {this.state.array.map((value, index) =>
+                            this.renderList(value, index)
+                        )}
+                    </ScrollView>
                 </Content>
             </Container>
 
@@ -124,4 +165,22 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#23b9b9'
     },
+    post: {
+        margin: 2,
+        flex: 0,
+        backgroundColor: '#e4e4e4'
+    },
+    titleText: {
+        color: '#000',
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        fontWeight: 'bold'
+    },
+    contentText: {
+        color: '#000',
+        textAlign: 'left',
+        alignSelf: 'flex-end',
+        marginTop: 5,
+        fontSize: 15
+    }
 });

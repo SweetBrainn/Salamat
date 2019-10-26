@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView} from 'react-native';
-import {ChatScreen} from 'react-native-easy-chat-ui'
+import React, { Component } from 'react';
+import { StyleSheet, View, Image, ScrollView, Keyboard } from 'react-native';
+import { ChatScreen } from 'react-native-easy-chat-ui'
 
 import {
     Container,
@@ -12,20 +12,24 @@ import {
     CardItem,
     Button,
     Left,
-    Card,
+    Item,
+    Input,
     Right,
     Body,
     Icon,
     Text,
-    List,
-    ListItem,
-    Thumbnail
+    Textarea,
+    Form,
+    Thumbnail,
+    Fab
 } from 'native-base';
 
 export default class MyChatScreen extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+
+        };
     }
 
     onBackPressed() {
@@ -37,24 +41,42 @@ export default class MyChatScreen extends Component {
 
         return (
             <Container>
-                <Header style={{backgroundColor: '#23b9b9'}}>
+                <Header style={{ backgroundColor: '#23b9b9' }}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.onBackPressed()}>
+                            onPress={() => this.onBackPressed()}>
                             <Icon style={styles.headerMenuIcon} name='arrow-back'
-                                  onPress={() => this.onBackPressed()}/>
+                                onPress={() => this.onBackPressed()} />
                         </Button>
                     </Left>
-                    <Body>
-                        <Title style={styles.headerText}>{(this.props.navigation.getParam('Contact'))}</Title>
-                    </Body>
                     <Right>
-                        <Icon name='user' type='FontAwesome' style={{color:'#fff'}}/>
+                        <Text style={styles.headerText}>ارسال پیام</Text>
                     </Right>
                 </Header>
-                <Content>
+                <Content padder>
+
+                    <Form>
+                        <Item style={{padding:2,fontSize:15,marginBottom:5,marginTop:5}}>
+                            <Icon active name='person' style={{fontSize:15,textAlign:'right'}} />
+                            <Input placeholder='گیرنده پیام' style={{ textAlign: 'right' }} />
+                        </Item>
+                        <Textarea rowSpan={7} bordered placeholder="متن پیام" style={{ textAlign: 'right',padding:2,fontSize:15 }} />
+                    </Form>
 
                 </Content>
+                <Footer>
+
+                    <Fab
+                        direction="up"
+                        containerStyle={styles.chatInput}
+                        style={{ backgroundColor: '#34A34F' }}
+                        position="bottomRight"
+                        onPress={() => alert('Sent')}>
+                        <Icon name="paper-plane" type="FontAwesome" />
+
+                    </Fab>
+
+                </Footer>
             </Container>
 
         );
@@ -74,7 +96,6 @@ MyChatScreen.navigationOptions = {
     },
     headerLeft: null
 }
-
 const styles = StyleSheet.create({
     content: {
         flex: 1,
@@ -86,7 +107,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         padding: 5,
-        fontSize: 15,
+        fontSize: 20,
         color: '#fff',
 
     },
@@ -140,5 +161,10 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginTop: 5,
         fontSize: 15
+    },
+    chatInput: {
+        padding: 2,
+        marginTop: 10,
+        marginBottom: 10
     }
 });

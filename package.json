@@ -33,6 +33,7 @@
     "react-native-persian-calendar-picker": "^3.0.1",
     "react-native-picker-select": "^6.3.3",
     "react-native-searchable-dropdown": "^1.1.1",
+    "react-native-swipeable-row": "^0.8.1",
     "react-native-web": "^0.11.7",
     "react-navigation": "^3.12.0",
     "react-persian": "^1.1.1"

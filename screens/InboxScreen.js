@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, ScrollView, TouchableHighlight, Alert } from 'react-native';
+import Swipeable from 'react-native-swipeable-row';
 import {
     Container,
     Header,
@@ -17,7 +18,8 @@ import {
     Text,
     List,
     ListItem,
-    Thumbnail
+    Thumbnail,
+    SwipeRow
 } from 'native-base';
 
 
@@ -38,6 +40,15 @@ const ChatList = (props) => {
         </List>
     )
 }
+const leftContent = <Text>Pull to activate</Text>;
+
+const rightButtons = [
+    <Button danger onPress={(index) => alert(InboxScreen.state.chatDetails[index].senderName) + 'deleted'}>
+        <Icon name='trash' />
+    </Button>,
+
+];
+
 export default class InboxScreen extends Component {
     constructor(props) {
         super(props)
@@ -60,25 +71,40 @@ export default class InboxScreen extends Component {
             navigator: this.props.myNavigator
         }
     }
-    myNavigate(index) {
-        this.state.navigator.navigate('ChatScreen', { Contact: this.state.chatDetails[index].senderName })
+    myNavigate() {
+        this.state.navigator.navigate('ChatScreen')
     }
 
     render() {
 
         return (
             <Container>
-                <Header style={{ backgroundColor: '#23b9b9' }} />
-                <Content>
+                <Header style={{ backgroundColor: '#23b9b9' }} >
+                    <Right>
+                        <Button light bordered  style={{ padding: 2,color:'#fff',marginBottom:5 }} onPress={()=>this.myNavigate()} >
+                            <Icon type='FontAwesome5' name='pen' style={{ color: '#fff', fontSize: 20 }} />
+                            <Text> ارسال پیام </Text>
+                        </Button>
+                    </Right>
 
+                </Header>
+                <Content>
                     <ScrollView>
                         <List>
                             {this.state.chatDetails.map((value, index) =>
                                 <View key={index}>
-
                                     <ListItem avatar style={{ padding: 2 }}
-                                        onPress={() => this.myNavigate(index)}>
-                                        <Body>
+                                        onLongPress={() => Alert.alert(
+                                            'حذف پیام',
+                                            'ادامه میدهید ؟ ',
+                                            [
+                                                { text: 'بله', onPress: () => alert(this.state.chatDetails[index].senderName + " حذف شد ") },
+                                                { text: 'انصراف' },
+                                            ],
+                                            { cancelable: true }
+                                        )}
+                                    >
+                                        <Body style={{ width: '70%', height: '100%' }}>
                                             <Text style={{
                                                 textAlign: 'right',
                                                 borderColor: '#fff'
@@ -86,16 +112,20 @@ export default class InboxScreen extends Component {
                                             <Text style={{ textAlign: 'right', borderColor: '#fff' }} note
                                                 numberOfLines={1}>{value.lastMessage}</Text>
                                         </Body>
-                                        <Right>
+                                        <Right style={{ height: '100%' }}>
                                             <Icon name='user' type='FontAwesome5' style={{ color: '#b4b4b4' }} />
                                         </Right>
-
+                                        {/* <Left>
+                                                 <Button transparent style={{height:'100%'}}>
+                                                      <Icon name='trash' style={{color:'#c10000'}}/>      
+                                                 </Button>
+                                             </Left>            */}
                                     </ListItem>
-
                                 </View>
                             )}
                         </List>
                     </ScrollView>
+
                 </Content>
             </Container>
 
