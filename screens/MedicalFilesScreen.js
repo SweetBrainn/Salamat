@@ -54,15 +54,15 @@ export default class MedicalFilesScreen extends Component {
         if (index <= 3) {
             return (
                 <View key={index}>
-                    <MyPost title={value.title} content={value.content}
-                        myColor='#fff' />
+                    <MyPost title={value.content} content={value.title}
+                        myColor='#e2e2e2' />
                 </View>
             )
         } else {
             return (
                 <View key={index}>
                     <MyPost title={value.title} content={value.content}
-                        myColor='#fff' />
+                        myColor='#e2e2e2' />
                 </View>
             )
         }
