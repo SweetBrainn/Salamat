@@ -15,8 +15,11 @@ import {
     Icon,
     Text,
     Title,
-    Card
+    Card, Tab
 } from 'native-base';
+import MedicalFilesScreen from "./MedicalFilesScreen";
+import ShowReservesScreen from "./ShowReservesScreen";
+import InboxScreen from "./InboxScreen";
 
 const medicalItems = [
     {
@@ -78,24 +81,24 @@ export default class ReserveScreen extends Component {
             <Container>
                 <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
                     <Left>
-                        <Button transparent style={styles.headerMenuIcon}>
-                            <Icon style={styles.headerIcon} type='FontAwesome' name='h-square'/>
-                            <Text style={styles.headerText}>مرکز درمانی</Text>
+                        <Button transparent style={styles.headerMenuIcon}
+                                onPress={() => this.props.navigation.openDrawer()}>
+                            <Icon style={styles.headerMenuIcon} name='menu'
+                                  onPress={() => this.props.navigation.openDrawer()}/>
                         </Button>
-                        {/*<Button transparent style={styles.headerMenuIcon}*/}
-                        {/*        onPress={() => this.props.navigation.openDrawer()}>*/}
-                        {/*    <Icon style={styles.headerMenuIcon} name='menu'*/}
-                        {/*          onPress={() => this.props.navigation.openDrawer()}/>*/}
-                        {/*</Button>*/}
                     </Left>
-                    <Right>
-                        {/*<Text style={styles.headerText}>نوبت دهی</Text>*/}
-                        <Button transparent style={styles.headerMenuIcon}>
-                        <Icon style={styles.headerIcon} type='FontAwesome' name='search'/>
-                        <Text style={styles.headerText}>تخصص</Text>
-                        </Button>
-                    </Right>
                 </Header>
+                <Tabs locked>
+                    <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>انتخاب مرکز درمانی</Text></TabHeading>}>
+
+                    </Tab>
+                    <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>انتخاب پزشک</Text></TabHeading>}>
+
+                    </Tab>
+                    <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>رزرو نوبت</Text></TabHeading>}>
+
+                    </Tab>
+                </Tabs>
                 <Content padder style={styles.content}>
                     {/*<Card>*/}
                     {/*    <CardItem bordered style={{flexDirection: 'column'}}>*/}

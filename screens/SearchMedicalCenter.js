@@ -1,24 +1,23 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Platform, TextInput, Text} from 'react-native';
-import { Picker } from 'react-native-woodpicker'
+import {StyleSheet, Text, View} from 'react-native';
 import {
-    Container,
-    Header,
-    Body,
-    Title,
-    Content,
-    CardItem,
-    Footer,
-    Card,
+    ActionSheet,
     Button,
+    Card,
+    Container,
+    Content,
+    Footer,
+    Header,
+    Icon,
     Left,
     Right,
-    Icon,
-    ActionSheet,
-    Root
+    Root,
+    List,
+    ListItem
 } from 'native-base';
-import Drawer from "react-native-drawer";
-import SideMenu from "../Menu/SideMenu";
+import SearchableDropdown from 'react-native-searchable-dropdown';
+
+
 
 const STATES = ["منطقه 1", "منطقه 2", "منطقه 3", "منطقه 4", "انصراف"];
 const DESTRUCTIVE_INDEX_STATE = 4;
@@ -32,9 +31,18 @@ export default class SearchMedicalCenter extends Component {
         super(props);
         this.state = {
             active: true,
+            medicalCenterSelectedValue: null,
             selectedState: '',
             clickedKind: '',
-            selected_id: 0
+            selected_id: 0,
+            medicalCenters: [
+                {name: 'مرکز درمانی 1'},
+                {name: 'مرکز درمانی 2'},
+                {name: 'مرکز درمانی 3'},
+                {name: 'مرکز درمانی 4'},
+                {name: 'بیمارستان امام رضا'},
+                {name: 'درمانگاه امام حسن'},
+            ]
         }
     }
 
@@ -75,6 +83,20 @@ export default class SearchMedicalCenter extends Component {
         )
     }
 
+    renderList() {
+        return (
+            this.state.medicalCenters.map((value, index) => {
+                if(value.name.include(this.state.medicalCenterSelectedValue)){
+                    <View key={index}>
+                        <Text>
+                            value.name
+                        </Text>
+                    </View>
+                }
+            })
+        )
+    }
+
 
     render() {
 
@@ -95,9 +117,58 @@ export default class SearchMedicalCenter extends Component {
                 </Header>
                 <Root>
                     <Content padder style={styles.content}>
-                        <Card>
+                        <SearchableDropdown
 
-                        </Card>
+                            onItemSelect={(item) => {
+                                this.setState({medicalCenterSelectedValue: item.name}, () => {
+                                    alert(item.name)
+                                })
+                            }}
+                            containerStyle={{padding: 5}}
+                            itemStyle={{
+                                padding: 10,
+                                marginTop: 2,
+                                backgroundColor: '#fafafa',
+                                borderBottomColor: '#23b9b9',
+                                borderTopColor: '#fafafa',
+                                borderRightColor: '#fafafa',
+                                borderLeftColor: '#fafafa',
+                                borderWidth: 0.5,
+                                borderRadius: 3,
+                                textAlign: 'right'
+                            }}
+                            itemTextStyle={{color: '#222', textAlign: 'right'}}
+                            itemsContainerStyle={{maxHeight: 140}}
+                            items={this.state.medicalCenters}
+                            defaultIndex={0}
+                            resetValue={false}
+                            chip={true}
+                            textInputProps={
+                                {
+                                    value: this.state.medicalCenterSelectedValue,
+                                    placeholder: "نام،خدمات،منطقه و ...",
+                                    underlineColorAndroid: "transparent",
+                                    style: {
+                                        padding: 12,
+                                        textAlign: 'right',
+                                        borderWidth: 1,
+                                        borderColor: '#ccc',
+                                        borderRadius: 5,
+                                    },
+
+                                }
+                            }
+                            onTextChange={(text) => (
+                                this.setState({medicalCenterSelectedValue: text}, () => {
+                                    this.renderList()
+                                })
+                            )}
+                            listProps={
+                                {
+                                    nestedScrollEnabled: true,
+                                }
+                            }
+                        />
                     </Content>
                 </Root>
                 <Footer>
@@ -138,6 +209,11 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         backgroundColor: '#fff',
+        borderColor: '#23b9b9',
+        borderWidth: 1,
+        margin: 5,
+        padding: 5,
+        flexDirection: 'column'
     },
     headerMenuIcon: {
         padding: 5,
@@ -156,7 +232,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#23b9b9'
     },
     viewStyle: {
-        flex: 1,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'red',
         flexDirection: 'column',
     },
     row: {

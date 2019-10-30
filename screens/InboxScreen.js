@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image, ScrollView, TouchableHighlight, Alert } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, View, Image, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import Swipeable from 'react-native-swipeable-row';
 import {
     Container,
@@ -26,28 +26,20 @@ import {
 const ChatList = (props) => {
     return (
         <List>
-            <ListItem avatar style={{ padding: 2 }}>
+            <ListItem avatar style={{padding: 2}}>
                 <Body>
-                    <Text style={{ textAlign: 'right', borderColor: '#fff' }}>{props.name}</Text>
-                    <Text style={{ textAlign: 'right', borderColor: '#fff' }} note
-                        numberOfLines={1}>{props.message}</Text>
+                    <Text style={{textAlign: 'right', borderColor: '#fff'}}>{props.name}</Text>
+                    <Text style={{textAlign: 'right', borderColor: '#fff'}} note
+                          numberOfLines={1}>{props.message}</Text>
                 </Body>
                 <Right>
-                    <Icon name='user' type='FontAwesome5' style={{ color: '#b4b4b4' }} />
+                    <Icon name='user' type='FontAwesome5' style={{color: '#b4b4b4'}}/>
                 </Right>
 
             </ListItem>
         </List>
     )
 }
-const leftContent = <Text>Pull to activate</Text>;
-
-const rightButtons = [
-    <Button danger onPress={(index) => alert(InboxScreen.state.chatDetails[index].senderName) + 'deleted'}>
-        <Icon name='trash' />
-    </Button>,
-
-];
 
 export default class InboxScreen extends Component {
     constructor(props) {
@@ -59,9 +51,9 @@ export default class InboxScreen extends Component {
                     senderImage: '',
                     lastMessage: 'نوبت امروز شما 15 دقیقه با تاخیر شروع می شود'
                 },
-                { senderName: 'دکتر رضایی', senderImage: '', lastMessage: 'نوبت امروز شما کنسل شده است' },
-                { senderName: 'دکتر علیزاده', senderImage: '', lastMessage: 'دفترچه بیمه فراموش نشود' },
-                { senderName: 'دکتر محمدی', senderImage: '', lastMessage: 'نسخه قبلی پزشک خود را همراه خود بیاورید' },
+                {senderName: 'دکتر رضایی', senderImage: '', lastMessage: 'نوبت امروز شما کنسل شده است'},
+                {senderName: 'دکتر علیزاده', senderImage: '', lastMessage: 'دفترچه بیمه فراموش نشود'},
+                {senderName: 'دکتر محمدی', senderImage: '', lastMessage: 'نسخه قبلی پزشک خود را همراه خود بیاورید'},
                 {
                     senderName: 'دکتر ضیایی',
                     senderImage: '',
@@ -71,18 +63,28 @@ export default class InboxScreen extends Component {
             navigator: this.props.myNavigator
         }
     }
+
     myNavigate() {
         this.state.navigator.navigate('ChatScreen')
+    }
+
+    deleteMessage({value, index}) {
+        delete this.state.chatDetails[index];
+        this.setState({chatDetails: this.state.chatDetails}, () => {
+            // alert('حذف انجام شد')
+        })
+
     }
 
     render() {
 
         return (
             <Container>
-                <Header style={{ backgroundColor: '#23b9b9' }} >
+                <Header style={{backgroundColor: '#23b9b9'}}>
                     <Right>
-                        <Button light bordered  style={{ padding: 2,color:'#fff',marginBottom:5 }} onPress={()=>this.myNavigate()} >
-                            <Icon type='FontAwesome5' name='pen' style={{ color: '#fff', fontSize: 20 }} />
+                        <Button light bordered style={{padding: 2, color: '#fff', marginBottom: 5}}
+                                onPress={() => this.myNavigate()}>
+                            <Icon type='FontAwesome5' name='pen' style={{color: '#fff', fontSize: 20}}/>
                             <Text> ارسال پیام </Text>
                         </Button>
                     </Right>
@@ -93,36 +95,43 @@ export default class InboxScreen extends Component {
                         <List>
                             {this.state.chatDetails.map((value, index) =>
                                 <View key={index}>
-                                    <ListItem avatar style={{ padding: 2 }}
-                                        onLongPress={() => Alert.alert(
-                                            'حذف پیام',
-                                            'ادامه میدهید ؟ ',
-                                            [
-                                                { text: 'بله', onPress: () => alert(this.state.chatDetails[index].senderName + " حذف شد ") },
-                                                { text: 'انصراف' },
-                                            ],
-                                            { cancelable: true }
-                                        )}
-                                    >
-                                        <Body style={{ width: '70%', height: '100%' }}>
-                                            <Text style={{
-                                                textAlign: 'right',
-                                                borderColor: '#fff'
-                                            }}>{value.senderName}</Text>
-                                            <Text style={{ textAlign: 'right', borderColor: '#fff' }} note
-                                                numberOfLines={1}>{value.lastMessage}</Text>
-                                        </Body>
-                                        <Right style={{ height: '100%' }}>
-                                            <Icon name='user' type='FontAwesome5' style={{ color: '#b4b4b4' }} />
-                                        </Right>
-                                        {/* <Left>
-                                                 <Button transparent style={{height:'100%'}}>
-                                                      <Icon name='trash' style={{color:'#c10000'}}/>      
-                                                 </Button>
-                                             </Left>            */}
-                                    </ListItem>
+                                    <Swipeable rightButtons={[<Button onPress={() => {
+                                        this.deleteMessage({value, index})
+                                    }} style={{height: '90%'}} danger>
+                                        <Icon name='trash'/>
+                                    </Button>]}
+                                               onRightActionRelease={() => this.deleteMessage({value, index})}>
+                                        <ListItem avatar style={{padding: 2}}
+                                                  onLongPress={() => Alert.alert(
+                                                      'حذف پیام',
+                                                      'ادامه میدهید ؟ ',
+                                                      [
+                                                          {
+                                                              text: 'بله',
+                                                              onPress: () => this.deleteMessage({value, index})
+                                                          },
+                                                          {text: 'انصراف'},
+                                                      ],
+                                                      {cancelable: true}
+                                                  )}
+                                        >
+                                            <Body style={{width: '70%', height: '100%'}}>
+                                                <Text style={{
+                                                    textAlign: 'right',
+                                                    borderColor: '#fff'
+                                                }}>{value.senderName}</Text>
+                                                <Text style={{textAlign: 'right', borderColor: '#fff'}} note
+                                                      numberOfLines={1}>{value.lastMessage}</Text>
+                                            </Body>
+                                            <Right style={{height: '100%'}}>
+                                                <Icon name='user' type='FontAwesome5' style={{color: '#b4b4b4'}}/>
+                                            </Right>
+                                        </ListItem>
+                                    </Swipeable>
                                 </View>
                             )}
+
+
                         </List>
                     </ScrollView>
 

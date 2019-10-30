@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { createDrawerNavigator, createAppContainer, createStackNavigator, createSwitchNavigator } from "react-navigation";
+import React, {Component} from 'react';
+import {createDrawerNavigator, createAppContainer, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import HomeScreen from './screens/HomeScreen'
 import SplashScreen from "./screens/SplashScreen";
 import SideMenu from "./Menu/SideMenu";
@@ -18,53 +18,58 @@ import ChatScreen from "./screens/MyChatScreen"
 import GetVerificationCodeScreen from "./screens/GetVerificationCodeScreen";
 import VerifyScreen from "./screens/VerifyScreen";
 
+const VerificationStackNavigator = createStackNavigator({
+    GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
+    VerifyScreen: {screen: VerifyScreen}
+});
+
 const ChatStackNavigator = createStackNavigator({
-    InboxScreen: { screen: InboxScreen },
-    ChatScreen: { screen: ChatScreen }
+    InboxScreen: {screen: InboxScreen},
+    ChatScreen: {screen: ChatScreen}
 }, {
-        defaultNavigationOptions: {
-            header: null
-        }
-    });
+    defaultNavigationOptions: {
+        header: null
+    }
+});
 const GuidStackNavigator = createStackNavigator({
-    GuideScreen: { screen: GuidScreen },
-    MoreInfo: { screen: MoreInfo }
+    GuideScreen: {screen: GuidScreen},
+    MoreInfo: {screen: MoreInfo}
 })
 const HistoryStackNavigator = createStackNavigator({
-    HistoryScreen: { screen: HistoryScreen },
+    HistoryScreen: {screen: HistoryScreen},
     InboxScreen: ChatStackNavigator,
     // InboxScreen:{screen:InboxScreen},
-    ChatScreen: { screen: ChatScreen },
-    MedicalFilesScreen: { screen: MedicalFilesScreen },
-    ShowReservesScreen: { screen: ShowReservesScreen },
-    OldReservesScreen: { screen: OldReservesScreen }
+    ChatScreen: {screen: ChatScreen},
+    MedicalFilesScreen: {screen: MedicalFilesScreen},
+    ShowReservesScreen: {screen: ShowReservesScreen},
+    OldReservesScreen: {screen: OldReservesScreen}
 }, {
-        initialRouteName: 'HistoryScreen',
-        defaultNavigationOptions: {
-            header: null
-        }
-    });
+    initialRouteName: 'HistoryScreen',
+    defaultNavigationOptions: {
+        header: null
+    }
+});
 const AppDrawerNavigator = createDrawerNavigator({
-    SplashScreen: { screen: SplashScreen },
-    HomeScreen: { screen: HomeScreen },
-    ReserveScreen: { screen: ReserveScreen },
+    SplashScreen: {screen: SplashScreen},
+    HomeScreen: {screen: HomeScreen},
+    ReserveScreen: {screen: ReserveScreen},
     HistoryScreen: HistoryStackNavigator,
-    ProfileScreen: { screen: ProfileScreen },
+    ProfileScreen: {screen: ProfileScreen},
     GuideScreen: GuidStackNavigator,
-    InfoScreen: { screen: NoticeScreen },
-    SearchMedicalCenterScreen: { screen: SearchMedicalCenter },
-    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
-    VerifyScreen:{screen:VerifyScreen}
+    InfoScreen: {screen: NoticeScreen},
+    SearchMedicalCenterScreen: {screen: SearchMedicalCenter},
+    GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
+    VerifyScreen: VerificationStackNavigator
 
 }, {
-        initialRouteName: 'SplashScreen',
-        // initialRouteName:'GetVerificationCodeScreen',
-        // initialRouteName:'VerifyScreen',
-        contentComponent: SideMenu,
-        drawerPosition: 'left',
-        drawerOpenRoute: 'DrawerOpen',
-        drawerCloseRoute: 'DrawerClose',
-        drawerToggleRoute: 'DrawerToggle'
-    });
+    initialRouteName: 'SplashScreen',
+    // initialRouteName:'GetVerificationCodeScreen',
+    // initialRouteName:'VerifyScreen',
+    contentComponent: SideMenu,
+    drawerPosition: 'left',
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle'
+});
 export default createAppContainer(AppDrawerNavigator);
 

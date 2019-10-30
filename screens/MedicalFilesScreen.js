@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Modal, ScrollView } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, View, Modal, ScrollView} from 'react-native';
+import Swipeable from 'react-native-swipeable-row'
 import {
     Container,
     Header,
@@ -22,12 +23,12 @@ import {
 const MyPost = (props) => {
     return (
         <Card style={[styles.post]}>
-            <CardItem header style={{ backgroundColor: props.myColor }}>
+            <CardItem header style={{backgroundColor: props.myColor}}>
                 <Body>
                     <Text style={styles.titleText}>{props.title}</Text>
                 </Body>
             </CardItem>
-            <CardItem style={{ backgroundColor: props.myColor }}>
+            <CardItem style={{backgroundColor: props.myColor}}>
                 <Body>
                     <Text style={styles.contentText}>{props.content}</Text>
                 </Body>
@@ -40,9 +41,9 @@ export default class MedicalFilesScreen extends Component {
         super(props)
         this.state = {
             array: [
-                { title: "چهارشنبه 1398/8/1", content: "نسخه شماره 1" },
-                { title: "شنبه 1398/8/5", content: "نسخه شماره 2" },
-                { title: "جمعه 1398/8/7", content: "نسخه شماره 3" },
+                {title: "چهارشنبه 1398/8/1", content: "نسخه شماره 1"},
+                {title: "شنبه 1398/8/5", content: "نسخه شماره 2"},
+                {title: "جمعه 1398/8/7", content: "نسخه شماره 3"},
             ]
         }
     }
@@ -50,20 +51,42 @@ export default class MedicalFilesScreen extends Component {
     onBackPressed() {
         this.props.navigation.goBack()
     }
+
+    deleteMessage({value, index}) {
+        delete this.state.array[index];
+        this.setState({array: this.state.array}, () => {
+            // alert('حذف انجام شد')
+        })
+    }
+
     renderList(value, index) {
         if (index <= 3) {
             return (
                 <View key={index}>
-                    <MyPost title={value.content} content={value.title}
-                        myColor='#e2e2e2' />
+                    <Swipeable rightButtons={[<Button onPress={() => {
+                        this.deleteMessage({value, index})
+                    }} style={{height: '100%', margin: 2}} danger>
+                        <Icon name='trash'/>
+                    </Button>]}
+                               onRightActionRelease={() => this.deleteMessage({value, index})}
+                    >
+                        <MyPost title={value.content} content={value.title}
+                                myColor='#e2e2e2'/>
+                    </Swipeable>
                 </View>
             )
         } else {
             return (
-                <View key={index}>
-                    <MyPost title={value.title} content={value.content}
-                        myColor='#e2e2e2' />
-                </View>
+                <Swipeable rightButtons={[<Button onPress={() => {
+                    this.deleteMessage({value, index})
+                }} style={{height: '100%', margin: 2}} danger>
+                    <Icon name='trash'/>
+                </Button>]}
+                           onRightActionRelease={() => this.deleteMessage({value, index})}
+                >
+                    <MyPost title={value.content} content={value.title}
+                            myColor='#e2e2e2'/>
+                </Swipeable>
             )
         }
 
@@ -73,10 +96,10 @@ export default class MedicalFilesScreen extends Component {
 
         return (
             <Container>
-                <Header transparent style={{ backgroundColor: '#23b9b9' }}>
+                <Header transparent style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                            onPress={() => this.onBackPressed()}>
+                                onPress={() => this.onBackPressed()}>
                             {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
                             {/*      onPress={() => this.onBackPressed()}/>*/}
                         </Button>

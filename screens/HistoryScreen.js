@@ -32,7 +32,7 @@ export default class HistoryScreen extends Component {
                         <Text style={styles.headerText}>پرونده شخصی</Text>
                         </Right>
                     </Header>
-                    <Tabs>
+                    <Tabs locked>
                         <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>نسخه ها</Text></TabHeading>}>
                             <MedicalFilesScreen />
                         </Tab>
