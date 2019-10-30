@@ -17,6 +17,23 @@ import OldReservesScreen from "./screens/OldReservesScreen";
 import ChatScreen from "./screens/MyChatScreen"
 import GetVerificationCodeScreen from "./screens/GetVerificationCodeScreen";
 import VerifyScreen from "./screens/VerifyScreen";
+import SearchDoctorScreen from "./screens/SearchDoctorScreen";
+import MedicalCenterAdvancedSearchScreen from "./screens/MedicalCenterAdvancedSearchScreen"
+import DoctorAdvancedSearchScreen from "./screens/DoctorAdvancedSearchScreen";
+import DetailsScreen from "./screens/DetailsScreen"
+
+
+const SearchMedicalCenterNavigator = createStackNavigator({
+    SearchMedicalCenter: {screen: SearchMedicalCenter},
+    MedicalCenterAdvancedSearchScreen: {screen: MedicalCenterAdvancedSearchScreen},
+    DetailsScreen: {screen: DetailsScreen}
+});
+
+const SearchDoctorNavigator = createStackNavigator({
+    SearchDoctorScreen: {screen: SearchDoctorScreen},
+    DoctorAdvancedSearchScreen: {screen: DoctorAdvancedSearchScreen},
+    DetailsScreen: {screen: DetailsScreen}
+});
 
 const VerificationStackNavigator = createStackNavigator({
     GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
@@ -57,7 +74,8 @@ const AppDrawerNavigator = createDrawerNavigator({
     ProfileScreen: {screen: ProfileScreen},
     GuideScreen: GuidStackNavigator,
     InfoScreen: {screen: NoticeScreen},
-    SearchMedicalCenterScreen: {screen: SearchMedicalCenter},
+    SearchMedicalCenterScreen: SearchMedicalCenterNavigator,
+    SearchDoctorScreen: SearchDoctorNavigator,
     GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
     VerifyScreen: VerificationStackNavigator
 
