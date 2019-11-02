@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {SearchableFlatList, SearchableSectionList} from "react-native-searchable-list";
-import CheckAlert from "react-native-awesome-alert"
+import {Alert} from 'react-native'
+import AlertPro from "react-native-alert-pro";
 import {
     ActionSheet,
     Button,
@@ -31,7 +32,7 @@ export default class SearchMedicalCenter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedMedicalCenter: null,
+            selectedMedicalCenter: {id: 0, title: "", data: []},
             data: [{
                 id: 0,
                 title: "مرکز درمانی 1",
@@ -47,7 +48,9 @@ export default class SearchMedicalCenter extends Component {
             searchTerm: "",
             searchAttribute: 'data.data',
             searchByTitle: false,
-            ignoreCase: true
+            ignoreCase: true,
+            titleOfAlert: '',
+            messageOfAlert: '',
         };
 
 
@@ -106,12 +109,29 @@ export default class SearchMedicalCenter extends Component {
 
     }
 
-    goToMoreInfoScreen(value) {
-        for (var i in this.state.data) {
-            if (value === this.state.data[i].title) {
-                this.setState({selectedMedicalCenter: this.state.data[i]}, () => {
-                    this.props.navigation.navigate('DetailsScreen', {medicalCenter: this.props.selectedMedicalCenter})
+    goToDetailsScreen(value) {
+        for (let i of this.state.data) {
+            if (value === i.title) {
+                this.setState({selectedMedicalCenter: i}, () => {
+                    this.props.navigation.navigate('DetailsScreen', {medicalCenter: i, doctor: null})
                 })
+                break
+            }
+        }
+    }
+
+    showAlert(value) {
+        for (let item of this.state.data) {
+            if (item.title === value) {
+                let result = '';
+                for (let text of item.data) {
+                    if (text !== value) {
+                        result = ' ' + result + text + ' ';
+                    }
+                }
+                return result;
+                //this.setState({messageOfAlert: result, titleOfAlert: value})
+                break
             }
         }
     }
@@ -133,6 +153,8 @@ export default class SearchMedicalCenter extends Component {
                 </Header>
                 <Root>
                     <Content padder style={styles.content}>
+
+
                         {/*<SearchableDropdown*/}
 
                         {/*    onItemSelect={(item) => {*/}
@@ -200,6 +222,7 @@ export default class SearchMedicalCenter extends Component {
                         {/*        }*/}
                         {/*    </List>*/}
                         {/*</View>*/}
+
                         <Item regular>
                             <Input placeholder='جستجوی نام مرکز،خدمات،منطقه و ...'
                                    placeholderTextColor={'#d0d0d0'}
@@ -225,8 +248,23 @@ export default class SearchMedicalCenter extends Component {
                                 <ListItem
                                     style={{width: '100%', height: 50, alignSelf: 'center', padding: 2, marginTop: 2}}
                                     onPress={() => {
-                                        this.goToMoreInfoScreen(title)
-                                    }}
+                                        Alert.alert(
+                                            title,
+                                            this.showAlert(title)
+                                            ,
+                                            [
+                                                {text: 'انصراف'},
+                                                {
+                                                    text: 'جستجوی پزشک',
+                                                    onPress: () => alert('clicked'),
+                                                    style: 'cancel',
+                                                },
+                                                {text: 'اطلاعات بیشتر', onPress: () => this.goToDetailsScreen(title)},
+                                            ],
+                                            {cancelable: true},
+                                        );
+                                    }
+                                    }
                                 >
                                     <Body>
                                         <Text style={{

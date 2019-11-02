@@ -27,12 +27,16 @@ const SearchMedicalCenterNavigator = createStackNavigator({
     SearchMedicalCenter: {screen: SearchMedicalCenter},
     MedicalCenterAdvancedSearchScreen: {screen: MedicalCenterAdvancedSearchScreen},
     DetailsScreen: {screen: DetailsScreen}
+},{
+    initialRouteName:'SearchMedicalCenter'
 });
 
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
     DoctorAdvancedSearchScreen: {screen: DoctorAdvancedSearchScreen},
     DetailsScreen: {screen: DetailsScreen}
+},{
+    initialRouteName:'SearchDoctorScreen'
 });
 
 const VerificationStackNavigator = createStackNavigator({
