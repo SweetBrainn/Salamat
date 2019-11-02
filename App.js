@@ -18,14 +18,13 @@ import ChatScreen from "./screens/MyChatScreen"
 import GetVerificationCodeScreen from "./screens/GetVerificationCodeScreen";
 import VerifyScreen from "./screens/VerifyScreen";
 import SearchDoctorScreen from "./screens/SearchDoctorScreen";
-import MedicalCenterAdvancedSearchScreen from "./screens/MedicalCenterAdvancedSearchScreen"
-import DoctorAdvancedSearchScreen from "./screens/DoctorAdvancedSearchScreen";
+import AdvanceSearchScreen from "./screens/AdvanceSearchScreen"
 import DetailsScreen from "./screens/DetailsScreen"
 
 
 const SearchMedicalCenterNavigator = createStackNavigator({
     SearchMedicalCenter: {screen: SearchMedicalCenter},
-    MedicalCenterAdvancedSearchScreen: {screen: MedicalCenterAdvancedSearchScreen},
+    AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen}
 },{
     initialRouteName:'SearchMedicalCenter'
@@ -33,7 +32,7 @@ const SearchMedicalCenterNavigator = createStackNavigator({
 
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
-    DoctorAdvancedSearchScreen: {screen: DoctorAdvancedSearchScreen},
+    AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen}
 },{
     initialRouteName:'SearchDoctorScreen'

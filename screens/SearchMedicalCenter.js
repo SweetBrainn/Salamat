@@ -93,22 +93,6 @@ export default class SearchMedicalCenter extends Component {
         )
     }
 
-    renderList() {
-
-        this.state.medicalCenters.map((value, index) => {
-            if (value.name.includes(this.state.medicalCenterSelectedValue)) {
-                return (
-                    <View key={index}>
-                        <Text>
-                            value.name
-                        </Text>
-                    </View>
-                )
-            }
-        })
-
-    }
-
     goToDetailsScreen(value) {
         for (let i of this.state.data) {
             if (value === i.title) {
@@ -234,7 +218,10 @@ export default class SearchMedicalCenter extends Component {
                         {/*<Item style={{alignContent:'flex-end',margin:2}}>*/}
                         <View style={styles.row}>
                             <Button transparent style={{alignSelf: 'flex-start', margin: 2, padding: 2}}
-                                    onPress={() => this.props.navigation.navigate('MedicalCenterAdvancedSearchScreen')}>
+                                    onPress={() => this.props.navigation.navigate('AdvanceSearchScreen', {
+                                        medicalCenter: true,
+                                        doctor: false
+                                    })}>
                                 <Text style={{textAlign: 'right', fontSize: 13, color: '#23b9b9'}}>جستجوی پیشرفته</Text>
                             </Button>
                         </View>
@@ -342,7 +329,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end'
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
     }
 });
