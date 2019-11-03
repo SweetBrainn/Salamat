@@ -44,7 +44,7 @@ export default class SideMenu extends Component {
                             </Body>
                         </ListItem>
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('SearchDoctorScreen')
+                            this.props.navigation.navigate('SearchDoctorScreen',{medicalCenter:''})
                         }}>
                             <Right>
                                 <Icon type='FontAwesome' name='user-md' style={styles.icons}/>

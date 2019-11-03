@@ -34,6 +34,7 @@
     "react-native-elements": "^1.2.6",
     "react-native-gesture-handler": "~1.3.0",
     "react-native-persian-calendar-picker": "^3.0.1",
+    "react-native-picker-module": "^1.2.3",
     "react-native-picker-select": "^6.3.3",
     "react-native-searchable-dropdown": "^1.1.1",
     "react-native-searchable-list": "^1.1.3",
@@ -46,7 +47,11 @@
     "babel-preset-expo": "^7.0.0",
     "jest-expo": "^35.0.0",
     "react-native-awesome-alert": "^0.4.5",
+    "react-native-dropdown": "0.0.6",
     "react-native-maps": "^0.26.1",
+    "react-native-material-dropdown": "^0.11.1",
+    "react-native-paper": "^3.1.1",
+    "react-native-rtl-layout": "0.0.1",
     "react-native-woodpicker": "0.0.17"
   },
   "private": true

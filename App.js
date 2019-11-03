@@ -25,7 +25,8 @@ import DetailsScreen from "./screens/DetailsScreen"
 const SearchMedicalCenterNavigator = createStackNavigator({
     SearchMedicalCenter: {screen: SearchMedicalCenter},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
-    DetailsScreen: {screen: DetailsScreen}
+    DetailsScreen: {screen: DetailsScreen},
+    SearchDoctorScreen: {screen: SearchDoctorScreen}
 },{
     initialRouteName:'SearchMedicalCenter'
 });

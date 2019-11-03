@@ -120,6 +120,7 @@ export default class SearchMedicalCenter extends Component {
         }
     }
 
+
     render() {
         return (
             <Container>
@@ -243,7 +244,7 @@ export default class SearchMedicalCenter extends Component {
                                                 {text: 'انصراف'},
                                                 {
                                                     text: 'جستجوی پزشک',
-                                                    onPress: () => alert('clicked'),
+                                                    onPress: () => this.props.navigation.navigate('SearchDoctorScreen', {medicalCenter:(title)}),
                                                     style: 'cancel',
                                                 },
                                                 {text: 'اطلاعات بیشتر', onPress: () => this.goToDetailsScreen(title)},
