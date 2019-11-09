@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image, ScrollView, Keyboard } from 'react-native';
-import { ChatScreen } from 'react-native-easy-chat-ui'
+import React, {Component} from 'react';
+import {StyleSheet, View, Image, ScrollView, Keyboard} from 'react-native';
+import {ChatScreen} from 'react-native-easy-chat-ui'
 
 import {
     Container,
@@ -27,9 +27,7 @@ import {
 export default class MyChatScreen extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-
-        };
+        this.state = {};
     }
 
     onBackPressed() {
@@ -41,12 +39,12 @@ export default class MyChatScreen extends Component {
 
         return (
             <Container>
-                <Header style={{ backgroundColor: '#23b9b9' }}>
+                <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                            onPress={() => this.onBackPressed()}>
+                                onPress={() => this.onBackPressed()}>
                             <Icon style={styles.headerMenuIcon} name='arrow-back'
-                                onPress={() => this.onBackPressed()} />
+                                  onPress={() => this.onBackPressed()}/>
                         </Button>
                     </Left>
                     <Right>
@@ -54,13 +52,13 @@ export default class MyChatScreen extends Component {
                     </Right>
                 </Header>
                 <Content padder>
-
                     <Form>
-                        <Item style={{padding:2,fontSize:15,marginBottom:5,marginTop:5}}>
-                            <Icon active name='person' style={{fontSize:15,textAlign:'right'}} />
-                            <Input placeholder='گیرنده پیام' style={{ textAlign: 'right' }} />
+                        <Item style={{padding: 1, fontSize: 15, marginBottom: 5, marginTop: 5}}>
+                            <Icon active name='person' style={{fontSize: 15, textAlign: 'right'}}/>
+                            <Input placeholder='گیرنده پیام' style={{textAlign: 'right'}}/>
                         </Item>
-                        <Textarea rowSpan={7} bordered placeholder="متن پیام" style={{ textAlign: 'right',padding:2,fontSize:15 }} />
+                        <Textarea rowSpan={7} bordered placeholder="متن پیام"
+                                  style={{textAlign: 'right', padding: 2, fontSize: 15}}/>
                     </Form>
 
                 </Content>
@@ -69,10 +67,10 @@ export default class MyChatScreen extends Component {
                     <Fab
                         direction="up"
                         containerStyle={styles.chatInput}
-                        style={{ backgroundColor: '#34A34F' }}
+                        style={{backgroundColor: '#34A34F'}}
                         position="bottomRight"
                         onPress={() => alert('Sent')}>
-                        <Icon name="paper-plane" type="FontAwesome" />
+                        <Icon name="paper-plane" type="FontAwesome"/>
 
                     </Fab>
 

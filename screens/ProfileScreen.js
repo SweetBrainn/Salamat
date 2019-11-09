@@ -157,7 +157,7 @@ export default class ProfileScreen extends Component {
                         </View>
                     </View>
                 </Content>
-                <Footer style={{backgroundColor: '#fff'}}>
+                <Footer style={styles.footer}>
                     <View style={{flex: 1}}>
                         <Fab
                             active={this.state.active}
@@ -191,20 +191,18 @@ ProfileScreen.navigationOptions = {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(47,246,246,0.06)',
     },
     headerMenuIcon: {
-
         color: '#fff',
     },
     headerText: {
         fontSize: 20,
         padding: 5,
         color: '#fff',
-
     },
     container: {
-        backgroundColor: '#fff',
+
         flex: 1
     },
     header: {
@@ -225,7 +223,7 @@ const styles = StyleSheet.create({
     },
     body: {
         marginTop: 5,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(47,246,246,0.02)',
     },
     label: {
         textAlign: 'right',
@@ -265,5 +263,8 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginTop: 10,
         marginBottom: 3
+    },
+    footer:{
+    backgroundColor:'rgba(47,246,246,0.06)'
     }
 });

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, ActivityIndicator} from 'react-native';
 import {
     Container,
     Header,
-    Title,
+    Spinner,
     Content,
     Footer,
     FooterTab,
@@ -20,27 +20,50 @@ import {
 import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
 
-const MyPost = (props) => {
-    return (
-        <Card style={[styles.post]}>
-            <CardItem>
-                <Body>
-                    <Image style={styles.postImage}
-                           source={{uri: props.postContentImage}}/>
-                    <Text style={styles.postText}>{props.postContentText}</Text>
-                </Body>
-            </CardItem>
-            {/*<CardItem>*/}
-            {/*    <Left>*/}
-            {/*        <Button transparent>*/}
-            {/*            <Icon type='FontAwesome' name="heart" style={{color: '#ba150b'}}/>*/}
-            {/*            <Text style={{color: '#ba150b'}}>{props.likes} نفر پسندیده اند</Text>*/}
-            {/*        </Button>*/}
-            {/*    </Left>*/}
-            {/*</CardItem>*/}
-        </Card>
-    )
+
+class Post extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            animate: props.animate,
+            postContentImage:props.postContentImage,
+            postContentText: props.postContentText,
+            keyValue : props.key
+        }
+    }
+
+    render() {
+        return (
+            <View key={this.state.keyValue}>
+            <Card style={[styles.post]}>
+                <CardItem>
+                    <Body>
+                        <ActivityIndicator color={'gray'} animating={this.state.animate} size={"small"} style={{alignSelf:'center'}}/>
+                        <Image
+                            onLoadEnd={() => {
+                                this.setState({animate: !this.state.animate})
+                            }}
+                            style={[styles.postImage]}
+                            source={{uri: this.state.postContentImage}}/>
+                        <Text style={styles.postText}>{this.state.postContentText}</Text>
+                    </Body>
+                </CardItem>
+                {/*<CardItem>*/}
+                {/*    <Left>*/}
+                {/*        <Button transparent>*/}
+                {/*            <Icon type='FontAwesome' name="heart" style={{color: '#ba150b'}}/>*/}
+                {/*            <Text style={{color: '#ba150b'}}>{props.likes} نفر پسندیده اند</Text>*/}
+                {/*        </Button>*/}
+                {/*    </Left>*/}
+                {/*</CardItem>*/}
+            </Card>
+            </View>
+        )
+    }
 }
+
+
+
 export default class NoticeScreen extends Component {
 
     constructor(props) {
@@ -48,6 +71,7 @@ export default class NoticeScreen extends Component {
 
         super(props);
         this.state = {
+            animate: true,
             posts: [
                 {
                     image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=ni7ZvuXS7rA%253d&portalid=0',
@@ -111,11 +135,15 @@ export default class NoticeScreen extends Component {
                     {/*    </CardItem>*/}
                     {/*</Card>*/}
                     <ScrollView>
-                        {this.state.posts.map((item, key) => (
-                            <View key={key}>
-                                <MyPost postContentText={item.text} postContentImage={item.image}
-                                        likes={Math.round(Math.random() * 10) + 1}/>
-                            </View>
+                        {
+                            this.state.posts.map((item, key) => (
+
+                                /*<MyPost animate={this.state.animate} postContentText={item.text}*/
+                               /*        postContentImage={item.image}*/
+                                /*        likes={Math.round(Math.random() * 10) + 1}/>*/
+                                <Post animate={this.state.animate} postContentText={item.text} key={key}
+                                      postContentImage={item.image}/>
+
                         ))}
                     </ScrollView>
                 </Content>
@@ -142,7 +170,7 @@ NoticeScreen.navigationOptions = {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(47,246,246,0.06)',
     },
     headerMenuIcon: {
         padding: 5,

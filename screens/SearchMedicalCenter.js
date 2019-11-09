@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {SearchableFlatList, SearchableSectionList} from "react-native-searchable-list";
 import {Alert} from 'react-native'
-import AlertPro from "react-native-alert-pro";
+import Autocomplete from 'react-native-autocomplete-input';
 import {
     ActionSheet,
     Button,
@@ -20,24 +20,25 @@ import {
 } from 'native-base';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 
-
-const STATES = ["منطقه 1", "منطقه 2", "منطقه 3", "منطقه 4", "انصراف"];
-const DESTRUCTIVE_INDEX_STATE = 4;
-const CANCEL_INDEX_STATE = 4;
-const KINDS = ["طرف قرارداد", "آزاد", "انصراف"];
-const DESTRUCTIVE_INDEX_KIND = 2;
-const CANCEL_INDEX_KIND = 2;
 export default class SearchMedicalCenter extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             selectedMedicalCenter: {id: 0, title: "", data: []},
+            mainData: [
+                {
+                    id: 0,
+                    title: "مرکز درمانی 1",
+                    data: ["دندان پزشکی", "جراحی فک", "فیزیوتراپی", 'منطقه 1', 'مرکز درمانی 1']
+                },
+                {id: 1, title: "مرکز درمانی 2", data: ['مرکز درمانی 2', "چشم پزشکی", "منطقه 10"]},
+                {id: 2, title: "بیمارستان امام سجاد", data: ['بیمارستان امام رضا 2', "منطقه 9", "خدمات فک و صورت"]},
+                {id: 3, title: "درمانگاه امام حسن", data: ['درمانگاه امام حسن', "منطقه 10", "آزمایشگاه"]},
+                {id: 4, title: "بیمارستان امام رضا", data: ['بیمارستان امام رضا', "منطقه 11"]},
+            ],
             data: [{
-                id: 0,
-                title: "مرکز درمانی 1",
-                data: ["دندان پزشکی", "جراحی فک", "فیزیوتراپی", 'منطقه 1', 'مرکز درمانی 1']
-            },
+                id: 0, title: "مرکز درمانی 1", data: ["دندان پزشکی", "جراحی فک", "فیزیوتراپی", 'منطقه 1', 'مرکز درمانی 1']},
                 {id: 1, title: "مرکز درمانی 2", data: ['مرکز درمانی 2', "چشم پزشکی", "منطقه 10"]},
                 {id: 2, title: "بیمارستان امام سجاد", data: ['بیمارستان امام رضا 2', "منطقه 9", "خدمات فک و صورت"]},
                 {id: 3, title: "درمانگاه امام حسن", data: ['درمانگاه امام حسن', "منطقه 10", "آزمایشگاه"]},
@@ -51,46 +52,21 @@ export default class SearchMedicalCenter extends Component {
             ignoreCase: true,
             titleOfAlert: '',
             messageOfAlert: '',
+
         };
 
 
     }
 
 
-    showActionState() {
-        ActionSheet.show(
-            {
-                options: STATES,
-                cancelButtonIndex: CANCEL_INDEX_STATE,
-                destructiveButtonIndex: DESTRUCTIVE_INDEX_STATE,
-                title: "انتخاب منطقه"
-            },
-            buttonIndex => {
-                if (buttonIndex !== CANCEL_INDEX_STATE) {
-                    this.setState({clicked: STATES[buttonIndex]});
-                } else {
-                    this.setState({clicked: ""});
-                }
+    filterData(value) {
+        let filteredList = [];
+        for (let item of this.state.mainData) {
+            if (item.title.includes(value) || item.data.includes(value)) {
+                filteredList.push(item);
             }
-        )
-    }
-
-    showActionKind() {
-        ActionSheet.show(
-            {
-                options: KINDS,
-                cancelButtonIndex: CANCEL_INDEX_KIND,
-                destructiveButtonIndex: DESTRUCTIVE_INDEX_KIND,
-                title: "انواع مراکز درمانی"
-            },
-            buttonIndex => {
-                if (buttonIndex !== CANCEL_INDEX_KIND) {
-                    this.setState({clickedKind: KINDS[buttonIndex]});
-                } else {
-                    this.setState({clickedKind: ""});
-                }
-            }
-        )
+        }
+        this.setState({data: filteredList})
     }
 
     goToDetailsScreen(value) {
@@ -138,76 +114,6 @@ export default class SearchMedicalCenter extends Component {
                 </Header>
                 <Root>
                     <Content padder style={styles.content}>
-
-
-                        {/*<SearchableDropdown*/}
-
-                        {/*    onItemSelect={(item) => {*/}
-                        {/*        this.setState({medicalCenterSelectedValue: item.name}, () => {*/}
-                        {/*            alert(item.name)*/}
-                        {/*        })*/}
-                        {/*    }}*/}
-                        {/*    containerStyle={{padding: 5}}*/}
-                        {/*    itemStyle={{*/}
-                        {/*        padding: 10,*/}
-                        {/*        marginTop: 2,*/}
-                        {/*        backgroundColor: '#fafafa',*/}
-                        {/*        borderBottomColor: '#23b9b9',*/}
-                        {/*        borderTopColor: '#fafafa',*/}
-                        {/*        borderRightColor: '#fafafa',*/}
-                        {/*        borderLeftColor: '#fafafa',*/}
-                        {/*        borderWidth: 0.5,*/}
-                        {/*        borderRadius: 3,*/}
-                        {/*        textAlign: 'right'*/}
-                        {/*    }}*/}
-                        {/*    itemTextStyle={{color: '#222', textAlign: 'right'}}*/}
-                        {/*    itemsContainerStyle={{maxHeight: 140}}*/}
-                        {/*    items={this.state.medicalCenters}*/}
-                        {/*    defaultIndex={0}*/}
-                        {/*    resetValue={false}*/}
-                        {/*    chip={true}*/}
-                        {/*    textInputProps={*/}
-                        {/*        {*/}
-                        {/*            value: this.state.medicalCenterSelectedValue,*/}
-                        {/*            placeholder: "نام،خدمات،منطقه و ...",*/}
-                        {/*            underlineColorAndroid: "transparent",*/}
-                        {/*            style: {*/}
-                        {/*                padding: 12,*/}
-                        {/*                textAlign: 'right',*/}
-                        {/*                borderWidth: 1,*/}
-                        {/*                borderColor: '#ccc',*/}
-                        {/*                borderRadius: 5,*/}
-                        {/*            },*/}
-
-                        {/*        }*/}
-                        {/*    }*/}
-                        {/*    onTextChange={(text) => (*/}
-                        {/*        this.setState({medicalCenterSelectedValue: text}, () => {*/}
-                        {/*            this.renderList()*/}
-                        {/*        })*/}
-                        {/*    )}*/}
-                        {/*    listProps={*/}
-                        {/*        {*/}
-                        {/*            nestedScrollEnabled: true,*/}
-                        {/*        }*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<View style={styles.row}>*/}
-                        {/*    <List>*/}
-                        {/*        {*/}
-                        {/*            this.state.medicalCenterSearchResult.map((value, index) => {*/}
-                        {/*                return (*/}
-                        {/*                    <View key={index}>*/}
-                        {/*                        <ListItem>*/}
-                        {/*                            <Text>{value.name}</Text>*/}
-                        {/*                        </ListItem>*/}
-                        {/*                    </View>*/}
-                        {/*                )*/}
-                        {/*            })*/}
-                        {/*        }*/}
-                        {/*    </List>*/}
-                        {/*</View>*/}
-
                         <Item regular>
                             <Input placeholder='جستجوی نام مرکز،خدمات،منطقه و ...'
                                    placeholderTextColor={'#d0d0d0'}
@@ -216,7 +122,6 @@ export default class SearchMedicalCenter extends Component {
                                    onChangeText={(searchTerm) => (this.setState({searchTerm: searchTerm}))}
                             />
                         </Item>
-                        {/*<Item style={{alignContent:'flex-end',margin:2}}>*/}
                         <View style={styles.row}>
                             <Button transparent style={{alignSelf: 'flex-start', margin: 2, padding: 2}}
                                     onPress={() => this.props.navigation.navigate('AdvanceSearchScreen', {
@@ -226,7 +131,6 @@ export default class SearchMedicalCenter extends Component {
                                 <Text style={{textAlign: 'right', fontSize: 13, color: '#23b9b9'}}>جستجوی پیشرفته</Text>
                             </Button>
                         </View>
-                        {/*//</Item>*/}
                         <SearchableSectionList
                             style={{marginTop: 15}}
                             sections={this.state.data} searchTerm={this.state.searchTerm}
@@ -244,7 +148,7 @@ export default class SearchMedicalCenter extends Component {
                                                 {text: 'انصراف'},
                                                 {
                                                     text: 'جستجوی پزشک',
-                                                    onPress: () => this.props.navigation.navigate('SearchDoctorScreen', {medicalCenter:(title)}),
+                                                    onPress: () => this.props.navigation.navigate('SearchDoctorScreen', {medicalCenter: (title)}),
                                                     style: 'cancel',
                                                 },
                                                 {text: 'اطلاعات بیشتر', onPress: () => this.goToDetailsScreen(title)},
@@ -271,6 +175,7 @@ export default class SearchMedicalCenter extends Component {
                             )}
                             keyExtractor={item => item}
                         />
+
 
                     </Content>
                 </Root>

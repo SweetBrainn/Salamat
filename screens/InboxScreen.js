@@ -79,18 +79,27 @@ export default class InboxScreen extends Component {
     render() {
 
         return (
-            <Container>
-                <Header style={{backgroundColor: '#23b9b9'}}>
-                    <Right>
-                        <Button light bordered style={{padding: 2, color: '#fff', marginBottom: 5}}
-                                onPress={() => this.myNavigate()}>
-                            <Icon type='FontAwesome5' name='pen' style={{color: '#fff', fontSize: 20}}/>
-                            <Text> ارسال پیام </Text>
-                        </Button>
-                    </Right>
-
-                </Header>
+            <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
                 <Content>
+                    <Icon light bordered style={{
+                        alignSelf: 'flex-start',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 100,
+                        marginTop: 5,
+                        marginBottom:5,
+                        marginLeft:10,
+                        marginRight:5,
+                        color:'#fff'
+
+                    }}
+                          type='FontAwesome' name='edit'
+                          color={"#fff"}
+                            onPress={() => {
+                                // alert('pressed')
+                                this.state.navigator.navigate('ChatScreen')
+                            }}/>
+
                     <ScrollView>
                         <List>
                             {this.state.chatDetails.map((value, index) =>
@@ -118,13 +127,15 @@ export default class InboxScreen extends Component {
                                             <Body style={{width: '70%', height: '100%'}}>
                                                 <Text style={{
                                                     textAlign: 'right',
-                                                    borderColor: '#fff'
+                                                    borderColor: '#fff',
+                                                    color: '#f4f4f4'
                                                 }}>{value.senderName}</Text>
-                                                <Text style={{textAlign: 'right', borderColor: '#fff'}} note
+                                                <Text style={{textAlign: 'right', borderColor: '#fff', color: '#fff'}}
+                                                      note
                                                       numberOfLines={1}>{value.lastMessage}</Text>
                                             </Body>
                                             <Right style={{height: '100%'}}>
-                                                <Icon name='user' type='FontAwesome5' style={{color: '#b4b4b4'}}/>
+                                                <Icon name='user' type='FontAwesome5' style={{color: '#fff'}}/>
                                             </Right>
                                         </ListItem>
                                     </Swipeable>
@@ -159,7 +170,7 @@ InboxScreen.navigationOptions = {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(34,166,166,0.72)',
     },
     headerMenuIcon: {
         padding: 5,
@@ -190,13 +201,12 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 5,
         borderWidth: 1,
-        borderColor: '#c7c7c7',
+        borderColor: '#fff',
         borderRadius: 2,
         elevation: 8
     },
     header: {
-        backgroundColor: "#23b9b9",
-        height: 150,
+        backgroundColor: "rgba(34,166,166,0.72)",
     },
     body: {
         marginTop: 40,

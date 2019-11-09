@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Platform, Linking} from 'react-native';
 import {Container, Header, Title, Content, Footer, Fab, Button, Left, Right, Toast, Icon, Text} from 'native-base';
+import * as Permissions from 'expo-permissions';
+import {Notifications} from 'expo';
 import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
 
@@ -12,14 +14,11 @@ export default class HomeScreen extends Component {
         this.state = {
             active: true,
         }
+
     }
 
     render() {
-
-
         return (
-
-
             <Container>
                 <Header style={styles.header}>
                     <Left>
@@ -34,7 +33,6 @@ export default class HomeScreen extends Component {
                     </Right>
                 </Header>
                 <Content padder style={styles.content}>
-
                 </Content>
                 <Footer style={styles.footer}>
                     <View style={{flex: 1}}>

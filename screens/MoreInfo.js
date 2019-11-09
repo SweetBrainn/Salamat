@@ -55,7 +55,7 @@ export default class MoreInfo extends Component {
                 </Header>
                 <Content>
 
-                    <View style={styles.container}>
+                    <View style={[styles.container]}>
                         <View style={styles.header}></View>
                         <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
                         <View style={styles.body}>
@@ -96,7 +96,7 @@ MoreInfo.navigationOptions = {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        backgroundColor: '#fff',
+
     },
     headerMenuIcon: {
         padding:5,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         elevation: 8
     },
     header:{
-        backgroundColor: "#23b9b9",
+        backgroundColor: '#23b9b9',
         height:150,
     },
     body:{
@@ -140,8 +140,9 @@ const styles = StyleSheet.create({
     },
     bodyContent: {
         flex: 1,
-        margin:10,
+        margin:5,
         alignItems: 'center',
+        backgroundColor:'rgba(47,250,250,0.08)',
         padding:10,
         borderWidth: 2,
         borderColor: '#23b9b9'

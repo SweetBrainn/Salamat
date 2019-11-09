@@ -20,23 +20,19 @@ import VerifyScreen from "./screens/VerifyScreen";
 import SearchDoctorScreen from "./screens/SearchDoctorScreen";
 import AdvanceSearchScreen from "./screens/AdvanceSearchScreen"
 import DetailsScreen from "./screens/DetailsScreen"
-
+import RegisterScreen from "./screens/RegisterScreen";
 
 const SearchMedicalCenterNavigator = createStackNavigator({
     SearchMedicalCenter: {screen: SearchMedicalCenter},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen},
     SearchDoctorScreen: {screen: SearchDoctorScreen}
-},{
-    initialRouteName:'SearchMedicalCenter'
-});
+},);
 
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen}
-},{
-    initialRouteName:'SearchDoctorScreen'
 });
 
 const VerificationStackNavigator = createStackNavigator({
@@ -71,6 +67,7 @@ const HistoryStackNavigator = createStackNavigator({
     }
 });
 const AppDrawerNavigator = createDrawerNavigator({
+    RegisterScreen:{screen:RegisterScreen},
     SplashScreen: {screen: SplashScreen},
     HomeScreen: {screen: HomeScreen},
     ReserveScreen: {screen: ReserveScreen},
@@ -85,6 +82,7 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 }, {
     initialRouteName: 'SplashScreen',
+    // initialRouteName: 'RegisterScreen',
     // initialRouteName:'GetVerificationCodeScreen',
     // initialRouteName:'VerifyScreen',
     contentComponent: SideMenu,

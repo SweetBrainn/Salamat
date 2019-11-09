@@ -33,6 +33,11 @@ const MyPost = (props) => {
                     <Text style={styles.contentText}>{props.content}</Text>
                 </Body>
             </CardItem>
+            <CardItem style={{backgroundColor: props.myColor}}>
+                <Body>
+                    <Text style={styles.contentText}>{props.doctor}</Text>
+                </Body>
+            </CardItem>
         </Card>
     )
 }
@@ -41,9 +46,9 @@ export default class MedicalFilesScreen extends Component {
         super(props)
         this.state = {
             array: [
-                {title: "چهارشنبه 1398/8/1", content: "نسخه شماره 1"},
-                {title: "شنبه 1398/8/5", content: "نسخه شماره 2"},
-                {title: "جمعه 1398/8/7", content: "نسخه شماره 3"},
+                {title: "چهارشنبه 1398/8/1", content: "نسخه شماره 1",doctor:'محسن زنجانی متخصص قلب'},
+                {title: "شنبه 1398/8/5", content: "نسخه شماره 2",doctor:'محمدرضا سلیمانی جراح فک و صورت'},
+                {title: "جمعه 1398/8/7", content: "نسخه شماره 3",doctor:'محمد شریفی دندانپزشک '},
             ]
         }
     }
@@ -62,7 +67,7 @@ export default class MedicalFilesScreen extends Component {
     renderList(value, index) {
         if (index <= 3) {
             return (
-                <View key={index}>
+                <View key={index} >
                     <Swipeable rightButtons={[<Button onPress={() => {
                         this.deleteMessage({value, index})
                     }} style={{height: '100%', margin: 2}} danger>
@@ -70,8 +75,8 @@ export default class MedicalFilesScreen extends Component {
                     </Button>]}
                                onRightActionRelease={() => this.deleteMessage({value, index})}
                     >
-                        <MyPost title={value.content} content={value.title}
-                                myColor='#e2e2e2'/>
+                        <MyPost title={value.content} content={value.title} doctor={value.doctor}
+                                myColor={'rgba(34,166,166,0.72)'}/>
                     </Swipeable>
                 </View>
             )
@@ -85,7 +90,7 @@ export default class MedicalFilesScreen extends Component {
                            onRightActionRelease={() => this.deleteMessage({value, index})}
                 >
                     <MyPost title={value.content} content={value.title}
-                            myColor='#e2e2e2'/>
+                            myColor={'rgba(34,166,166,0.72)'}/>
                 </Swipeable>
             )
         }
@@ -95,19 +100,7 @@ export default class MedicalFilesScreen extends Component {
     render() {
 
         return (
-            <Container>
-                <Header transparent style={{backgroundColor: '#23b9b9'}}>
-                    <Left>
-                        <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.onBackPressed()}>
-                            {/*<Icon style={styles.headerMenuIcon} name='arrow-back'*/}
-                            {/*      onPress={() => this.onBackPressed()}/>*/}
-                        </Button>
-                    </Left>
-                    <Body>
-                        {/* <Title style={styles.headerText}>نسخه های من</Title> */}
-                    </Body>
-                </Header>
+            <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
                 <Content>
                     <ScrollView>
                         {this.state.array.map((value, index) =>
@@ -138,7 +131,7 @@ MedicalFilesScreen.navigationOptions = {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(47,246,246,0.06)',
     },
     headerMenuIcon: {
         padding: 5,
@@ -169,7 +162,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 5,
         borderWidth: 1,
-        borderColor: '#c7c7c7',
+        borderColor: 'rgba(34,166,166,0.72)',
         borderRadius: 2,
         elevation: 8
     },
@@ -190,17 +183,18 @@ const styles = StyleSheet.create({
     },
     post: {
         margin: 2,
+        padding: 2,
         flex: 0,
-        backgroundColor: '#e4e4e4'
+        backgroundColor: 'rgba(34,166,166,0.72)'
     },
     titleText: {
-        color: '#000',
+        color: '#fff',
         textAlign: 'left',
         alignSelf: 'flex-end',
         fontWeight: 'bold'
     },
     contentText: {
-        color: '#000',
+        color: '#fff',
         textAlign: 'left',
         alignSelf: 'flex-end',
         marginTop: 5,

@@ -79,7 +79,7 @@ export default class ShowReservesScreen extends Component {
                                onRightActionRelease={() => this.deleteMessage({value, index})}
                     >
                         <MyPost title={value.title} content={value.content}
-                                myColor='#50d177'/>
+                                myColor={'rgba(0,214,0,0.52)'}/>
                     </Swipeable>
                 </View>
             )
@@ -94,7 +94,7 @@ export default class ShowReservesScreen extends Component {
                                onRightActionRelease={() => this.deleteMessage({value, index})}
                     >
                         <MyPost title={value.title} content={value.content}
-                                myColor='#909090'/>
+                                myColor={'rgba(139,139,139,0.3)'}/>
                     </Swipeable>
                 </View>
             )
@@ -105,19 +105,7 @@ export default class ShowReservesScreen extends Component {
     render() {
 
         return (
-            <Container>
-                <Header transparent style={{backgroundColor: '#23b9b9'}}>
-                    {/* <Left>
-                        <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.onBackPressed()}>
-                            <Icon style={styles.headerMenuIcon} name='arrow-back'
-                                  onPress={() => this.onBackPressed()}/>
-                        </Button>
-                    </Left> */}
-                    <Body>
-                        {/* <Title style={styles.headerText}>نوبت های رزرو شده</Title> */}
-                    </Body>
-                </Header>
+            <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
                 <Content>
                     <View style={styles.container}>
                         <ScrollView>
@@ -150,7 +138,7 @@ ShowReservesScreen.navigationOptions = {
 const styles = StyleSheet.create({
     content: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(34,166,166,0.72)',
     },
     headerMenuIcon: {
         padding: 5,

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Platform, StatusBar} from 'react-native';
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import SearchMedicalCenter from "./SearchMedicalCenter";
+import SearchDoctorScreen from "./SearchDoctorScreen";
 import {
     Container,
     Header,
@@ -21,60 +23,17 @@ import MedicalFilesScreen from "./MedicalFilesScreen";
 import ShowReservesScreen from "./ShowReservesScreen";
 import InboxScreen from "./InboxScreen";
 
-const medicalItems = [
-    {
-        id: 1,
-        name: 'مرکز شماره 1',
-    },
-    {
-        id: 2,
-        name: 'مرکز شماره 2',
-    },
-    {
-        id: 3,
-        name: 'مرکز شماره 3',
-    },
-    {
-        id: 4,
-        name: 'بیمارستان میلاد',
-    },
-    {
-        id: 5,
-        name: 'بیمارستان امام خمینی',
-    },
-    {
-        id: 6,
-        name: 'درمانگاه مرکزی شهرداری',
-    },
-    {
-        id: 7,
-        name: 'بیمارستان شماره 4',
-    },
-    {
-        id: 8,
-        name: 'بیمارستان امام حسین',
-    },
-];
-const Doctors = []
+
 export default class ReserveScreen extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            selectedItems: [
-                {
-                    id: 7,
-                    name: 'Go',
-                },
-            ]
+            initialPage: 1,
+
         }
     }
 
-    search(text) {
-        if (text.length > 3) {
-            alert(text)
-        }
-    }
 
     render() {
         return (
@@ -88,14 +47,14 @@ export default class ReserveScreen extends Component {
                         </Button>
                     </Left>
                 </Header>
-                <Tabs locked>
-                    <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>انتخاب مرکز درمانی</Text></TabHeading>}>
+                <Tabs locked initialPage={this.state.initialPage}>
+                    <Tab heading={<TabHeading><Text style={{fontSize: 10}}>انتخاب مرکز درمانی</Text></TabHeading>}>
 
                     </Tab>
-                    <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>انتخاب پزشک</Text></TabHeading>}>
+                    <Tab heading={<TabHeading><Text style={{fontSize: 10}}>انتخاب پزشک</Text></TabHeading>}>
 
                     </Tab>
-                    <Tab heading={<TabHeading><Text style={{ fontSize: 10 }}>رزرو نوبت</Text></TabHeading>}>
+                    <Tab heading={<TabHeading><Text style={{fontSize: 10}}>رزرو نوبت</Text></TabHeading>}>
 
                     </Tab>
                 </Tabs>
@@ -410,10 +369,10 @@ const styles = StyleSheet.create({
 
     },
     headerIcon: {
-        paddingTop:5,
-        paddingBottom:5,
+        paddingTop: 5,
+        paddingBottom: 5,
         fontSize: 15,
-        color:'#fff'
+        color: '#fff'
     },
     icons: {
         color: '#fff',
