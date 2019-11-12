@@ -67,6 +67,7 @@ export default class ProfileScreen extends Component {
 
         return (
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={{
                     backgroundColor: '#23b9b9', shadowOffset: {height: 0, width: 0},
                     shadowOpacity: 0, shadowColor: '#23b9b9'
@@ -158,7 +159,7 @@ export default class ProfileScreen extends Component {
                     </View>
                 </Content>
                 <Footer style={styles.footer}>
-                    <View style={{flex: 1}}>
+                    <View style={{flex: 1, backgroundColor: '#fff'}}>
                         <Fab
                             active={this.state.active}
                             direction="up"
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 3
     },
-    footer:{
-    backgroundColor:'rgba(47,246,246,0.06)'
+    footer: {
+        backgroundColor: '#fff'
     }
 });

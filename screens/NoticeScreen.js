@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, ActivityIndicator, StatusBar} from 'react-native';
 import {
     Container,
     Header,
@@ -94,6 +94,7 @@ export default class NoticeScreen extends Component {
         return (
 
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}

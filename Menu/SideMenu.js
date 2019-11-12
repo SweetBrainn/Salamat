@@ -2,10 +2,41 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Image} from 'react-native';
 import {Content, Container, Footer, Button, Header, Icon, Right, List, ListItem, Left, Body} from 'native-base';
 
-
+const INDEX = 2; //index of homeScreen in drawer navigator
 export default class SideMenu extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            navigationState: {},
+            user: {}
+        }
+
+
+    }
+
+    getAccess(menuItem, role) {
+        if (role !== 'admin') {
+            if (menuItem === 'guide') {
+                return true
+            }
+            if (menuItem === 'notice') {
+                return true
+            }
+            if (menuItem === 'exit') {
+                return true
+            }
+            return false
+        } else if (role === 'admin') {
+            return true;
+        }
+    }
+
     render() {
+
+        let PARAMS = {};
         return (
+
             <View style={{height: '100%', width: '100%', backgroundColor: '#23b9b9'}}>
                 <View style={{height: '30%', width: '100%'}}>
                     <Image style={styles.headerImage}
@@ -13,6 +44,7 @@ export default class SideMenu extends Component {
                 </View>
                 <Content style={[styles.container, {marginTop: 5}]}>
                     <List>
+                        {this.getAccess('reserve', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
                             this.props.navigation.navigate('ReserveScreen')
                         }}>
@@ -22,7 +54,8 @@ export default class SideMenu extends Component {
                             <Body style={styles.body}>
                                 <Text style={styles.text}>نوبت دهی</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('personalInfo', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
                             this.props.navigation.navigate('HistoryScreen')
                         }}>
@@ -32,7 +65,8 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>پرونده شخصی</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('notice', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
                             this.props.navigation.navigate('InfoScreen')
                         }}>
@@ -42,9 +76,10 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>اطلاع رسانی</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('searchDoctor', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('SearchDoctorScreen',{medicalCenter:''})
+                            this.props.navigation.navigate('SearchDoctorScreen', {medicalCenter: ''})
                         }}>
                             <Right>
                                 <Icon type='FontAwesome' name='user-md' style={styles.icons}/>
@@ -52,7 +87,8 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>جستجوی پزشک</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('searchMedicalCenter', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
                             this.props.navigation.navigate('SearchMedicalCenterScreen')
                         }}>
@@ -62,7 +98,8 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>جستجوی مراکز درمانی</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('profile', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
                             this.props.navigation.navigate('ProfileScreen')
                         }}>
@@ -72,7 +109,8 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>حساب کاربری</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('guide', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
                             this.props.navigation.navigate('GuideScreen')
                         }}>
@@ -82,7 +120,8 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>راهنما</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
+                        {this.getAccess('exit', 'admin') &&
                         <ListItem icon style={styles.listItem}>
                             <Right>
                                 <Icon type='FontAwesome' name='power-off' style={styles.icons}/>
@@ -90,7 +129,7 @@ export default class SideMenu extends Component {
                             <Body>
                                 <Text style={styles.text}>خروج</Text>
                             </Body>
-                        </ListItem>
+                        </ListItem>}
                     </List>
                 </Content>
             </View>

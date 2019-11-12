@@ -87,18 +87,18 @@ export default class InboxScreen extends Component {
                         justifyContent: 'center',
                         borderRadius: 100,
                         marginTop: 5,
-                        marginBottom:5,
-                        marginLeft:10,
-                        marginRight:5,
-                        color:'#fff'
+                        marginBottom: 5,
+                        marginLeft: 10,
+                        marginRight: 5,
+                        color: '#fff'
 
                     }}
                           type='FontAwesome' name='edit'
                           color={"#fff"}
-                            onPress={() => {
-                                // alert('pressed')
-                                this.state.navigator.navigate('ChatScreen')
-                            }}/>
+                          onPress={() => {
+                              // alert('pressed')
+                              this.state.navigator.navigate('ChatScreen')
+                          }}/>
 
                     <ScrollView>
                         <List>

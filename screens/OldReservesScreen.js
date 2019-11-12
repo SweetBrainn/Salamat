@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, StatusBar} from 'react-native';
 import {
     Container,
     Header,
@@ -73,6 +73,7 @@ export default class OldReserveScreen extends Component {
     render() {
         return (
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header transparent style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}

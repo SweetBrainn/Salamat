@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView, Alert} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, Alert, StatusBar} from 'react-native';
 import Swipeable from 'react-native-swipeable-row'
 import {
     Container,
@@ -106,6 +106,7 @@ export default class ShowReservesScreen extends Component {
 
         return (
             <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Content>
                     <View style={styles.container}>
                         <ScrollView>

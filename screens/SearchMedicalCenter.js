@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
 import {SearchableFlatList, SearchableSectionList} from "react-native-searchable-list";
 import {Alert} from 'react-native'
 import Autocomplete from 'react-native-autocomplete-input';
@@ -38,7 +38,10 @@ export default class SearchMedicalCenter extends Component {
                 {id: 4, title: "بیمارستان امام رضا", data: ['بیمارستان امام رضا', "منطقه 11"]},
             ],
             data: [{
-                id: 0, title: "مرکز درمانی 1", data: ["دندان پزشکی", "جراحی فک", "فیزیوتراپی", 'منطقه 1', 'مرکز درمانی 1']},
+                id: 0,
+                title: "مرکز درمانی 1",
+                data: ["دندان پزشکی", "جراحی فک", "فیزیوتراپی", 'منطقه 1', 'مرکز درمانی 1']
+            },
                 {id: 1, title: "مرکز درمانی 2", data: ['مرکز درمانی 2', "چشم پزشکی", "منطقه 10"]},
                 {id: 2, title: "بیمارستان امام سجاد", data: ['بیمارستان امام رضا 2', "منطقه 9", "خدمات فک و صورت"]},
                 {id: 3, title: "درمانگاه امام حسن", data: ['درمانگاه امام حسن', "منطقه 10", "آزمایشگاه"]},
@@ -100,6 +103,7 @@ export default class SearchMedicalCenter extends Component {
     render() {
         return (
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -138,7 +142,7 @@ export default class SearchMedicalCenter extends Component {
                             ignoreCase={false}
                             renderSectionHeader={({section: {title}}) => (
                                 <ListItem
-                                    style={{width: '100%', height: 50, alignSelf: 'center', padding: 2, marginTop: 2}}
+                                    style={{width: '100%', height: 50, alignSelf: 'center', padding: 1, marginTop: 2}}
                                     onPress={() => {
                                         Alert.alert(
                                             title,
@@ -165,7 +169,7 @@ export default class SearchMedicalCenter extends Component {
                                             height: '100%',
                                             textAlign: 'right',
                                             fontSize: 15,
-                                            padding: 2
+                                            padding: 1
                                         }}>{title}</Text>
                                     </Body>
                                 </ListItem>

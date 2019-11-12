@@ -1,11 +1,44 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Platform, Linking} from 'react-native';
+import {StyleSheet, View, Linking, StatusBar, WebView} from 'react-native';
 import {Container, Header, Title, Content, Footer, Fab, Button, Left, Right, Toast, Icon, Text} from 'native-base';
 import * as Permissions from 'expo-permissions';
-import {Notifications} from 'expo';
-import Drawer from "react-native-drawer";
-import SideMenu from "../Menu/SideMenu";
+import HTML from 'react-native-render-html';
 
+const htmlPage = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>map</title>
+</head>
+<body>
+<Text>hiii</Text>
+<div style="flex-direction: row;flex: 1;justify-content: center;align-content: center">
+<div id="mapId" style="width: 500px;height:500px;position: center;padding-left: 600px">
+
+</div>
+</div>
+</body>
+
+<script src="http://tmap.tehran.ir/app/pub/index.php/application/api/key/47b38134190e432ea74623de53f91c34"></script>
+<script>
+    var map = null;
+    var marker;
+
+ $(document).ready(function () {
+        LoadMap('mapId')
+    });
+
+    function LoadMap(panelId) {
+        
+        map = new MPS.Map(panelId, {controls: ['Navigation'], zoom: 4});
+        marker = null;
+    }
+LoadMap('mapId')
+    
+</script>
+
+
+</html>`
 
 export default class HomeScreen extends Component {
 
@@ -17,9 +50,15 @@ export default class HomeScreen extends Component {
 
     }
 
+    componentDidMount(): void {
+
+    }
+
     render() {
+
         return (
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -32,8 +71,20 @@ export default class HomeScreen extends Component {
                         <Text style={styles.headerText}>نرم افزار سلامت</Text>
                     </Right>
                 </Header>
-                <Content padder style={styles.content}>
+
+                {/*<HTML html={htmlPage}/>*/}
+
+                <Content scrollEnabled={false} style={{flex: 1}}>
+
+                    <HTML
+                        html={htmlPage}
+                        style={{flex: 1}}
+                        mixedContentMode='always'
+                    />
+
                 </Content>
+
+
                 <Footer style={styles.footer}>
                     <View style={{flex: 1}}>
                     </View>
@@ -68,8 +119,9 @@ HomeScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
     content: {
-        flex: 1,
-        backgroundColor: '#fff',
+        width: '100%',
+        height: '100%',
+
     },
     headerMenuIcon: {
         padding: 5,

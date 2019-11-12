@@ -20,6 +20,7 @@
     "expo-asset": "^7.0.0",
     "expo-constants": "^7.0.0",
     "expo-font": "~7.0.0",
+    "expo-permissions": "latest",
     "expo-web-browser": "^7.0.0",
     "native-base": "^2.13.8",
     "react": "16.8.3",
@@ -41,6 +42,7 @@
     "react-native-searchable-list": "^1.1.3",
     "react-native-swipeable-row": "^0.8.1",
     "react-native-web": "^0.11.7",
+    "react-native-webview": "^7.5.0",
     "react-navigation": "^3.12.0",
     "react-persian": "^1.1.1"
   },
@@ -54,7 +56,8 @@
     "react-native-material-dropdown": "^0.11.1",
     "react-native-paper": "^3.1.1",
     "react-native-rtl-layout": "0.0.1",
-    "react-native-woodpicker": "0.0.17"
+    "react-native-woodpicker": "0.0.17",
+    "react-native-render-html": "latest"
   },
   "private": true
 }

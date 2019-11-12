@@ -27,6 +27,7 @@ export default class HistoryScreen extends Component {
     render() {
         return (
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -39,8 +40,9 @@ export default class HistoryScreen extends Component {
                         <Text style={styles.headerText}>پرونده شخصی</Text>
                     </Right>
                 </Header>
-                <Tabs tabBarPosition={'top'} locked tabBarUnderlineStyle={{height:5,backgroundColor:"#1e8080"}}tabBarActiveTextColor={'#1e8080'} >
-                    <Tab  heading={<TabHeading style={styles.tabHeading}><Icon
+                <Tabs tabBarPosition={'top'} tabContainerStyle={[styles.tabHeading]} locked
+                      tabBarUnderlineStyle={{height: 5, backgroundColor: "#1e8080"}} tabBarActiveTextColor={'#1e8080'}>
+                    <Tab heading={<TabHeading style={styles.tabHeading}><Icon
                         type={'FontAwesome5'} style={styles.tabIcon} name="notes-medical"/><Text style={styles.tabText}>نسخه
                         ها</Text></TabHeading>}>
                         <MedicalFilesScreen/>
@@ -178,12 +180,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     tabHeading: {
-        backgroundColor: 'rgba(47,246,246,0.06)'
+        backgroundColor: '#fff'
     },
     tabIcon: {
         fontSize: 20,
+        color: '#1e8080'
     },
     tabText: {
-        fontSize: 10
+        fontSize: 10,
+        color: '#1e8080'
     }
 });

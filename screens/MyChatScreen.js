@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView, Keyboard} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, Keyboard, StatusBar} from 'react-native';
 import {ChatScreen} from 'react-native-easy-chat-ui'
 
 import {
@@ -39,6 +39,7 @@ export default class MyChatScreen extends Component {
 
         return (
             <Container>
+                <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -62,7 +63,7 @@ export default class MyChatScreen extends Component {
                     </Form>
 
                 </Content>
-                <Footer>
+                <Footer style={styles.footer}>
 
                     <Fab
                         direction="up"
@@ -164,5 +165,8 @@ const styles = StyleSheet.create({
         padding: 2,
         marginTop: 10,
         marginBottom: 10
+    },
+    footer:{
+        backgroundColor:'#fff'
     }
 });

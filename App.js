@@ -86,6 +86,7 @@ const AppDrawerNavigator = createDrawerNavigator({
     // initialRouteName:'GetVerificationCodeScreen',
     // initialRouteName:'VerifyScreen',
     contentComponent: SideMenu,
+    user:{username:'empty',password:'empty',role:'stranger'},
     drawerPosition: 'left',
     drawerOpenRoute: 'DrawerOpen',
     drawerCloseRoute: 'DrawerClose',

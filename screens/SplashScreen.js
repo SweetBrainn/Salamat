@@ -18,7 +18,7 @@ export default class SplashScreen extends Component {
         const data = await this.performTimeConsumingTask();
 
         if (data !== null) {
-            this.props.navigation.navigate('HomeScreen');
+            this.props.navigation.navigate('HomeScreen', {user: {username: 'adrian', password: '1234', role: 'stranger'}});
         }
     }
 
@@ -26,7 +26,18 @@ export default class SplashScreen extends Component {
         return (
             <ImageBackground style={styles.container}
                              source={require('D:\\E\\react native projects\\salamat\\assets\\images\\splash.png')}
-                              onPress={()=>this.props.navigation.navigate('Home')}>
+                             onPress={() => {
+                                 // this.props.navigation.user.username = 'adrian';
+                                 // this.props.navigation.user.password = '1234';
+                                 // this.props.navigation.user.role = 'admin';
+                                 this.props.navigation.navigate('HomeScreen', {
+                                     user: {
+                                         username: 'adrian',
+                                         password: '1234',
+                                         role: 'stranger'
+                                     }
+                                 })
+                             }}>
             </ImageBackground>
         );
     }
