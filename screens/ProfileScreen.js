@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {StyleSheet, TextInput, View, Platform, StatusBar, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, TextInput, View, Platform, StatusBar, Image, ActivityIndicator} from 'react-native';
+import {Table, Row, Rows} from 'react-native-table-component';
 import {
     Container,
     Header,
@@ -29,6 +30,7 @@ export default class ProfileScreen extends Component {
             activeFab: true,
             TextInputEditable: false,
             TextInputColor: '#7a7a7a',
+            animated: true,
             username: 'M.Hoseini',
             name: ' محمد ',
             family: ' حسینی ',
@@ -37,7 +39,13 @@ export default class ProfileScreen extends Component {
             gender: 'مرد',
             FabIcon: 'edit',
             FabColor: '#23b9b9',
-            headerText: 'حساب کاربری'
+            headerText: 'حساب کاربری',
+            headers: ["شرکت بیمه", "نوع بیمه", "کد بیمه", "سریال بیمه"],
+            rows: [
+                ["تامین اجتماعی", "تکمیلی", "1055396", "7071468"],
+                ["تامین اجتماعی", "پایه", "884680", "1564334"],
+                ["تامین اجتماعی", "تکمیلی", "6889413", "4148430"],
+            ]
         };
     }
 
@@ -63,8 +71,6 @@ export default class ProfileScreen extends Component {
     }
 
     render() {
-
-
         return (
             <Container>
                 <StatusBar hidden translucent backgroundColor="transparent"/>
@@ -83,11 +89,15 @@ export default class ProfileScreen extends Component {
                         <Text style={styles.headerText}>{this.state.headerText}</Text>
                     </Right>
                 </Header>
-                <Content style={[styles.content]}>
+                <Content scrollEnabled={true} style={[styles.content]}>
                     <View style={styles.container}>
                         <View style={styles.header}></View>
                         <Image style={styles.avatar}
+                               onLoadEnd={() => {
+                                   this.setState({animated: !this.state.animated})
+                               }}
                                source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+                        <ActivityIndicator size={'small'} color={'gray'} animating={this.state.animated}/>
                         <View style={styles.body}>
                             <View style={styles.card}>
                                 <View style={styles.row}>
@@ -154,22 +164,55 @@ export default class ProfileScreen extends Component {
                                                editable={false}/>
                                     <Text style={styles.label}>جنسیت</Text>
                                 </View>
+                                <View style={styles.row}>
+                                    <Text style={styles.label}>
+                                        بیمه های من :
+                                    </Text>
+                                </View>
+                                <View style={{padding: 5, margin: 5, marginTop: 10}}>
+                                    <Table
+                                        borderStyle={{
+                                            borderWidth: 1,
+                                            borderRadius: 2,
+                                            margin: 2,
+                                            padding: 2,
+                                            borderColor: '#23b9b9'
+                                        }}>
+                                        <Row data={this.state.headers} flexArr={[2, 1, 1, 1]} style={{
+                                            alignContent: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                             textStyle={{
+                                                 textAlign: 'center',
+                                                 fontSize: 13,
+                                                 fontWeight: 'bold'
+                                             }}/>
+                                        <Rows data={this.state.rows} flexArr={[2, 1, 1, 1]} style={{
+                                            alignContent: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                              textStyle={{
+                                                  textAlign: 'center',
+                                                  fontSize: 13
+                                              }}/>
+                                    </Table>
+                                </View>
                             </View>
                         </View>
                     </View>
                 </Content>
-                <Footer style={styles.footer}>
-                    <View style={{flex: 1, backgroundColor: '#fff'}}>
-                        <Fab
-                            active={this.state.active}
-                            direction="up"
-                            style={{backgroundColor: this.state.FabColor}}
-                            position="bottomRight"
-                            onPress={() => this.FabClicked()}>
-                            <Icon type='FontAwesome' name={this.state.FabIcon}/>
-                        </Fab>
-                    </View>
-                </Footer>
+                {/*<Footer style={styles.footer}>*/}
+                {/*    <View style={{flex: 1, backgroundColor: '#fff'}}>*/}
+                {/*        <Fab*/}
+                {/*            active={this.state.active}*/}
+                {/*            direction="up"*/}
+                {/*            style={{backgroundColor: this.state.FabColor}}*/}
+                {/*            position="bottomRight"*/}
+                {/*            onPress={() => this.FabClicked()}>*/}
+                {/*            <Icon type='FontAwesome' name={this.state.FabIcon}/>*/}
+                {/*        </Fab>*/}
+                {/*    </View>*/}
+                {/*</Footer>*/}
             </Container>
         );
     }
@@ -223,6 +266,9 @@ const styles = StyleSheet.create({
         marginTop: 60
     },
     body: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
         marginTop: 5,
         backgroundColor: 'rgba(47,246,246,0.02)',
     },
@@ -245,24 +291,23 @@ const styles = StyleSheet.create({
         flex: 2,
     },
     card: {
+        flex: 1,
+        padding: 5,
         flexDirection: 'column',
         marginTop: 5,
         marginBottom: 5,
-        marginRight: 20,
-        marginLeft: 20,
+        marginRight: 10,
+        marginLeft: 10,
         borderRadius: 5,
         borderColor: '#d8d8d8',
         borderWidth: 1,
-        shadowColor: '#d8d8d8',
-        shadowOffset: {width: 0, height: 2},
-        shadowRadius: 2,
         elevation: 8
     },
     row: {
         flexDirection: 'row',
         marginRight: 5,
         marginLeft: 5,
-        marginTop: 10,
+        marginTop: 15,
         marginBottom: 3
     },
     footer: {

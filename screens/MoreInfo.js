@@ -14,11 +14,9 @@ import {
     Right,
     Body,
     Icon,
-    Text,
     List,
-
+    Text
 } from 'native-base';
-
 
 
 export default class MoreInfo extends Component {
@@ -56,9 +54,8 @@ export default class MoreInfo extends Component {
                 </Header>
                 <Content>
 
-                    <View style={[styles.container]}>
+                    <View style={{flex: 1}}>
                         <View style={styles.header}></View>
-                        <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
                         <View style={styles.body}>
                             <View style={styles.bodyContent}>
                                 <Card style={styles.card}>
@@ -69,6 +66,19 @@ export default class MoreInfo extends Component {
                                         <Text style={styles.questionInfo}>{this.state.question.moreInfo}</Text>
                                     </CardItem>
                                 </Card>
+                            </View>
+                            <View style={{
+                                flex: 1,
+                                margin: 2,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: '#fff',
+                                padding: 5,
+                                borderWidth: 2,
+                                borderColor: '#fff'
+                            }}>
+                                <Text style={styles.offer}>در صورت نیاز به اطلاعات بیشتر لطفا با شماره 1842 تماس
+                                    بگیرید</Text>
                             </View>
                         </View>
                     </View>
@@ -100,29 +110,38 @@ const styles = StyleSheet.create({
 
     },
     headerMenuIcon: {
-        padding:5,
+        padding: 5,
         color: '#fff',
     },
     headerText: {
-        padding:5,
+        padding: 5,
         fontSize: 20,
         color: '#fff',
-        alignSelf:'flex-end'
+        alignSelf: 'flex-end'
 
     },
     questionName: {
-        alignSelf:'flex-start',
-        justifyContent:'center',
-        alignContent:'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        alignContent: 'center',
         textAlign: 'right',
         fontSize: 10
     },
     questionInfo: {
-        alignSelf:'flex-start',
-        justifyContent:'center',
-        alignContent:'center',
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        alignContent: 'center',
         textAlign: 'right',
         fontSize: 10
+    },
+    offer: {
+        flex: 1,
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        alignContent: 'center',
+        textAlign: 'center',
+        fontSize: 10,
+        color: 'gray'
     },
     card: {
         marginRight: 10,
@@ -133,19 +152,19 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         elevation: 8
     },
-    header:{
+    header: {
         backgroundColor: '#23b9b9',
-        height:150,
+        height: 120,
     },
-    body:{
-        marginTop:40,
+    body: {
+        marginTop: 20,
     },
     bodyContent: {
         flex: 1,
-        margin:5,
+        margin: 5,
         alignItems: 'center',
-        backgroundColor:'rgba(47,250,250,0.08)',
-        padding:10,
+        backgroundColor: 'rgba(47,250,250,0.08)',
+        padding: 10,
         borderWidth: 2,
         borderColor: '#23b9b9'
     },

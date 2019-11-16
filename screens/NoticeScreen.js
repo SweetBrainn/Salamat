@@ -21,30 +21,34 @@ import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
 
 
-class Post extends Component{
+class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
             animate: props.animate,
-            postContentImage:props.postContentImage,
+            postContentImage: props.postContentImage,
             postContentText: props.postContentText,
-            keyValue : props.key
+            // keyValue: props.myKey
         }
     }
 
     render() {
         return (
-            <View key={this.state.keyValue}>
             <Card style={[styles.post]}>
-                <CardItem>
+                <CardItem header>
                     <Body>
-                        <ActivityIndicator color={'gray'} animating={this.state.animate} size={"small"} style={{alignSelf:'center'}}/>
+                        <ActivityIndicator color={'gray'} animating={this.state.animate} size={"small"}
+                                           style={{alignSelf: 'center'}}/>
                         <Image
                             onLoadEnd={() => {
                                 this.setState({animate: !this.state.animate})
                             }}
                             style={[styles.postImage]}
                             source={{uri: this.state.postContentImage}}/>
+                    </Body>
+                </CardItem>
+                <CardItem footer>
+                    <Body>
                         <Text style={styles.postText}>{this.state.postContentText}</Text>
                     </Body>
                 </CardItem>
@@ -57,11 +61,9 @@ class Post extends Component{
                 {/*    </Left>*/}
                 {/*</CardItem>*/}
             </Card>
-            </View>
         )
     }
 }
-
 
 
 export default class NoticeScreen extends Component {
@@ -74,16 +76,34 @@ export default class NoticeScreen extends Component {
             animate: true,
             posts: [
                 {
+                    id: 1,
                     image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=ni7ZvuXS7rA%253d&portalid=0',
                     text: 'گزارش تصویری از خدمت‌رسانی تیم پزشکی شرکت شهر سالم به زائرین اربعین حسینی'
                 },
                 {
+                    id: 2,
                     image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
                     text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
                 },
                 {
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=7AOJunaG-3s%253d&portalid=0',
-                    text: 'برگزاری جشن شکرانه شرکت شهر سالم سال 1397'
+                    id: 3,
+                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
+                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
+                },
+                {
+                    id: 4,
+                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
+                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
+                },
+                {
+                    id: 5,
+                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
+                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
+                },
+                {
+                    id: 6,
+                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
+                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
                 },
             ]
         }
@@ -140,12 +160,13 @@ export default class NoticeScreen extends Component {
                             this.state.posts.map((item, key) => (
 
                                 /*<MyPost animate={this.state.animate} postContentText={item.text}*/
-                               /*        postContentImage={item.image}*/
+                                /*        postContentImage={item.image}*/
                                 /*        likes={Math.round(Math.random() * 10) + 1}/>*/
-                                <Post animate={this.state.animate} postContentText={item.text} key={key}
-                                      postContentImage={item.image}/>
-
-                        ))}
+                                <View key={key}>
+                                    <Post animate={this.state.animate} postContentText={item.text}
+                                          postContentImage={item.image}/>
+                                </View>
+                            ))}
                     </ScrollView>
                 </Content>
             </Container>
@@ -195,16 +216,22 @@ const styles = StyleSheet.create({
     },
     postText: {
         textAlign: 'right',
-        marginTop: 5,
-        fontSize: 10
+        marginTop: 10,
+        padding: 1,
+        fontSize: 13,
+
     },
     post: {
-        margin: 5,
-        flex: 0
+        margin: 10,
+        flex: 0,
+        borderColor: '#23b9b9',
+        borderWidth: 5,
+        elevation: 8,
+
     },
     postImage: {
         height: 200,
-        width: 200,
+        width: 300,
         flex: 1,
         alignSelf: 'center'
     }

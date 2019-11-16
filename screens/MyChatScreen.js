@@ -32,16 +32,6 @@ export default class MyChatScreen extends Component {
         };
     }
 
-    async componentDidMount() {
-        await Font.loadAsync(
-            {
-                'IRANMarker': require('/assets/IRANMarker.ttf')
-            }
-        )
-
-        this.setState({fontLoaded: true})
-
-    }
 
     onBackPressed() {
         this.props.navigation.goBack()

@@ -162,18 +162,18 @@ export default class GuidScreen extends Component {
                 </Header>
                 <Content padder style={styles.content}>
                     <Card style={styles.card} cardItemPadding={14}>
-                        <CardItem header bordered>
+                        <CardItem style={styles.cardHeader} header bordered>
                             <Body style={styles.body}>
-                                <Text style={[styles.titleStyle, {fontSize: 15, fontWeight: 'bold',color:'#23b9b9'}]}>سوالات
+                                <Text style={[styles.titleStyle, {fontSize: 15, fontWeight: 'bold', color: '#23b9b9'}]}>سوالات
                                     متداول بیماران سامانه سلامت
                                 </Text>
                             </Body>
                         </CardItem>
-                        <List Indent>
+                        <List Indent style={{backgroundColor: '#fff'}}>
                             {
                                 this.state.questionsList.map((l, i) => (
                                     <ListItem
-                                        containerStyle={{backgroundColor:'rgba(37,180,180,0.42)'}}
+                                        containerStyle={{backgroundColor: 'rgba(37,180,180,0.42)'}}
                                         noIndent
                                         style={[styles.items,]}
                                         key={i}
@@ -187,9 +187,6 @@ export default class GuidScreen extends Component {
                                 ))
                             }
                         </List>
-                        {/*{*/}
-                        {/*    <Accordion dataArray={this.state.dataArray} expanded={0}/>*/}
-                        {/*}*/}
                     </Card>
                 </Content>
             </Container>
@@ -231,8 +228,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     card: {
-
-        backgroundColor: 'rgba(16,118,118,0.28)',
+        backgroundColor: '#fff',
         borderWidth: 2,
         borderColor: '#23a5a5',
         borderRadius: 1,
@@ -256,5 +252,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignContent: 'center'
+    },
+    cardHeader: {
+        borderWidth: 1,
+        borderBottomColor: '#1f9292',
+        borderColor: '#fff'
     }
 });

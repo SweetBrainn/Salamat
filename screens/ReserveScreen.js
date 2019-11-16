@@ -198,7 +198,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.skills),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.skills)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.skills)),
                                                 title: "انتخاب تخصص"
                                             },
                                             buttonIndex => {
@@ -238,7 +239,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.genders),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.genders)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.genders)),
                                                 title: "انتخاب جنسیت"
                                             },
                                             buttonIndex => {
@@ -278,7 +280,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.states),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.states)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.states)),
                                                 title: "انتخاب منطقه"
                                             },
                                             buttonIndex => {
@@ -319,7 +322,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.years),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.years)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.years)),
                                                 title: "انتخاب سال"
                                             },
                                             buttonIndex => {
@@ -359,7 +363,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.month),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.month)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.month)),
                                                 title: "انتخاب ماه"
                                             },
                                             buttonIndex => {
@@ -399,7 +404,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.days),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.days)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.days)),
                                                 title: "انتخاب روز"
                                             },
                                             buttonIndex => {
@@ -439,7 +445,8 @@ export default class ReserveScreen extends Component {
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.dates),
-                                                cancelButtonIndex: this.getCancelButtonIndex(this.getOptions(this.state.dates)),
+                                                cancelButtonIndex: this.getCancelButtonIndex(
+                                                    this.getOptions(this.state.dates)),
                                                 title: "انتخاب ساعت"
                                             },
                                             buttonIndex => {

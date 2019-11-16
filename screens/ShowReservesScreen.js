@@ -73,13 +73,13 @@ export default class ShowReservesScreen extends Component {
                 <View key={index}>
                     <Swipeable rightButtons={[<Button onPress={() => {
                         this.deleteMessage({value, index})
-                    }} style={{height: '100%',margin:2}} danger>
+                    }} style={{height: '100%', margin: 2}} danger>
                         <Icon name='trash'/>
                     </Button>]}
                                onRightActionRelease={() => this.deleteMessage({value, index})}
                     >
                         <MyPost title={value.title} content={value.content}
-                                myColor={'rgba(0,214,0,0.52)'}/>
+                                myColor={'rgba(0,193,92,0.71)'}/>
                     </Swipeable>
                 </View>
             )
@@ -88,7 +88,7 @@ export default class ShowReservesScreen extends Component {
                 <View key={index}>
                     <Swipeable rightButtons={[<Button onPress={() => {
                         this.deleteMessage({value, index})
-                    }} style={{height: '100%',margin:2}} danger>
+                    }} style={{height: '100%', margin: 2}} danger>
                         <Icon name='trash'/>
                     </Button>]}
                                onRightActionRelease={() => this.deleteMessage({value, index})}
