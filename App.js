@@ -48,6 +48,7 @@ const ChatStackNavigator = createStackNavigator({
         header: null
     }
 });
+
 const GuidStackNavigator = createStackNavigator({
     GuideScreen: {screen: GuidScreen},
     MoreInfo: {screen: MoreInfo}
@@ -66,9 +67,16 @@ const HistoryStackNavigator = createStackNavigator({
         header: null
     }
 });
+const SplashStackNavigator = createStackNavigator({
+    SplashScreen:{screen:SplashScreen},
+    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
+    VerifyScreen : {screen:VerifyScreen}
+},{
+    initialRouteName:'SplashScreen'
+});
 const AppDrawerNavigator = createDrawerNavigator({
     RegisterScreen:{screen:RegisterScreen},
-    SplashScreen: {screen: SplashScreen},
+    //SplashScreen: {screen: SplashScreen},
     HomeScreen: {screen: HomeScreen},
     ReserveScreen: {screen: ReserveScreen},
     HistoryScreen: HistoryStackNavigator,
@@ -81,7 +89,7 @@ const AppDrawerNavigator = createDrawerNavigator({
     VerifyScreen: VerificationStackNavigator
 
 }, {
-    initialRouteName: 'SplashScreen',
+    initialRouteName: 'HomeScreen',
     // initialRouteName: 'RegisterScreen',
     // initialRouteName:'GetVerificationCodeScreen',
     // initialRouteName:'VerifyScreen',
@@ -92,5 +100,14 @@ const AppDrawerNavigator = createDrawerNavigator({
     drawerCloseRoute: 'DrawerClose',
     drawerToggleRoute: 'DrawerToggle'
 });
-export default createAppContainer(AppDrawerNavigator);
+const AppSwitchNavigator = createSwitchNavigator({
+    SplashItem:SplashStackNavigator,
+    HomeItem:AppDrawerNavigator
+},{
+    initialRouteName:'SplashItem'
+});
+
+export default createAppContainer(AppSwitchNavigator);
+
+
 

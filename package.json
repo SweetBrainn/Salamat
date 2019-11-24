@@ -34,6 +34,7 @@
     "react-native-alert-pro": "^1.1.2",
     "react-native-asset": "^2.0.0",
     "react-native-dashboard": "0.0.4",
+    "react-native-dialog": "^5.6.0",
     "react-native-drawer": "^2.5.1",
     "react-native-dropdown-autocomplete": "^1.0.17",
     "react-native-dynamic-search-bar": "^0.2.1",

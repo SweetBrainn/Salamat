@@ -3,6 +3,7 @@ import {StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
 import {SearchableFlatList, SearchableSectionList} from "react-native-searchable-list";
 import {Alert} from 'react-native'
 import Autocomplete from 'react-native-autocomplete-input';
+import Dialog from "react-native-dialog";
 import {
     ActionSheet,
     Button,
@@ -20,12 +21,16 @@ import {
 } from 'native-base';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 
+
 export default class SearchMedicalCenter extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             selectedMedicalCenter: {id: 0, title: "", data: []},
+            title: '',
+            description: '',
+            visible: false,
             mainData: [
                 {
                     id: 0,
@@ -152,7 +157,8 @@ export default class SearchMedicalCenter extends Component {
                                                 {text: 'انصراف'},
                                                 {
                                                     text: 'جستجوی پزشک',
-                                                    onPress: () => this.props.navigation.navigate('SearchDoctorScreen', {medicalCenter: (title)}),
+                                                    onPress: () => this.props.navigation.navigate('SearchDoctorScreen',
+                                                        {medicalCenter: (title)}),
                                                     style: 'cancel',
                                                 },
                                                 {text: 'اطلاعات بیشتر', onPress: () => this.goToDetailsScreen(title)},
@@ -161,6 +167,7 @@ export default class SearchMedicalCenter extends Component {
                                         );
                                     }
                                     }
+
                                 >
                                     <Body>
                                         <Text style={{
@@ -169,7 +176,6 @@ export default class SearchMedicalCenter extends Component {
                                             height: '100%',
                                             textAlign: 'right',
                                             fontSize: 15,
-                                            padding: 1
                                         }}>{title}</Text>
                                     </Body>
                                 </ListItem>

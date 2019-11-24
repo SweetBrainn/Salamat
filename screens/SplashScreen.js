@@ -18,7 +18,9 @@ export default class SplashScreen extends Component {
         const data = await this.performTimeConsumingTask();
 
         if (data !== null) {
-            this.props.navigation.navigate('HomeScreen', {user: {username: 'adrian', password: '1234', role: 'stranger'}});
+            //this.props.navigation.navigate('HomeScreen', {user: {username: 'adrian', password: '1234', role:
+            // 'stranger'}});
+            this.props.navigation.navigate('GetVerificationCodeScreen', {user: {username: 'adrian', password: '1234', role: 'stranger'}});
         }
     }
 
@@ -30,7 +32,14 @@ export default class SplashScreen extends Component {
                                  // this.props.navigation.user.username = 'adrian';
                                  // this.props.navigation.user.password = '1234';
                                  // this.props.navigation.user.role = 'admin';
-                                 this.props.navigation.navigate('HomeScreen', {
+                                 // this.props.navigation.navigate('HomeScreen', {
+                                 //     user: {
+                                 //         username: 'adrian',
+                                 //         password: '1234',
+                                 //         role: 'stranger'
+                                 //     }
+                                 // })
+                                 this.props.navigation.navigate('GetVerificationCodeScreen', {
                                      user: {
                                          username: 'adrian',
                                          password: '1234',
