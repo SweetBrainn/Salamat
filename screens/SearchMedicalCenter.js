@@ -20,6 +20,8 @@ import {
     ListItem
 } from 'native-base';
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
+import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
 
 export default class SearchMedicalCenter extends Component {
@@ -31,6 +33,7 @@ export default class SearchMedicalCenter extends Component {
             title: '',
             description: '',
             visible: false,
+            medicalCenterTitle: '',
             mainData: [
                 {
                     id: 0,
@@ -149,22 +152,23 @@ export default class SearchMedicalCenter extends Component {
                                 <ListItem
                                     style={{width: '100%', height: 50, alignSelf: 'center', padding: 1, marginTop: 2}}
                                     onPress={() => {
-                                        Alert.alert(
-                                            title,
-                                            this.showAlert(title)
-                                            ,
-                                            [
-                                                {text: 'انصراف'},
-                                                {
-                                                    text: 'جستجوی پزشک',
-                                                    onPress: () => this.props.navigation.navigate('SearchDoctorScreen',
-                                                        {medicalCenter: (title)}),
-                                                    style: 'cancel',
-                                                },
-                                                {text: 'اطلاعات بیشتر', onPress: () => this.goToDetailsScreen(title)},
-                                            ],
-                                            {cancelable: true},
-                                        );
+                                        // Alert.alert(
+                                        //     title,
+                                        //     this.showAlert(title)
+                                        //     ,
+                                        //     [
+                                        //         {text: 'انصراف'},
+                                        //         {
+                                        //             text: 'جستجوی پزشک',
+                                        //             onPress: () => this.props.navigation.navigate('SearchDoctorScreen',
+                                        //                 {medicalCenter: (title)}),
+                                        //             style: 'cancel',
+                                        //         },
+                                        //         {text: 'اطلاعات بیشتر', onPress: () => this.goToDetailsScreen(title)},
+                                        //     ],
+                                        //     {cancelable: true},
+                                        // );
+                                        this.setState({medicalCenterTitle: title, visible: true})
                                     }
                                     }
 
@@ -186,6 +190,50 @@ export default class SearchMedicalCenter extends Component {
                             keyExtractor={item => item}
                         />
 
+
+                        <Modal
+                            width={300}
+                            onTouchOutside={() => {
+                                this.setState({visible: false});
+                            }}
+                            visible={this.state.visible}
+                            modalTitle={<ModalTitle style={styles.modalTitle} textStyle={styles.modalTitleText}
+                                                    title={this.state.medicalCenterTitle}/>}
+                            modalAnimation={new SlideAnimation({
+                                slideFrom: 'bottom'
+                            })}
+                            footer={
+                                <ModalFooter style={styles.modalFooter}>
+                                    <ModalButton
+                                        style={[styles.modalCancelButton]}
+                                        textStyle={styles.modalCancelButtonText}
+                                        text="جستجوی پزشک"
+                                        onPress={() => {
+                                            this.setState({visible: false})
+                                            this.props.navigation.navigate('SearchDoctorScreen',
+                                                {medicalCenter: (this.state.medicalCenterTitle)})
+                                        }}
+                                    />
+                                    <ModalButton
+                                        style={[styles.modalSuccessButton]}
+                                        textStyle={[styles.modalSuccessButtonText]}
+                                        text="اطلاعات بیشتر"
+                                        onPress={() => {
+                                            this.setState({visible: false})
+                                            this.goToDetailsScreen(this.state.medicalCenterTitle)
+                                        }
+                                        }
+                                    />
+                                </ModalFooter>
+                            }
+                        >
+                            <ModalContent style={styles.modalContent}>
+                                <View>
+                                    <Text style={[styles.modalCancelButtonText, {fontSize: 13}]}>{this.showAlert(
+                                        this.state.medicalCenterTitle)}</Text>
+                                </View>
+                            </ModalContent>
+                        </Modal>
 
                     </Content>
                 </Root>
@@ -247,5 +295,49 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start'
+    },
+    modalTitle: {
+        backgroundColor: '#23b9b9',
+    },
+    modalTitleText: {
+        color: '#fff',
+        textAlign: 'right'
+    },
+    modalFooter: {
+        padding: 2,
+        backgroundColor: 'rgba(47,246,246,0.06)'
+    },
+    modalCancelButton: {
+        flex: 1,
+        backgroundColor: '#fff',
+        borderRadius: 3,
+        borderColor: '#23b9b9',
+        borderWidth: 1,
+        padding: 2,
+        margin: 5
+    },
+    modalSuccessButton: {
+        flex: 1,
+        backgroundColor: '#23b9b9',
+        borderRadius: 3,
+        padding: 2,
+        margin: 5
+    },
+    modalSuccessButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 12,
+        textAlign: 'right'
+    },
+    modalCancelButtonText: {
+        color: '#23b9b9',
+        fontSize: 12,
+        textAlign: 'right'
+    },
+    modalContent: {
+        marginTop: 5,
+        padding: 2,
+        alignContent: 'center',
+        backgroundColor: 'rgba(47,246,246,0.06)'
     }
 });

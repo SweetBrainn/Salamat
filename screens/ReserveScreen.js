@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, StatusBar, TextInput} from 'react-native';
+import Modal, {ModalButton, ModalFooter, ModalTitle, SlideAnimation, ModalContent} from 'react-native-modals';
+import JalaliCalendarPicker from 'react-native-jalali-calendar-picker';
+import PersianCalendarPicker from 'react-native-persian-calendar-picker';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import SearchMedicalCenter from "./SearchMedicalCenter";
 import SearchDoctorScreen from "./SearchDoctorScreen";
@@ -24,24 +27,27 @@ import MedicalFilesScreen from "./MedicalFilesScreen";
 import ShowReservesScreen from "./ShowReservesScreen";
 import InboxScreen from "./InboxScreen";
 
+//date.format('jYYYY-jM-jD [is] YYYY-M-D')
 
 const CANCEL_TEXT = 'انصراف';
 export default class ReserveScreen extends Component {
+    _isMounted = false;
 
     constructor(props) {
         super(props);
         this.state = {
-            initialPage: 1,
-            doctorActive: false,
-            reserveActive: false,
-            medicalCenterActive: true,
+            //-----------------------ActionSheets states--------------------
             selectedSkill: {id: -100, value: ' انتخاب تخصص'},
             selectedState: {id: -100, value: 'انتخاب منطقه'},
             selectedGender: {id: -100, value: ' انتخاب جنسیت'},
-            selectedYear: {id: -100, value: ' انتخاب سال'},
-            selectedMonth: {id: -100, value: ' انتخاب ماه'},
-            selectedDay: {id: -100, value: ' انتخاب روز'},
-            selectedDate: {id: -100, value: ' انتخاب زمان'},
+            //-----------------------Modal states---------------------------
+            startDateModalVisible: false,
+            endDateModalVisible: false,
+            //-----------------------JalaliCalendar states------------------
+            minDate: new Date(),
+            selectedStartDate: null,
+            selectedEndDate: null,
+            //-----------------------BaseInfo States------------------------
             states: [
                 {id: 0, value: '1'},
                 {id: 1, value: '2'},
@@ -137,7 +143,16 @@ export default class ReserveScreen extends Component {
                 {id: 3, value: '16 تا 18'},
                 {id: 4, value: '18 تا 20'},
             ]
-        }
+        };
+        // this.onStartDateChange = this.onStartDateChange.bind(this);
+        (this: any).onStartDateChange = this.onStartDateChange.bind(this);
+        (this: any).onEndDateChange = this.onEndDateChange.bind(this);
+    }
+    onStartDateChange(date) {
+        this.setState({selectedStartDate: date});
+    }
+    onEndDateChange(date) {
+        this.setState({selectedEndDate: date});
     }
 
     getOptions(array) {
@@ -164,6 +179,12 @@ export default class ReserveScreen extends Component {
         return array.indexOf(CANCEL_TEXT)
     }
 
+    getMaxDate(){
+        let date = new Date();
+        date.setMonth(this.state.minDate.getUTCMonth() + 3)
+        return date;
+    }
+
     render() {
         return (
             <Container>
@@ -177,7 +198,7 @@ export default class ReserveScreen extends Component {
                         </Button>
                     </Left>
                     <Right>
-                        <Text style={styles.headerText}>نوبت دهی</Text>
+                        <Text style={styles.headerText}>جستجوی نوبت</Text>
                     </Right>
                 </Header>
                 <Root>
@@ -319,18 +340,7 @@ export default class ReserveScreen extends Component {
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
-                                        ActionSheet.show(
-                                            {
-                                                options: this.getOptions(this.state.years),
-                                                cancelButtonIndex: this.getCancelButtonIndex(
-                                                    this.getOptions(this.state.years)),
-                                                title: "انتخاب سال"
-                                            },
-                                            buttonIndex => {
-                                                if (buttonIndex <= this.state.years.length - 1)
-                                                    this.setState({selectedYear: this.state.years[buttonIndex]});
-                                            }
-                                        )
+                                        this.setState({startDateModalVisible: true})
                                     }}
                                     bordered style={{
                                     textAlign: 'center',
@@ -353,25 +363,26 @@ export default class ReserveScreen extends Component {
                                         borderWidth: 1,
                                         borderColor: '#23b9b9',
 
-                                    }}>{this.state.selectedYear.value}</Text>
+                                    }}>{this.state.selectedStartDate == null ? 'انتخاب تاریخ' : this.state.selectedStartDate.format('jYYYY-jM-jD')}</Text>
                                 </Button>
-                                <Text style={styles.label}>سال</Text>
+                                <Text style={styles.label}>از تاریخ</Text>
                             </View>
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
-                                        ActionSheet.show(
-                                            {
-                                                options: this.getOptions(this.state.month),
-                                                cancelButtonIndex: this.getCancelButtonIndex(
-                                                    this.getOptions(this.state.month)),
-                                                title: "انتخاب ماه"
-                                            },
-                                            buttonIndex => {
-                                                if (buttonIndex <= this.state.month.length - 1)
-                                                    this.setState({selectedMonth: this.state.month[buttonIndex]});
-                                            }
-                                        )
+                                        // ActionSheet.show(
+                                        //     {
+                                        //         options: this.getOptions(this.state.days),
+                                        //         cancelButtonIndex: this.getCancelButtonIndex(
+                                        //             this.getOptions(this.state.days)),
+                                        //         title: "انتخاب تاریخ"
+                                        //     },
+                                        //     buttonIndex => {
+                                        //         if (buttonIndex <= this.state.days.length - 1)
+                                        //             this.setState({selectedDay: this.state.days[buttonIndex]});
+                                        //     }
+                                        // )
+                                        this.setState({endDateModalVisible: true})
                                     }}
                                     bordered style={{
                                     textAlign: 'center',
@@ -384,6 +395,7 @@ export default class ReserveScreen extends Component {
                                     borderColor: '#fff',
 
                                 }}>
+
                                     <Text style={{
                                         padding: 1,
                                         textAlign: 'center',
@@ -394,91 +406,9 @@ export default class ReserveScreen extends Component {
                                         borderWidth: 1,
                                         borderColor: '#23b9b9',
 
-                                    }}>{this.state.selectedMonth.value}</Text>
+                                    }}>{this.state.selectedEndDate == null ? 'انتخاب تاریخ' : this.state.selectedEndDate.format('jYYYY-jM-jD')}</Text>
                                 </Button>
-                                <Text style={styles.label}>ماه</Text>
-                            </View>
-                            <View style={styles.row}>
-                                <Button
-                                    onPress={() => {
-                                        ActionSheet.show(
-                                            {
-                                                options: this.getOptions(this.state.days),
-                                                cancelButtonIndex: this.getCancelButtonIndex(
-                                                    this.getOptions(this.state.days)),
-                                                title: "انتخاب روز"
-                                            },
-                                            buttonIndex => {
-                                                if (buttonIndex <= this.state.days.length - 1)
-                                                    this.setState({selectedDay: this.state.days[buttonIndex]});
-                                            }
-                                        )
-                                    }}
-                                    bordered style={{
-                                    textAlign: 'center',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderRadius: 2,
-                                    margin: 1,
-                                    flex: 2,
-                                    borderWidth: 1,
-                                    borderColor: '#fff',
-
-                                }}>
-                                    <Text style={{
-                                        padding: 1,
-                                        textAlign: 'center',
-                                        borderRadius: 2,
-                                        flex: 2,
-                                        fontSize: 13,
-                                        color: '#23b9b9',
-                                        borderWidth: 1,
-                                        borderColor: '#23b9b9',
-
-                                    }}>{this.state.selectedDay.value}</Text>
-                                </Button>
-                                <Text style={styles.label}>روز</Text>
-                            </View>
-                            <View style={styles.row}>
-                                <Button
-                                    onPress={() => {
-                                        ActionSheet.show(
-                                            {
-                                                options: this.getOptions(this.state.dates),
-                                                cancelButtonIndex: this.getCancelButtonIndex(
-                                                    this.getOptions(this.state.dates)),
-                                                title: "انتخاب ساعت"
-                                            },
-                                            buttonIndex => {
-                                                if (buttonIndex <= this.state.dates.length - 1)
-                                                    this.setState({selectedDate: this.state.dates[buttonIndex]});
-                                            }
-                                        )
-                                    }}
-                                    bordered style={{
-                                    textAlign: 'center',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderRadius: 2,
-                                    margin: 1,
-                                    flex: 2,
-                                    borderWidth: 1,
-                                    borderColor: '#fff',
-
-                                }}>
-                                    <Text style={{
-                                        padding: 1,
-                                        textAlign: 'center',
-                                        borderRadius: 2,
-                                        flex: 2,
-                                        fontSize: 13,
-                                        color: '#23b9b9',
-                                        borderWidth: 1,
-                                        borderColor: '#23b9b9',
-
-                                    }}>{this.state.selectedDate.value}</Text>
-                                </Button>
-                                <Text style={styles.label}>ساعت</Text>
+                                <Text style={styles.label}>تا تاریخ</Text>
                             </View>
                         </Card>
 
@@ -753,13 +683,107 @@ export default class ReserveScreen extends Component {
                         {/*        </Button>*/}
                         {/*    </CardItem>*/}
                         {/*</Card>*/}
+
+                        {/* ----------------------StartDate Modal---------------------------- */}
+                        <Modal
+                            onTouchOutside={() => {
+                                this.setState({startDateModalVisible: false});
+                            }}
+                            visible={this.state.startDateModalVisible}
+                            modalTitle={<ModalTitle style={styles.modalTitle} textStyle={styles.modalTitleText}
+                                                    title="انتخاب تاریخ شروع"/>}
+                            modalAnimation={new SlideAnimation({
+                                slideFrom: 'bottom'
+                            })}
+                            footer={
+                                <ModalFooter style={styles.modalFooter}>
+                                    <ModalButton
+                                        style={styles.modalCancelButton}
+                                        textStyle={styles.modalCancelButtonText}
+                                        text="انصراف"
+                                        onPress={() => this.setState({startDateModalVisible: false})}
+                                    />
+                                    <ModalButton
+                                        style={styles.modalSuccessButton}
+                                        textStyle={styles.modalSuccessButtonText}
+                                        text="انتخاب"
+                                        onPress={() => this.setState({startDateModalVisible: false})}
+                                    />
+                                </ModalFooter>
+                            }
+                        >
+                            <ModalContent style={styles.modalContent}>
+                                <View>
+                                    <PersianCalendarPicker
+                                        enableSwipe={false}
+                                        initDate={this.state.minDate}
+                                        minDate={this.state.minDate}
+                                        maxDate={this.getMaxDate()}
+                                        previousTitle={'ماه قبل'}
+                                        nextTitle={'ماه بعد'}
+                                        selectedDayColor={'#23b9b9'}
+                                        selectedDayTextColor={'#fff'}
+                                        todayBackgroundColor={'#e6e6e6'}
+                                        textStyle={{color: '#000'}}
+                                        onDateChange={this.onStartDateChange}
+                                    />
+                                </View>
+                            </ModalContent>
+                        </Modal>
+                        {/* ----------------------EndDate Modal---------------------------- */}
+                        <Modal
+                            onTouchOutside={() => {
+                                this.setState({endDateModalVisible: false});
+                            }}
+                            visible={this.state.endDateModalVisible}
+                            modalTitle={<ModalTitle style={styles.modalTitle} textStyle={styles.modalTitleText}
+                                                    title="انتخاب تاریخ پایان"/>}
+                            modalAnimation={new SlideAnimation({
+                                slideFrom: 'bottom'
+                            })}
+                            footer={
+                                <ModalFooter style={styles.modalFooter}>
+                                    <ModalButton
+                                        style={styles.modalCancelButton}
+                                        textStyle={styles.modalCancelButtonText}
+                                        text="انصراف"
+                                        onPress={() => this.setState({endDateModalVisible: false})}
+                                    />
+                                    <ModalButton
+                                        style={styles.modalSuccessButton}
+                                        textStyle={styles.modalSuccessButtonText}
+                                        text="انتخاب"
+                                        onPress={() => this.setState({endDateModalVisible: false})}
+                                    />
+                                </ModalFooter>
+                            }
+                        >
+                            <ModalContent style={styles.modalContent}>
+                                <View>
+                                    <PersianCalendarPicker
+                                        enableSwipe={false}
+                                        initDate={this.state.minDate}
+                                        minDate={this.state.minDate}
+                                        maxDate={this.getMaxDate()}
+                                        previousTitle={'ماه قبل'}
+                                        nextTitle={'ماه بعد'}
+                                        selectedDayColor={'#23b9b9'}
+                                        selectedDayTextColor={'#fff'}
+                                        todayBackgroundColor={'#e6e6e6'}
+                                        textStyle={{color: '#000'}}
+                                        onDateChange={this.onEndDateChange}
+                                    />
+                                </View>
+                            </ModalContent>
+                        </Modal>
+
                     </Content>
                 </Root>
                 <Footer style={styles.footer}>
                     <Button style={styles.button} onPress={() => {
                         alert('clicked')
                     }}>
-                        <Text style={[{color: '#fff', fontSize: 15}]}>رزرو نوبت</Text>
+                        <Text style={[{color: '#fff', fontSize: 15}]}>جستجو</Text>
                     </Button>
                 </Footer>
             </Container>
@@ -792,7 +816,7 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     headerText: {
-        fontSize: 15,
+        fontSize: 20,
         padding: 5,
         color: '#fff',
 
@@ -880,5 +904,41 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: 'right'
 
+    },
+    modalTitle:{
+        backgroundColor: '#23b9b9'
+    },
+    modalTitleText:{
+        color:'#fff'
+    },
+    modalFooter:{
+        padding: 2,
+        backgroundColor:'rgba(47,246,246,0.06)'
+    },
+    modalCancelButton:{
+        backgroundColor: '#fff',
+        borderRadius: 3,
+        borderColor: '#23b9b9',
+        borderWidth: 1,
+        padding: 2,
+        margin: 5
+    },
+    modalSuccessButton:{
+        backgroundColor: '#23b9b9',
+        borderRadius: 3,
+        padding: 2,
+        margin: 5
+    },
+    modalSuccessButtonText:{
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 15
+    },
+    modalCancelButtonText:{
+        color: '#23b9b9',
+        fontSize: 15
+    },
+    modalContent:{
+        backgroundColor:'rgba(47,246,246,0.06)'
     }
 });

@@ -17,23 +17,25 @@ import {
     Icon,
     Text,
     List,
-
+    ListItem
 } from 'native-base';
+import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
+import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
 
 const MyPost = (props) => {
     return (
         <Card style={[styles.post]}>
-            <CardItem header style={{backgroundColor: props.myColor}}>
-                <Body>
-                    <Text style={styles.titleText}>{props.title}</Text>
-                </Body>
-            </CardItem>
-            <CardItem style={{backgroundColor: props.myColor}}>
-                <Body>
-                    <Text style={styles.contentText}>{props.content}</Text>
-                </Body>
-            </CardItem>
+                   <CardItem header style={{backgroundColor: props.myColor}}>
+                       <Body>
+                           <Text style={styles.titleText}>{props.title}</Text>
+                       </Body>
+                   </CardItem>
+                   <CardItem style={{backgroundColor: props.myColor}}>
+                       <Body>
+                           <Text style={styles.contentText}>{props.content}</Text>
+                       </Body>
+                   </CardItem>
         </Card>
     )
 }
@@ -41,6 +43,7 @@ export default class ShowReservesScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            visibleModal:false,
             array: [
                 {title: "چهارشنبه 1398/8/1", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
                 {title: "شنبه 1398/8/5", content: "رزرو نوبت با دکتر حسینی متخصص گوارش"},
@@ -58,7 +61,7 @@ export default class ShowReservesScreen extends Component {
     deleteMessage({value, index}) {
         delete this.state.array[index];
         this.setState({array: this.state.array}, () => {
-            // alert('حذف انجام شد')
+             alert('حذف انجام شد')
         })
 
     }
@@ -71,12 +74,41 @@ export default class ShowReservesScreen extends Component {
         if (index <= 3) {
             return (
                 <View key={index}>
-                    <Swipeable rightButtons={[<Button onPress={() => {
-                        this.deleteMessage({value, index})
+                    <Swipeable
+                        rightButtons={[<Button onPress={() => {
+                            Alert.alert(
+                                'لغو نوبت',
+                                'آیا از لغو این نوبت اطمینان دارید ؟',
+                                [
+                                    {
+                                        text: 'بله',
+                                        onPress: () => this.deleteMessage({value, index})
+                                    },
+                                    {
+                                        text: 'انصراف',
+                                        styles: 'cancel'
+                                    },
+                                ],
+                                {cancelable: true}
+                            )
                     }} style={{height: '100%', margin: 2}} danger>
-                        <Icon name='trash'/>
+                        <Icon type={'FontAwesome5'} name='calendar-times'/>
                     </Button>]}
-                               onRightActionRelease={() => this.deleteMessage({value, index})}
+                               onRightActionRelease={() => Alert.alert(
+                                   'لغو نوبت',
+                                   'آیا از لغو این نوبت اطمینان دارید ؟',
+                                   [
+                                       {
+                                           text: 'بله',
+                                           onPress: () => this.deleteMessage({value, index})
+                                       },
+                                       {
+                                           text: 'انصراف',
+                                           styles: 'cancel'
+                                       },
+                                   ],
+                                   {cancelable: true}
+                               )}
                     >
                         <MyPost title={value.title} content={value.content}
                                 myColor={'rgba(0,193,92,0.71)'}/>
@@ -86,13 +118,7 @@ export default class ShowReservesScreen extends Component {
         } else {
             return (
                 <View key={index}>
-                    <Swipeable rightButtons={[<Button onPress={() => {
-                        this.deleteMessage({value, index})
-                    }} style={{height: '100%', margin: 2}} danger>
-                        <Icon name='trash'/>
-                    </Button>]}
-                               onRightActionRelease={() => this.deleteMessage({value, index})}
-                    >
+                    <Swipeable>
                         <MyPost title={value.title} content={value.content}
                                 myColor={'rgba(139,139,139,0.3)'}/>
                     </Swipeable>
@@ -206,5 +232,41 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginTop: 5,
         fontSize: 15
+    },
+    modalTitle:{
+        backgroundColor: '#23b9b9'
+    },
+    modalTitleText:{
+        color:'#fff'
+    },
+    modalFooter:{
+        padding: 2,
+        backgroundColor:'rgba(47,246,246,0.06)'
+    },
+    modalCancelButton:{
+        backgroundColor: '#fff',
+        borderRadius: 3,
+        borderColor: '#23b9b9',
+        borderWidth: 1,
+        padding: 2,
+        margin: 5
+    },
+    modalSuccessButton:{
+        backgroundColor: '#23b9b9',
+        borderRadius: 3,
+        padding: 2,
+        margin: 5
+    },
+    modalSuccessButtonText:{
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 15
+    },
+    modalCancelButtonText:{
+        color: '#23b9b9',
+        fontSize: 15
+    },
+    modalContent:{
+        backgroundColor:'rgba(47,246,246,0.06)'
     }
 });

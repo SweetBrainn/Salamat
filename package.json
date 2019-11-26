@@ -42,6 +42,8 @@
     "react-native-easy-grid": "latest",
     "react-native-elements": "^1.2.6",
     "react-native-gesture-handler": "~1.3.0",
+    "react-native-jalali-calendar-picker": "^0.2.6",
+    "react-native-modals": "^0.19.9",
     "react-native-persian-calendar-picker": "^3.0.1",
     "react-native-picker-module": "^1.2.3",
     "react-native-picker-select": "^6.3.3",

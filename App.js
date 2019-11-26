@@ -107,7 +107,8 @@ const AppSwitchNavigator = createSwitchNavigator({
     initialRouteName:'SplashItem'
 });
 
-export default createAppContainer(AppSwitchNavigator);
+// export default createAppContainer(AppSwitchNavigator);
+export default createAppContainer(AppDrawerNavigator);
 
 
 
