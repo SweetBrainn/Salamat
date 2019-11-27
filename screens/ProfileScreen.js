@@ -6,7 +6,7 @@ import {
     Header,
     Title,
     Content,
-    Footer,
+    Accordion,
     FooterTab,
     Button,
     Card,
@@ -45,10 +45,49 @@ export default class ProfileScreen extends Component {
                 ["تامین اجتماعی", "تکمیلی", "1055396", "7071468"],
                 ["تامین اجتماعی", "پایه", "884680", "1564334"],
                 ["تامین اجتماعی", "تکمیلی", "6889413", "4148430"],
-            ]
-        };
+            ],
+            insurances: [
+                {
+                    insurance: "تامین اجتماعی",
+                    code: "11111111111",
+                    serial: "69969555555",
+                    insuranceType: "تکمیلی"
+                },
+                {
+                    insurance: "تامین اجتماعی",
+                    code: "8798765656",
+                    serial: "152045045698",
+                    insuranceType: "پایه"
+                },
+                {
+                    insurance: "تامین اجتماعی",
+                    code: "8798765656",
+                    serial: "152045045698",
+                    insuranceType: "پایه"
+                }
+            ],
+            insurancesForShow:
+                [{title: "First Element", content: "Lorem ipsum dolor sit amet"},
+                    {title: "Second Element", content: "Lorem ipsum dolor sit amet"},
+                    {title: "Third Element", content: "Lorem ipsum dolor sit amet"}
+                ]
+        }
+
     }
 
+
+    getContent() {
+        let data = null;
+        let array = [];
+        for (let item of this.state.insurances) {
+            let insuranceForShow = {
+                title: item.insurance,
+                content: " بیمه " + item.insuranceType + " با شماره " + item.serial + " و کد " + item.code
+            }
+            array.push(insuranceForShow)
+        }
+        this.setState({insurancesForShow: array})
+    }
 
     FabClicked() {
         if (!this.state.TextInputEditable) {
@@ -68,6 +107,14 @@ export default class ProfileScreen extends Component {
                 headerText: ' حساب کاربری'
             })
         }
+    }
+
+    componentWillMount(): void {
+        this.getContent()
+    }
+
+    componentDidMount(): void {
+        this.getContent()
     }
 
     render() {
@@ -169,34 +216,53 @@ export default class ProfileScreen extends Component {
                                         بیمه های من :
                                     </Text>
                                 </View>
-                                <View style={{padding: 5, margin: 5, marginTop: 10}}>
-                                    <Table
-                                        borderStyle={{
-                                            borderWidth: 1,
-                                            borderRadius: 2,
-                                            margin: 2,
-                                            padding: 2,
-                                            borderColor: '#23b9b9'
-                                        }}>
-                                        <Row data={this.state.headers} flexArr={[2, 1, 1, 1]} style={{
-                                            alignContent: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                             textStyle={{
-                                                 textAlign: 'center',
-                                                 fontSize: 13,
-                                                 fontWeight: 'bold'
-                                             }}/>
-                                        <Rows data={this.state.rows} flexArr={[2, 1, 1, 1]} style={{
-                                            alignContent: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                              textStyle={{
-                                                  textAlign: 'center',
-                                                  fontSize: 13
-                                              }}/>
-                                    </Table>
-                                </View>
+                                {/*<View style={{padding: 5, margin: 5, marginTop: 10}}>*/}
+                                {false && <Table
+                                    borderStyle={{
+                                        borderWidth: 1,
+                                        borderRadius: 2,
+                                        margin: 2,
+                                        padding: 2,
+                                        borderColor: '#23b9b9'
+                                    }}>
+                                    <Row data={this.state.headers} flexArr={[2, 1, 1, 1]} style={{
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                         textStyle={{
+                                             textAlign: 'center',
+                                             fontSize: 13,
+                                             fontWeight: 'bold'
+                                         }}/>
+                                    <Rows data={this.state.rows} flexArr={[2, 1, 1, 1]} style={{
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                          textStyle={{
+                                              textAlign: 'center',
+                                              fontSize: 13
+                                          }}/>
+                                </Table>}
+                                <Accordion style={{margin:5,flexDirection: 'column-reverse', flex: 1}}
+                                           dataArray={this.state.insurancesForShow}
+                                           headerStyle={{
+                                               backgroundColor: "rgba(35,185,185,0.72)",
+                                               flexDirection: 'row-reverse'
+                                           }}
+                                           contentStyle={{
+                                               backgroundColor: "rgba(49,255,255,0)",
+                                               flexDirection: 'row-reverse',
+                                               alignContent: 'flex-start',
+                                               backfaceVisibility:'hidden',
+                                               alignItems:'flex-start',
+                                               borderColor:'#23b9b9',
+                                               borderWidth:1
+
+                                           }}
+                                           iconStyle={{color: "white"}}
+                                           expandedIconStyle={{color: "white"}}
+                                />
+                                {/*</View>*/}
                             </View>
                         </View>
                     </View>

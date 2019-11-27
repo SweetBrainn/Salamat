@@ -22,7 +22,9 @@ import MedicalFilesScreen from "./MedicalFilesScreen";
 import ShowReservesScreen from "./ShowReservesScreen";
 import OldReserveScreen from "./OldReservesScreen";
 import InboxScreen from "./InboxScreen";
+import HomeScreen from "./HomeScreen";
 
+const homeScreen = HomeScreen;
 export default class HistoryScreen extends Component {
     render() {
         return (

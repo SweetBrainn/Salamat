@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, StatusBar} from 'react-native';
+import {StyleSheet, View, Text, StatusBar} from 'react-native';
 import {
     Container,
     Header,
@@ -15,7 +15,6 @@ import {
     Body,
     Icon,
     List,
-    Text
 } from 'native-base';
 
 

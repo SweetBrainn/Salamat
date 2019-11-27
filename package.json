@@ -25,6 +25,7 @@
     "expo-asset": "^7.0.0",
     "expo-constants": "^7.0.0",
     "expo-font": "~7.0.0",
+    "expo-intent-launcher": "^7.0.0",
     "expo-permissions": "latest",
     "expo-web-browser": "^7.0.0",
     "native-base": "^2.13.8",
@@ -59,16 +60,18 @@
   },
   "devDependencies": {
     "babel-preset-expo": "^7.0.0",
+    "expo-location": "latest",
     "jest-expo": "^35.0.0",
     "react-native-autocomplete-input": "^4.1.0",
     "react-native-awesome-alert": "^0.4.5",
+    "react-native-device-info": "^5.3.1",
     "react-native-dropdown": "0.0.6",
     "react-native-maps": "^0.26.1",
     "react-native-material-dropdown": "^0.11.1",
     "react-native-paper": "^3.1.1",
+    "react-native-render-html": "latest",
     "react-native-rtl-layout": "0.0.1",
-    "react-native-woodpicker": "0.0.17",
-    "react-native-render-html": "latest"
+    "react-native-woodpicker": "0.0.17"
   },
   "private": true
 }
