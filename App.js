@@ -68,11 +68,12 @@ const HistoryStackNavigator = createStackNavigator({
     }
 });
 const SplashStackNavigator = createStackNavigator({
-    SplashScreen:{screen:SplashScreen},
-    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
+    // SplashScreen:{screen:SplashScreen},
+    // GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
     VerifyScreen : {screen:VerifyScreen}
 },{
-    initialRouteName:'SplashScreen'
+    initialRouteName:'VerifyScreen'
+    // initialRouteName:'SplashScreen'
 });
 const AppDrawerNavigator = createDrawerNavigator({
     RegisterScreen:{screen:RegisterScreen},
@@ -107,8 +108,8 @@ const AppSwitchNavigator = createSwitchNavigator({
     initialRouteName:'SplashItem'
 });
 
-// export default createAppContainer(AppSwitchNavigator);
-export default createAppContainer(AppDrawerNavigator);
+export default createAppContainer(AppSwitchNavigator);
+// export default createAppContainer(AppDrawerNavigator);
 
 
 

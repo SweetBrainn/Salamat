@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView, ActivityIndicator, StatusBar} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, ActivityIndicator, StatusBar, AsyncStorage} from 'react-native';
 import {
     Container,
     Header,
@@ -20,6 +20,7 @@ import {
 import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
 
+const GETNOTICES = '/api/GetNotices';
 
 class Post extends Component {
     constructor(props) {
@@ -74,6 +75,9 @@ export default class NoticeScreen extends Component {
         super(props);
         this.state = {
             animate: true,
+            progressModalVisible: false,
+            token: null,
+            baseUrl: null,
             posts: [
                 {
                     id: 1,
@@ -105,8 +109,42 @@ export default class NoticeScreen extends Component {
                     image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
                     text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
                 },
-            ]
+            ],
+            notices: null
         }
+    }
+
+
+    async componentWillMount(): void {
+        var token = await AsyncStorage.getItem('token');
+        this.setState({baseUrl: this.props.navigation.getParam('baseUrl'), token: token}, () => {
+            // alert(this.state.baseUrl + '    ' + this.state.token)
+            this.getNotices()
+        })
+    }
+
+    getNotices() {
+        fetch(this.state.baseUrl + GETNOTICES, {
+            method: 'GET',
+            headers: {'content-type': 'application/json'},
+        }).then((response) => response.json())
+            .then(async (responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['data'];
+                        alert(JSON.stringify(data))
+                        this.setState({progressModalVisible: false, notices: data})
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert('خطا در اتصال به سرویس')
+                    })
+                }
+            })
+            .catch((error) => {
+                // console.error(error)
+                alert(error)
+            })
     }
 
     render() {
@@ -124,7 +162,10 @@ export default class NoticeScreen extends Component {
                         </Button>
                     </Left>
                     <Right>
-                        <Text style={styles.headerText}>اطلاع رسانی</Text>
+                        <Text onPress={async () => {
+                            var token = await AsyncStorage.getItem('token');
+                            alert(token)
+                        }} style={styles.headerText}>اطلاع رسانی</Text>
                     </Right>
                 </Header>
                 <Content padder style={styles.content}>
@@ -163,8 +204,8 @@ export default class NoticeScreen extends Component {
                                 /*        postContentImage={item.image}*/
                                 /*        likes={Math.round(Math.random() * 10) + 1}/>*/
                                 <View key={key}>
-                                    <Post animate={this.state.animate} postContentText={item.text}
-                                          postContentImage={item.image}/>
+                                    <Post animate={this.state.animate} postContentText={item.title}
+                                          postContentImage={'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=ni7ZvuXS7rA%253d&portalid=0'}/>
                                 </View>
                             ))}
                     </ScrollView>

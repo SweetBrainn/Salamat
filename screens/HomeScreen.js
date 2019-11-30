@@ -4,12 +4,12 @@ import {Container, Header, Title, Content, Footer, Fab, Button, Left, Right, Toa
 import HTML from 'react-native-render-html';
 import * as Permissions from 'expo-permissions'
 import * as Location from 'expo-location';
+
+const AsyncStorage = require('react-native').AsyncStorage;
 import Constants from 'expo-constants'
 import * as IntentLauncher from 'expo-intent-launcher';
-import DeviceInfo from 'react-native-device-info'
-import apiAddress from "apiAddress.json";
+// import DeviceInfo from 'react-native-device-info'
 
-const AUTHENTICATE_ADDRESS = apiAddress.base + apiAddress.authenticate ;
 export default class HomeScreen extends Component {
 
     constructor(props) {
@@ -17,11 +17,13 @@ export default class HomeScreen extends Component {
         this.state = {
             active: true,
             errorMessage: '',
+            user: null,
+            baseUrl:null
         }
 
     }
 
-    openSettings = () => {
+    openSettings = async () => {
         if (Platform.OS == 'ios') {
             Linking.openURL('app-settings:');
         } else {
@@ -29,6 +31,7 @@ export default class HomeScreen extends Component {
                 IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
             );
         }
+
     }
 
     _getLocationAsync = async () => {
@@ -61,56 +64,20 @@ export default class HomeScreen extends Component {
 
     }
 
-     componentWillMount(): void {
-        let data={username: 'testUsername',deviceId:DeviceInfo.getUniqueId().toString()}
+    async componentWillMount(): void {
         if (Platform.OS === 'android' && !Constants.isDevice) {
             this.setState({
                 errorMessage: 'try on device'
             })
         } else {
-             this._getLocationAsync();
+            this._getLocationAsync();
         }
-
-        fetch(AUTHENTICATE_ADDRESS, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "same-origin",
-        }).then(response => {
-            return response.json()
-        })
-            .then(jsonData => {
-                alert(JSON.stringify(jsonData))
-            })
-            .catch(err => {
-                alert(err.message.toString())
-            })
+        this.setState({user:this.props.navigation.getParam('user'),baseUrl:this.props.navigation.getParam('baseUrl')})
     }
 
-
-    // async alertIfLocationDisabledAsync() {
-    //     const { status } = await Permissions.getAsync(Permissions.LOCATION);
-    //     if (status !== 'granted') {
-    //         Alert.alert(
-    //             '',
-    //             'لطفا به برنامه برای دسترسی به موقعیت فعلی خود دسترسی دهید'
-    //             ,
-    //             [
-    //                 {text: 'انصراف',
-    //                 styles:'cancel'
-    //                 },
-    //                 {text: 'تایید', onPress: () => Linking.openURL('app-settings:')},
-    //             ],
-    //             {cancelable: true},
-    //         );
-    //
-    //     }
-    // }
-    // componentDidMount(): void {
-    //     this.alertIfLocationDisabledAsync()
-    // }
+    componentDidMount(): void {
+        this.setState({user:this.props.navigation.getParam('user'),baseUrl:this.props.navigation.getParam('baseUrl')})
+    }
 
     render() {
 
