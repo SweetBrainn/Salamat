@@ -19,6 +19,7 @@ import {
 } from 'native-base';
 import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
+import Modal, {ModalContent, SlideAnimation} from "react-native-modals";
 
 const GETNOTICES = '/api/GetNotices';
 
@@ -29,40 +30,46 @@ class Post extends Component {
             animate: props.animate,
             postContentImage: props.postContentImage,
             postContentText: props.postContentText,
+            showForPatient: props.showForPatient,
+            showForActor: props.showForActor
             // keyValue: props.myKey
         }
     }
 
     render() {
-        return (
-            <Card style={[styles.post]}>
-                <CardItem header>
-                    <Body>
-                        <ActivityIndicator color={'gray'} animating={this.state.animate} size={"small"}
-                                           style={{alignSelf: 'center'}}/>
-                        <Image
-                            onLoadEnd={() => {
-                                this.setState({animate: !this.state.animate})
-                            }}
-                            style={[styles.postImage]}
-                            source={{uri: this.state.postContentImage}}/>
-                    </Body>
-                </CardItem>
-                <CardItem footer>
-                    <Body>
-                        <Text style={styles.postText}>{this.state.postContentText}</Text>
-                    </Body>
-                </CardItem>
-                {/*<CardItem>*/}
-                {/*    <Left>*/}
-                {/*        <Button transparent>*/}
-                {/*            <Icon type='FontAwesome' name="heart" style={{color: '#ba150b'}}/>*/}
-                {/*            <Text style={{color: '#ba150b'}}>{props.likes} نفر پسندیده اند</Text>*/}
-                {/*        </Button>*/}
-                {/*    </Left>*/}
-                {/*</CardItem>*/}
-            </Card>
-        )
+        if (this.state.showForPatient) {
+            return (
+
+                <Card style={[styles.post]}>
+                    <CardItem header>
+                        <Body>
+                            <ActivityIndicator color={'gray'} animating={this.state.animate} size={"small"}
+                                               style={{alignSelf: 'center'}}/>
+                            <Image
+                                onLoadEnd={() => {
+                                    this.setState({animate: !this.state.animate})
+                                }}
+                                style={[styles.postImage]}
+                                source={{uri: this.state.postContentImage}}/>
+                        </Body>
+                    </CardItem>
+                    <CardItem footer>
+                        <Body>
+                            <Text style={styles.postText}>{this.state.postContentText}</Text>
+                        </Body>
+                    </CardItem>
+                    {/*<CardItem>*/}
+                    {/*    <Left>*/}
+                    {/*        <Button transparent>*/}
+                    {/*            <Icon type='FontAwesome' name="heart" style={{color: '#ba150b'}}/>*/}
+                    {/*            <Text style={{color: '#ba150b'}}>{props.likes} نفر پسندیده اند</Text>*/}
+                    {/*        </Button>*/}
+                    {/*    </Left>*/}
+                    {/*</CardItem>*/}
+                </Card>
+            );
+        }
+
     }
 }
 
@@ -78,79 +85,53 @@ export default class NoticeScreen extends Component {
             progressModalVisible: false,
             token: null,
             baseUrl: null,
-            posts: [
-                {
-                    id: 1,
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=ni7ZvuXS7rA%253d&portalid=0',
-                    text: 'گزارش تصویری از خدمت‌رسانی تیم پزشکی شرکت شهر سالم به زائرین اربعین حسینی'
-                },
-                {
-                    id: 2,
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
-                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
-                },
-                {
-                    id: 3,
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
-                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
-                },
-                {
-                    id: 4,
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
-                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
-                },
-                {
-                    id: 5,
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
-                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
-                },
-                {
-                    id: 6,
-                    image: 'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=AdbFseiVurA%253d&portalid=0',
-                    text: 'سرپرست توسعه منابع انسانی شهرداری تهران از ستاد مرکزی شرکت شهرسالم بازدید کرد'
-                },
-            ],
             notices: null
         }
     }
 
-
     async componentWillMount(): void {
         var token = await AsyncStorage.getItem('token');
-        this.setState({baseUrl: this.props.navigation.getParam('baseUrl'), token: token}, () => {
-            // alert(this.state.baseUrl + '    ' + this.state.token)
+        var baseUrl = await AsyncStorage.getItem('baseUrl')
+        this.setState({baseUrl: baseUrl, token: token}, () => {
             this.getNotices()
         })
     }
 
-    getNotices() {
-        fetch(this.state.baseUrl + GETNOTICES, {
+
+    async getNotices() {
+        this.setState({progressModalVisible: true})
+        await fetch(this.state.baseUrl + GETNOTICES, {
             method: 'GET',
-            headers: {'content-type': 'application/json'},
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
         }).then((response) => response.json())
-            .then(async (responseData) => {
+            .then((responseData) => {
                 if (responseData['StatusCode'] === 200) {
                     if (responseData['Data'] != null) {
-                        let data = responseData['data'];
-                        alert(JSON.stringify(data))
-                        this.setState({progressModalVisible: false, notices: data})
+                        let data = responseData['Data'];
+                        this.setState({progressModalVisible: false}, () => {
+                            this.setState({notices: data})
+                        })
                     }
                 } else {
                     this.setState({progressModalVisible: false}, () => {
                         alert('خطا در اتصال به سرویس')
                     })
+
                 }
             })
             .catch((error) => {
-                // console.error(error)
-                alert(error)
+                console.error(error)
+                // alert(error)
             })
     }
 
+
     render() {
-
         return (
-
             <Container>
                 <StatusBar hidden translucent backgroundColor="transparent"/>
                 <Header style={{backgroundColor: '#23b9b9'}}>
@@ -162,10 +143,7 @@ export default class NoticeScreen extends Component {
                         </Button>
                     </Left>
                     <Right>
-                        <Text onPress={async () => {
-                            var token = await AsyncStorage.getItem('token');
-                            alert(token)
-                        }} style={styles.headerText}>اطلاع رسانی</Text>
+                        <Text style={styles.headerText}>اطلاع رسانی</Text>
                     </Right>
                 </Header>
                 <Content padder style={styles.content}>
@@ -197,21 +175,34 @@ export default class NoticeScreen extends Component {
                     {/*    </CardItem>*/}
                     {/*</Card>*/}
                     <ScrollView>
-                        {
-                            this.state.posts.map((item, key) => (
-
-                                /*<MyPost animate={this.state.animate} postContentText={item.text}*/
-                                /*        postContentImage={item.image}*/
-                                /*        likes={Math.round(Math.random() * 10) + 1}/>*/
-                                <View key={key}>
-                                    <Post animate={this.state.animate} postContentText={item.title}
-                                          postContentImage={'http://shahresalem.tehran.ir/LinkClick.aspx?fileticket=ni7ZvuXS7rA%253d&portalid=0'}/>
-                                </View>
-                            ))}
+                        {this.state.notices != null ?
+                        this.state.notices.map((item, key) => (
+                            /*<MyPost animate={this.state.animate} postContentText={item.text}*/
+                            /*        postContentImage={item.image}*/
+                            /*        likes={Math.round(Math.random() * 10) + 1}/>*/
+                            <View key={key}>
+                                <Post animate={this.state.animate} postContentText={item.title}
+                                      showForPatient={item.isViewPatient} showForActor={item.isViewActor}
+                                      postContentImage={'http://shahresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(2).JPG'}/>
+                            </View>
+                        )) : null}
                     </ScrollView>
+                    <Modal style={{opacity: 0.7}}
+                           width={300}
+                           visible={this.state.progressModalVisible}
+                           modalAnimation={new SlideAnimation({
+                               slideFrom: 'bottom'
+                           })}
+                    >
+                        <ModalContent style={styles.modalContent}>
+                            <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>
+                        </ModalContent>
+                    </Modal>
                 </Content>
             </Container>
         );
+
+
     }
 
 
@@ -275,5 +266,11 @@ const styles = StyleSheet.create({
         width: 300,
         flex: 1,
         alignSelf: 'center'
+    },
+    modalContent: {
+        marginTop: 5,
+        padding: 2,
+        alignContent: 'center',
+        backgroundColor: 'rgba(47,246,246,0.02)'
     }
 });

@@ -84,7 +84,7 @@ export default class SideMenu extends Component {
                                             borderWidth: 2,
                                             borderColor: '#fff'
                                         }}
-                                                   source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+                                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
                                     </View>
                                 </Left>
                                 <Right>
@@ -172,7 +172,10 @@ export default class SideMenu extends Component {
                         </ListItem>}
                         {this.getAccess('guide', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('GuideScreen')
+                            this.props.navigation.navigate('GuideScreen',{user:this.state.user != null ? this.state.user
+                                    :console.error('user == null => when I want to navigate into profile Screen user'),
+                                baseUrl:this.state.baseUrl != null ? this.state.baseUrl : 'empty'
+                            })
                         }}>
                             <Right>
                                 <Icon type='FontAwesome' name='info-circle' style={styles.icons}/>

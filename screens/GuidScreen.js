@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, StatusBar} from 'react-native';
+import {StyleSheet, View, Image, StatusBar, AsyncStorage, ActivityIndicator} from 'react-native';
 import {
     Container,
     Header,
@@ -20,130 +20,68 @@ import {
 import {ListItem} from 'react-native-elements'
 import Drawer from "react-native-drawer";
 import SideMenu from "../Menu/SideMenu";
+import Modal, {ModalContent, SlideAnimation} from "react-native-modals";
 
-
+const GETQUESTIONS = '/api/GetQuestions';
 export default class GuidScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dataArray: [
-                {
-                    title: "چگونه می توان از خدمات ویزیت در منزل و پرستاری استفاده نمود (ویژه کارکنان رسمی)",
-                    content: "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد."
-                },
-                {
-                    title: "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                    content: "شماره 1842"
-                },
-                {
-                    title: "فیزیوتراپی درمنزل چگونه انجام می گیرد؟(ویژه کارکنان رسمی)",
-                    content: "درخواست کتبی خود را به همراه برگ دستور فیزیوتراپی ممهور به مهر پزشک متخصص ارتوپدی یا جراح مغز و اعصاب به معاونت درمان ارسال تا پس از بررسی در کمیسیون درمان و موافقت، خدمات به شما ارائه گردد."
-                },
-                {
-                    title: "درچه صورت می توان از آمبولانس استفاده کرد؟",
-                    content: "                \"بیمه شدگان رسمی و قراردادی شهرداری تهران\\n\" +\n" +
-                        "                \"1- در صورت تماس با پزشک اورژانس می توانند درخواست آمبولانس نمایند. در صورت تشخیص پزشک اورژانس آمبولانس اعزام می شود.\\n\""
-                },
-                {
-                    title: "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                    content: "شماره 1842"
-                },
-                {
-                    title: "هزینه های استفاده از اورژانس به چه میزان است؟",
-                    content: "                \"کارکنان رسمی شهرداری تهران کاملا رایگان\\n\" +\n" +
-                        "                \"کارکنان قراردادی دارای بیمه مکمل سینا با فرانشیز 30درصد -- (هزینه دوساعت اول 150،000 ریال)\\n\" +\n" +
-                        "                \"کارکنان قراردادی بدون بیمه مکمل می بایست کلیه هزینه ها را به صورت آزاد پرداخت نمایند(هزینه استفاده دوساعت اول: 500،000 ریال -- پس از آن ساعتی 130،000 ریال)\""
-                },
-                {
-                    title: "هزینه های استفاده از اورژانس به چه میزان است؟",
-                    content: "                \"کارکنان رسمی شهرداری تهران کاملا رایگان\\n\" +\n" +
-                        "                \"کارکنان قراردادی دارای بیمه مکمل سینا با فرانشیز 30درصد -- (هزینه دوساعت اول 150،000 ریال)\\n\" +\n" +
-                        "                \"کارکنان قراردادی بدون بیمه مکمل می بایست کلیه هزینه ها را به صورت آزاد پرداخت نمایند(هزینه استفاده دوساعت اول: 500،000 ریال -- پس از آن ساعتی 130،000 ریال)\""
-                },
-                {
-                    title: "هزینه های استفاده از اورژانس به چه میزان است؟",
-                    content: "                \"کارکنان رسمی شهرداری تهران کاملا رایگان\\n\" +\n" +
-                        "                \"کارکنان قراردادی دارای بیمه مکمل سینا با فرانشیز 30درصد -- (هزینه دوساعت اول 150،000 ریال)\\n\" +\n" +
-                        "                \"کارکنان قراردادی بدون بیمه مکمل می بایست کلیه هزینه ها را به صورت آزاد پرداخت نمایند(هزینه استفاده دوساعت اول: 500،000 ریال -- پس از آن ساعتی 130،000 ریال)\""
-                },
-                {
-                    title: "هزینه های استفاده از اورژانس به چه میزان است؟",
-                    content: "                \"کارکنان رسمی شهرداری تهران کاملا رایگان\\n\" +\n" +
-                        "                \"کارکنان قراردادی دارای بیمه مکمل سینا با فرانشیز 30درصد -- (هزینه دوساعت اول 150،000 ریال)\\n\" +\n" +
-                        "                \"کارکنان قراردادی بدون بیمه مکمل می بایست کلیه هزینه ها را به صورت آزاد پرداخت نمایند(هزینه استفاده دوساعت اول: 500،000 ریال -- پس از آن ساعتی 130،000 ریال)\""
-                },
-                {
-                    title: "هزینه های استفاده از اورژانس به چه میزان است؟",
-                    content: "                \"کارکنان رسمی شهرداری تهران کاملا رایگان\\n\" +\n" +
-                        "                \"کارکنان قراردادی دارای بیمه مکمل سینا با فرانشیز 30درصد -- (هزینه دوساعت اول 150،000 ریال)\\n\" +\n" +
-                        "                \"کارکنان قراردادی بدون بیمه مکمل می بایست کلیه هزینه ها را به صورت آزاد پرداخت نمایند(هزینه استفاده دوساعت اول: 500،000 ریال -- پس از آن ساعتی 130،000 ریال)\""
-                },
-            ]
-            ,
-            questions: [
-                "چگونه می توان از خدمات ویزیت در منزل و پرستاری استفاده نمود (ویژه کارکنان رسمی)",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "چگونه می توان از خدمات ویزیت در منزل و پرستاری استفاده نمود (ویژه کارکنان رسمی)",
-                "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                "فیزیوتراپی درمنزل چگونه انجام می گیرد؟(ویژه کارکنان رسمی)",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "فیزیوتراپی درمنزل چگونه انجام می گیرد؟(ویژه کارکنان رسمی)",
-                "درچه صورت می توان از آمبولانس استفاده کرد؟",
-                "درچه صورت می توان از آمبولانس استفاده کرد؟",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                "در صورت نیاز به استفاده از خدمات فوریتهای پزشکی(اورژانس) با چه شماره ای می توان تماس گرفت؟",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-                "هزینه های استفاده از اورژانس به چه میزان است؟",
-            ],
-            info: [
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "جهت استفاده از این خدمات درخواست کتبی خود را به معاونت درمان ارسال نمائید تا پس از بررسی درخواست در کمیسیون ، در صورت موافقت خدمات به شما ارائه گردد.",
-                "شماره 1842",
-                "درخواست کتبی خود را به همراه برگ دستور فیزیوتراپی ممهور به مهر پزشک متخصص ارتوپدی یا جراح مغز و اعصاب به معاونت درمان ارسال تا پس از بررسی در کمیسیون درمان و موافقت، خدمات به شما ارائه گردد.",
-                "بیمه شدگان رسمی و قراردادی شهرداری تهران\n" +
-                "1- در صورت تماس با پزشک اورژانس می توانند درخواست آمبولانس نمایند. در صورت تشخیص پزشک اورژانس آمبولانس اعزام می شود.\n" +
-                "2- در صورت نیاز به انتقال بیماران از بیمارستان به منزل می بایست این مطلب در دفترچه بیمه درمانی بیمار توسط پزشک تائید گردد.\n" +
-                "3- در صورت نیاز به جابجایی بیمار از بیمارستان به مراکز درمانی و بالعکس می بایست این مطلب در دفترچه بیمه درمانی بیمار توسط پزشک تائید گردد. ",
-                "شماره 1842",
-                "شماره 1842",
-                "شماره 1842",
-                "کارکنان رسمی شهرداری تهران کاملا رایگان\n" +
-                "کارکنان قراردادی دارای بیمه مکمل سینا با فرانشیز 30درصد -- (هزینه دوساعت اول 150،000 ریال)\n" +
-                "کارکنان قراردادی بدون بیمه مکمل می بایست کلیه هزینه ها را به صورت آزاد پرداخت نمایند(هزینه استفاده دوساعت اول: 500،000 ریال -- پس از آن ساعتی 130،000 ریال)",
-            ],
-            questionsList: []
+            token: null,
+            baseUrl: null,
+            questions: null,
+            progressModalVisible: true,
         }
     }
 
-    componentDidMount() {
-        var list = [];
-        for (var i in this.state.questions) {
-            for (var j in this.state.info) {
-                if (i === j) {
-                    var data = {name: this.state.questions[i], moreInfo: this.state.info[i]}
-                    list.push(data)
-                }
-            }
-        }
-        this.setState({questionsList: list})
+    async componentWillMount(): void {
+        var token = await AsyncStorage.getItem('token');
+        var baseUrl = await AsyncStorage.getItem('baseUrl');
+        this.setState({baseUrl: baseUrl, token: token}, () => {
+            this.getQuestions()
+        })
     }
+
+
+    async getQuestions() {
+        this.setState({progressModalVisible: true})
+        fetch(this.state.baseUrl + GETQUESTIONS, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+        }).then((response) => response.json())
+            .then((responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        this.setState({questions: data}, () => {
+                            this.setState({progressModalVisible: false})
+                        })
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert('خطا در اتصال به سرویس')
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
+    }
+
 
     SelectQuestion(selectedQuestion) {
         this.props.navigation.navigate('MoreInfo', {backRoute: 'GuideScreen', question: selectedQuestion});
     }
 
     render() {
+
+
         return (
 
             <Container>
@@ -164,33 +102,46 @@ export default class GuidScreen extends Component {
                     <Card style={styles.card} cardItemPadding={14}>
                         <CardItem style={styles.cardHeader} header bordered>
                             <Body style={styles.body}>
-                                <Text style={[styles.titleStyle, {fontSize: 15, fontWeight: 'bold', color: '#23b9b9'}]}>سوالات
+                                <Text style={[styles.titleStyle,
+                                    {fontSize: 15, fontWeight: 'bold', color: '#23b9b9'}]}>سوالات
                                     متداول بیماران سامانه سلامت
                                 </Text>
                             </Body>
                         </CardItem>
                         <List Indent style={{backgroundColor: '#fff'}}>
-                            {
-                                this.state.questionsList.map((l, i) => (
-                                    <ListItem
-                                        containerStyle={{backgroundColor: 'rgba(37,180,180,0.42)'}}
-                                        noIndent
-                                        style={[styles.items,]}
-                                        key={i}
-                                        title={l.name}
-                                        titleStyle={styles.titleStyle}
-                                        bottomDivider
-                                        onPress={() => this.SelectQuestion(l)}
-                                        leftIcon={<Icon type='FontAwesome' name='info-circle'
-                                                        style={styles.leftIconStyle}/>}
-                                    />
-                                ))
+                            {this.state.questions != null &&
+                            this.state.questions.map((l, i) => (
+                                <ListItem
+                                    containerStyle={{backgroundColor: 'rgba(37,180,180,0.42)'}}
+                                    noIndent
+                                    style={[styles.items,]}
+                                    key={i}
+                                    title={l.title}
+                                    titleStyle={styles.titleStyle}
+                                    bottomDivider
+                                    onPress={() => this.SelectQuestion(l)}
+                                    leftIcon={<Icon type='FontAwesome' name='info-circle'
+                                                    style={styles.leftIconStyle}/>}
+                                />
+                            ))
                             }
                         </List>
                     </Card>
+                    <Modal style={{opacity: 0.7}}
+                           width={300}
+                           visible={this.state.progressModalVisible}
+                           modalAnimation={new SlideAnimation({
+                               slideFrom: 'bottom'
+                           })}
+                    >
+                        <ModalContent style={styles.modalContent}>
+                            <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>
+                        </ModalContent>
+                    </Modal>
                 </Content>
             </Container>
         );
+
     }
 
 }
@@ -257,5 +208,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderBottomColor: '#1f9292',
         borderColor: '#fff'
+    },
+    modalContent: {
+        marginTop: 5,
+        padding: 2,
+        alignContent: 'center',
+        backgroundColor: 'rgba(47,246,246,0.02)'
     }
 });

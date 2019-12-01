@@ -27,8 +27,8 @@ export default class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user:null,
-            animated:true,
+            user: null,
+            animated: true,
             insurances: [
                 {
                     insurance: "تامین اجتماعی",
@@ -74,13 +74,13 @@ export default class ProfileScreen extends Component {
 
     componentWillMount(): void {
         let passedUser = this.props.navigation.getParam('user');
-        this.setState({user:passedUser,insurances:passedUser['insurances']})
+        this.setState({user: passedUser, insurances: passedUser['insurances']})
         this.getContent()
     }
 
     componentDidMount(): void {
         let passedUser = this.props.navigation.getParam('user');
-        this.setState({user:passedUser,insurances:passedUser['insurances']})
+        this.setState({user: passedUser, insurances: passedUser['insurances']})
         this.getContent()
     }
 
@@ -110,14 +110,15 @@ export default class ProfileScreen extends Component {
                                onLoadEnd={() => {
                                    this.setState({animated: !this.state.animated})
                                }}
-                               source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
+                               source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
                         <ActivityIndicator size={'small'} color={'gray'} animating={this.state.animated}/>
                         <View style={styles.body}>
                             <View style={styles.card}>
                                 <View style={styles.row}>
                                     <TextInput
                                         style={[styles.textInput, {color: this.state.TextInputColor}]}
-                                        value={this.state.user['user_name']!=null ? this.state.user['user_name'] : 'نا مشخص'}
+                                        value={this.state.user['user_name'] != null ? this.state.user['user_name'] :
+                                            'نا مشخص'}
                                         onChangeText={(text) => {
                                             this.setState({username: text})
                                         }}
@@ -127,7 +128,8 @@ export default class ProfileScreen extends Component {
                                 </View>
                                 <View style={styles.row}>
                                     <TextInput style={[styles.textInput, {color: this.state.TextInputColor}]}
-                                               value={this.state.user['first_name']!=null ? this.state.user['first_name'] : 'نا مشخص'}
+                                               value={this.state.user['first_name'] != null ?
+                                                   this.state.user['first_name'] : 'نا مشخص'}
                                                onChangeText={(text) => {
                                                    this.setState({name: text})
                                                }}
@@ -137,7 +139,8 @@ export default class ProfileScreen extends Component {
                                 </View>
                                 <View style={styles.row}>
                                     <TextInput style={[styles.textInput, {color: this.state.TextInputColor,}]}
-                                               value={this.state.user['last_name']!=null ? this.state.user['last_name'] : 'نا مشخص'}
+                                               value={this.state.user['last_name'] != null ?
+                                                   this.state.user['last_name'] : 'نا مشخص'}
                                                multiline={false}
                                                onChangeText={(text) => {
                                                    this.setState({family: text})
@@ -148,7 +151,8 @@ export default class ProfileScreen extends Component {
                                 </View>
                                 <View style={styles.row}>
                                     <TextInput style={[styles.textInput, {color: this.state.TextInputColor}]}
-                                               value={this.state.user['nationalCode']!=null ? this.state.user['nationalCode'] : 'نا مشخص'}
+                                               value={this.state.user['nationalCode'] != null ?
+                                                   this.state.user['nationalCode'] : 'نا مشخص'}
                                                onChangeText={(text) => {
                                                    this.setState({nationalCode: text})
                                                }}
@@ -158,7 +162,8 @@ export default class ProfileScreen extends Component {
                                 </View>
                                 <View style={styles.row}>
                                     <TextInput style={[styles.textInput, {color: this.state.TextInputColor}]}
-                                               value={this.state.user['birthDate']!=null ? this.state.user['birthDate'] : 'نا مشخص'}
+                                               value={this.state.user['birthDate'] != null ?
+                                                   this.state.user['birthDate'] : 'نا مشخص'}
                                                onChangeText={(text) => {
                                                    this.setState({birthDate: text})
                                                }}
@@ -173,7 +178,8 @@ export default class ProfileScreen extends Component {
                                     borderBottomColor: '#fff'
                                 }]}>
                                     <TextInput style={[styles.textInput]}
-                                               value={this.state.user['gender']!=null ? this.state.user['gender'] : 'نا مشخص'}
+                                               value={this.state.user['gender'] != null ? this.state.user['gender'] :
+                                                   'نا مشخص'}
                                                multiline={false}
                                                editable={false}/>
                                     <Text style={styles.label}>جنسیت</Text>
@@ -184,7 +190,7 @@ export default class ProfileScreen extends Component {
                                     </Text>
                                 </View>
                                 {/*<View style={{padding: 5, margin: 5, marginTop: 10}}>*/}
-                                <Accordion style={{margin:5,flexDirection: 'column-reverse', flex: 1}}
+                                <Accordion style={{margin: 5, flexDirection: 'column-reverse', flex: 1}}
                                            dataArray={this.state.insurancesForShow}
                                            headerStyle={{
                                                backgroundColor: "rgba(35,185,185,0.72)",
@@ -194,10 +200,10 @@ export default class ProfileScreen extends Component {
                                                backgroundColor: "rgba(49,255,255,0)",
                                                flexDirection: 'row-reverse',
                                                alignContent: 'flex-start',
-                                               backfaceVisibility:'hidden',
-                                               alignItems:'flex-start',
-                                               borderColor:'#23b9b9',
-                                               borderWidth:1
+                                               backfaceVisibility: 'hidden',
+                                               alignItems: 'flex-start',
+                                               borderColor: '#23b9b9',
+                                               borderWidth: 1
 
                                            }}
                                            iconStyle={{color: "white"}}

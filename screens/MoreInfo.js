@@ -58,11 +58,11 @@ export default class MoreInfo extends Component {
                         <View style={styles.body}>
                             <View style={styles.bodyContent}>
                                 <Card style={styles.card}>
-                                    <CardItem header>
-                                        <Text style={styles.questionName}>{this.state.question.name}</Text>
+                                    <CardItem header style={{flexDirection:'row-reverse'}}>
+                                        <Text style={styles.questionName}>{this.state.question.title}</Text>
                                     </CardItem>
-                                    <CardItem>
-                                        <Text style={styles.questionInfo}>{this.state.question.moreInfo}</Text>
+                                    <CardItem style={{flexDirection:'row-reverse'}}>
+                                        <Text style={styles.questionInfo}>{this.state.question.content}</Text>
                                     </CardItem>
                                 </Card>
                             </View>
@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         textAlign: 'right',
-        fontSize: 10
+        fontSize: 10,
+        fontWeight:'bold'
     },
     questionInfo: {
         alignSelf: 'flex-start',

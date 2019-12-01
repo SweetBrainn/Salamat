@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView, Alert, StatusBar} from 'react-native';
+import {StyleSheet, View, Image, ScrollView, Alert, StatusBar, AsyncStorage, ActivityIndicator} from 'react-native';
 import Swipeable from 'react-native-swipeable-row'
 import {
     Container,
@@ -17,25 +17,63 @@ import {
     Icon,
     Text,
     List,
-    ListItem
+    ListItem, Fab
 } from 'native-base';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
-
+const GETRESREVATIONREPORTS = '/api/GetReservationReports';
 const MyPost = (props) => {
     return (
         <Card style={[styles.post]}>
-                   <CardItem header style={{backgroundColor: props.myColor}}>
-                       <Body>
-                           <Text style={styles.titleText}>{props.title}</Text>
-                       </Body>
-                   </CardItem>
-                   <CardItem style={{backgroundColor: props.myColor}}>
-                       <Body>
-                           <Text style={styles.contentText}>{props.content}</Text>
-                       </Body>
-                   </CardItem>
+            <CardItem bordered header style={{flexDirection: 'row-reverse', backgroundColor: props.headerColor}}>
+                <Right>
+                    <Text style={{color: '#fff', textAlign: 'right'}}>تاریخ</Text>
+                </Right>
+                <Body>
+                    <Text style={{color: '#fff', textAlign: 'right'}}>{props.date}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{backgroundColor: props.myColor, flexDirection: 'row-reverse'}}>
+                <Right>
+                    <Text style={{color: 'gray', textAlign: 'right'}}>پزشک</Text>
+                </Right>
+                <Body>
+                    <Text style={styles.titleText}>{props.actor}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{backgroundColor: props.myColor, flexDirection: 'row-reverse'}}>
+                <Right>
+                    <Text style={{color: 'gray', textAlign: 'right'}}>مرکز درمانی</Text>
+                </Right>
+                <Body>
+                    <Text style={styles.titleText}>{props.medicalCenter}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{backgroundColor: props.myColor, flexDirection: 'row-reverse'}}>
+                <Right>
+                    <Text style={{color: 'gray', textAlign: 'right'}}>وضعیت نوبت</Text>
+                </Right>
+                <Body>
+                    <Text style={styles.titleText}>{props.status}</Text>
+                </Body>
+            </CardItem>
+            <CardItem style={{backgroundColor: props.myColor, flexDirection: 'row-reverse'}}>
+                <Right>
+                    <Text style={{color: 'gray', textAlign: 'right'}}>نوع نوبت</Text>
+                </Right>
+                <Body>
+                    <Text style={styles.titleText}>{props.type}</Text>
+                </Body>
+            </CardItem>
+            <CardItem footer bordered style={{backgroundColor: props.myColor, flexDirection: 'row-reverse'}}>
+                <Right>
+                    <Text style={{color: 'gray', textAlign: 'right'}}>ساعت</Text>
+                </Right>
+                <Body>
+                    <Text style={styles.titleText}>{props.time}</Text>
+                </Body>
+            </CardItem>
         </Card>
     )
 }
@@ -43,35 +81,81 @@ export default class ShowReservesScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            visibleModal:false,
-            array: [
-                {title: "چهارشنبه 1398/8/1", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "شنبه 1398/8/5", content: "رزرو نوبت با دکتر حسینی متخصص گوارش"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-                {title: "جمعه 1398/8/7", content: "رزرو نوبت با دکتر رضایی متخصص مغز و اعصاب"},
-            ]
+            visibleModal: false,
+            array: null,
+            progressModalVisible: true,
         }
     }
 
     deleteMessage({value, index}) {
         delete this.state.array[index];
         this.setState({array: this.state.array}, () => {
-             alert('حذف انجام شد')
+            alert('حذف انجام شد')
         })
 
     }
+
+    async componentWillMount(): void {
+        var token = await AsyncStorage.getItem('token');
+        var baseUrl = await AsyncStorage.getItem('baseUrl');
+        this.setState({baseUrl: baseUrl, token: token}, () => {
+            this.getReservationReports()
+        })
+    }
+
+
+    async getReservationReports() {
+        this.setState({progressModalVisible: true})
+        fetch(this.state.baseUrl + GETRESREVATIONREPORTS, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+        }).then((response) => response.json())
+            .then((responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        this.setState({array: data}, () => {
+                            this.setState({progressModalVisible: false})
+                        })
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert('خطا در اتصال به سرویس')
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
+    }
+
 
     onBackPressed() {
         this.props.navigation.goBack()
     }
 
     renderList(value, index) {
-        if (index <= 3) {
+        if (value.statusValue === '1' || value.status === 'لغو شده') {
+            return (
+                <View key={index}>
+                    <Swipeable>
+                        <MyPost time={value.StartTime.substring(0,5)} type={value.type} status={value.status}
+                                medicalCenter={value.medicalCenter} actor={value.actor} date={value.date.substring(0,10)}
+                                myColor={'#cfcfcf'}
+                                headerColor={'rgba(215,1,0,0.75)'}
+
+
+                    />
+                    </Swipeable>
+                </View>
+            )
+        } else {
             return (
                 <View key={index}>
                     <Swipeable
@@ -91,36 +175,30 @@ export default class ShowReservesScreen extends Component {
                                 ],
                                 {cancelable: true}
                             )
-                    }} style={{height: '100%', margin: 2}} danger>
-                        <Icon type={'FontAwesome5'} name='calendar-times'/>
-                    </Button>]}
-                               onRightActionRelease={() => Alert.alert(
-                                   'لغو نوبت',
-                                   'آیا از لغو این نوبت اطمینان دارید ؟',
-                                   [
-                                       {
-                                           text: 'بله',
-                                           onPress: () => this.deleteMessage({value, index})
-                                       },
-                                       {
-                                           text: 'انصراف',
-                                           styles: 'cancel'
-                                       },
-                                   ],
-                                   {cancelable: true}
-                               )}
+                        }} style={{height: '100%', margin: 2}} danger>
+                            <Icon type={'FontAwesome5'} name='calendar-times'/>
+                        </Button>]}
+                        onRightActionRelease={() => Alert.alert(
+                            'لغو نوبت',
+                            'آیا از لغو این نوبت اطمینان دارید ؟',
+                            [
+                                {
+                                    text: 'بله',
+                                    onPress: () => this.deleteMessage({value, index})
+                                },
+                                {
+                                    text: 'انصراف',
+                                    styles: 'cancel'
+                                },
+                            ],
+                            {cancelable: true}
+                        )}
                     >
-                        <MyPost title={value.title} content={value.content}
-                                myColor={'rgba(0,193,92,0.71)'}/>
-                    </Swipeable>
-                </View>
-            )
-        } else {
-            return (
-                <View key={index}>
-                    <Swipeable>
-                        <MyPost title={value.title} content={value.content}
-                                myColor={'rgba(139,139,139,0.3)'}/>
+                        <MyPost time={value.StartTime} type={value.type} status={value.status}
+                                medicalCenter={value.medicalCenter} actor={value.actor} date={value.date}
+                                myColor={'#fff'}
+                                headerColor={'rgba(0,138,50,0.78)'}
+                        />
                     </Swipeable>
                 </View>
             )
@@ -136,12 +214,34 @@ export default class ShowReservesScreen extends Component {
                 <Content>
                     <View style={styles.container}>
                         <ScrollView>
-                            {this.state.array.map((value, index) =>
+                            {this.state.array != null &&
+                            this.state.array.map((value, index) =>
                                 this.renderList(value, index)
                             )}
                         </ScrollView>
+                        <Modal style={{opacity: 0.7}}
+                               width={300}
+                               visible={this.state.progressModalVisible}
+                               modalAnimation={new SlideAnimation({
+                                   slideFrom: 'bottom'
+                               })}
+                        >
+                            <ModalContent style={styles.modalContent}>
+                                <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>
+                            </ModalContent>
+                        </Modal>
                     </View>
                 </Content>
+                {/*<Footer style={{backgroundColor:'rgba(34,166,166,0.72)'}}>*/}
+                {/*    <Fab*/}
+                {/*        direction="up"*/}
+                {/*        style={{backgroundColor: '#37a39d'}}*/}
+                {/*        position="bottomRight"*/}
+                {/*        onPress={() => this.getReservationReports()}>*/}
+                {/*        <Icon name="refresh" type="FontAwesome" style={{color:'#fff'}}/>*/}
+
+                {/*    </Fab>*/}
+                {/*</Footer>*/}
             </Container>
 
         );
@@ -221,29 +321,26 @@ const styles = StyleSheet.create({
         backgroundColor: '#e4e4e4'
     },
     titleText: {
-        color: '#fff',
-        textAlign: 'left',
-        alignSelf: 'flex-end',
-        fontWeight: 'bold'
-    },
-    contentText: {
-        color: '#fff',
-        textAlign: 'left',
-        alignSelf: 'flex-end',
-        marginTop: 5,
+        color: 'gray',
+        textAlign: 'right',
         fontSize: 15
     },
-    modalTitle:{
+    contentText: {
+        color: 'gray',
+        textAlign: 'right',
+        fontSize: 15
+    },
+    modalTitle: {
         backgroundColor: '#23b9b9'
     },
-    modalTitleText:{
-        color:'#fff'
+    modalTitleText: {
+        color: '#fff'
     },
-    modalFooter:{
+    modalFooter: {
         padding: 2,
-        backgroundColor:'rgba(47,246,246,0.06)'
+        backgroundColor: 'rgba(47,246,246,0.06)'
     },
-    modalCancelButton:{
+    modalCancelButton: {
         backgroundColor: '#fff',
         borderRadius: 3,
         borderColor: '#23b9b9',
@@ -251,22 +348,25 @@ const styles = StyleSheet.create({
         padding: 2,
         margin: 5
     },
-    modalSuccessButton:{
+    modalSuccessButton: {
         backgroundColor: '#23b9b9',
         borderRadius: 3,
         padding: 2,
         margin: 5
     },
-    modalSuccessButtonText:{
+    modalSuccessButtonText: {
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 15
     },
-    modalCancelButtonText:{
+    modalCancelButtonText: {
         color: '#23b9b9',
         fontSize: 15
     },
-    modalContent:{
-        backgroundColor:'rgba(47,246,246,0.06)'
+    modalContent: {
+        marginTop: 5,
+        padding: 2,
+        alignContent: 'center',
+        backgroundColor: 'rgba(47,246,246,0.02)'
     }
 });
