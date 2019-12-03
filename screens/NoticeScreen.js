@@ -176,16 +176,16 @@ export default class NoticeScreen extends Component {
                     {/*</Card>*/}
                     <ScrollView>
                         {this.state.notices != null ?
-                        this.state.notices.map((item, key) => (
-                            /*<MyPost animate={this.state.animate} postContentText={item.text}*/
-                            /*        postContentImage={item.image}*/
-                            /*        likes={Math.round(Math.random() * 10) + 1}/>*/
-                            <View key={key}>
-                                <Post animate={this.state.animate} postContentText={item.title}
-                                      showForPatient={item.isViewPatient} showForActor={item.isViewActor}
-                                      postContentImage={'http://shahresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(2).JPG'}/>
-                            </View>
-                        )) : null}
+                            this.state.notices.map((item, key) => (
+                                /*<MyPost animate={this.state.animate} postContentText={item.text}*/
+                                /*        postContentImage={item.image}*/
+                                /*        likes={Math.round(Math.random() * 10) + 1}/>*/
+                                <View key={key}>
+                                    <Post animate={this.state.animate} postContentText={item.title}
+                                          showForPatient={item.isViewPatient} showForActor={item.isViewActor}
+                                          postContentImage={'http://shahresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(2).JPG'}/>
+                                </View>
+                            )) : null}
                     </ScrollView>
                     <Modal style={{opacity: 0.7}}
                            width={300}
