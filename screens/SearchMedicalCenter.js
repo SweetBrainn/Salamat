@@ -50,54 +50,43 @@ export default class SearchMedicalCenter extends Component {
 
 
     async goToDetailsScreen(value) {
-        var body = '{ title: ' + value.Title + ',id: ' + value.id + '}'
-        await this.setState({progressModalVisible: true})
-        await fetch(this.state.baseUrl + GETMEDICALCENTERBYID, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + new String(this.state.token)
-            },
-            body: JSON.stringify({title: value.Title, id: value.id})
-        }).then((response) => response.json())
-            .then((responseData) => {
-                if (responseData['StatusCode'] === 200) {
-                    if (responseData['Data'] != null) {
-                        let data = responseData['Data'];
-                        alert(JSON.stringify(data))
-                    }
-                } else {
-                    this.setState({progressModalVisible: false}, () => {
-                        alert(JSON.stringify(responseData))
-                    })
-
-                }
-            })
-            .catch((error) => {
-                console.error(error)
-                // alert(error)
-            })
-        // this.props.navigation.navigate('DetailsForMedicalCenterScreen', {medicalCenter: value, doctor: null})
+        // var body = '{ title: ' + value.Title + ',id: ' + value.id + '}'
+        // await this.setState({progressModalVisible: true})
+        // await fetch(this.state.baseUrl + GETMEDICALCENTERBYID, {
+        //     method: 'POST',
+        //     headers: {
+        //         'content-type': 'application/json',
+        //         Accept: 'application/json',
+        //         'Authorization': 'Bearer ' + new String(this.state.token)
+        //     },
+        //     body: JSON.stringify({title: value.Title, id: value.id})
+        // }).then((response) => response.json())
+        //     .then((responseData) => {
+        //         if (responseData['StatusCode'] === 200) {
+        //             if (responseData['Data'] != null) {
+        //                 let data = responseData['Data'];
+        //                 alert(JSON.stringify(data))
+        //             }
+        //         } else {
+        //             this.setState({progressModalVisible: false}, () => {
+        //                 alert(JSON.stringify(responseData))
+        //             })
+        //
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error(error)
+        //         // alert(error)
+        //     })
+        //  this.props.navigation.navigate('DetailsForMedicalCenterScreen', {medicalCenter: value, doctor: null})
+        await AsyncStorage.setItem('medicalCenterTitle', value.Title).then(() => {
+            this.props.navigation.navigate('DetailsForMedicalCenterScreen', {doctor: null})
+        });
 
     }
 
 
-    showAlert(value) {
-        for (let item of this.state.data) {
-            if (item.title === value) {
-                let result = '';
-                for (let text of item.data) {
-                    if (text !== value) {
-                        result = ' ' + result + text + ' ';
-                    }
-                }
-                return result;
-                //this.setState({messageOfAlert: result, titleOfAlert: value})
-                break
-            }
-        }
-    }
+
 
     async componentWillMount(): void {
         var token = await AsyncStorage.getItem('token');

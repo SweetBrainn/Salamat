@@ -54,7 +54,7 @@
     "react-native-swipeable-row": "^0.8.1",
     "react-native-table-component": "^1.2.1",
     "react-native-web": "^0.11.7",
-    "react-native-webview": "^7.5.0",
+    "react-native-webview": "7.0.5",
     "react-navigation": "^3.12.0",
     "react-persian": "^1.1.1",
     "vazir-font": "^21.1.1"

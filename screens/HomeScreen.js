@@ -1,15 +1,63 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Linking, StatusBar, Alert, Platform} from 'react-native';
+import {StyleSheet, View, Linking, StatusBar, Platform, AsyncStorage, ActivityIndicator} from 'react-native';
 import {Container, Header, Title, Content, Footer, Fab, Button, Left, Right, Toast, Icon, Text} from 'native-base';
 import HTML from 'react-native-render-html';
 import * as Permissions from 'expo-permissions'
 import * as Location from 'expo-location';
-
-const AsyncStorage = require('react-native').AsyncStorage;
 import Constants from 'expo-constants'
+import {WebView} from 'react-native-webview';
 import * as IntentLauncher from 'expo-intent-launcher';
+import MapView from 'react-native-maps'
+import Modal, {ModalContent, SlideAnimation} from "react-native-modals";
+
 // import DeviceInfo from 'react-native-device-info'
 
+const map = '<!DOCTYPE html>\n' +
+    '<html lang="en">\n' +
+    '<head>\n' +
+    '    <meta charset="UTF-8">\n' +
+    '    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+    '    <meta name="viewport" content="height=device-height, initial-scale=1.0">\n' +
+    '    <title>map</title>\n' +
+    '</head>\n' +
+    '<body>\n' +
+    '<div style="flex-direction: row;flex: 1;justify-content: center;align-content: center">\n' +
+    '    <div id="mapId" style="width: 96.5%;height: 96.5%;position: absolute">\n' +
+    '\n' +
+    '    </div>\n' +
+    '\n' +
+    '</div>\n' +
+    '</body>\n' +
+    '\n' +
+    '<script src="http://tmap.tehran.ir/app/pub/index.php/application/api/key/47b38134190e432ea74623de53f91c34"></script>\n' +
+    '<script>\n' +
+    '    var map = null;\n' +
+    '    var marker;\n' +
+    '\n' +
+    '\n' +
+    '    function LoadMap(panelId) {\n' +
+    '        map = new MPS.Map(panelId, {controls: [\'Navigation\'], zoom: 3});\n' +
+    '        marker = null;\n' +
+    '    }\n' +
+    '\n' +
+    '    LoadMap(\'mapId\');\n' +
+    '</script>\n' +
+    '\n' +
+    '\n' +
+    '</html>';
+const javascript = '<script src="http://tmap.tehran.ir/app/pub/index.php/application/api/key/47b38134190e432ea74623de53f91c34"></script>\n' +
+    '<script>\n' +
+    '    var map = null;\n' +
+    '    var marker;\n' +
+    '\n' +
+    '\n' +
+    '    function LoadMap(panelId) {\n' +
+    '        map = new MPS.Map(panelId, {controls: [\'Navigation\'], zoom: 3});\n' +
+    '        marker = null;\n' +
+    '    }\n' +
+    '\n' +
+    '    LoadMap(\'mapId\');\n' +
+    '</script>\n';
 export default class HomeScreen extends Component {
 
     constructor(props) {
@@ -18,7 +66,8 @@ export default class HomeScreen extends Component {
             active: true,
             errorMessage: '',
             user: null,
-            baseUrl:null
+            baseUrl: null,
+            progressModalVisible: false,
         }
 
     }
@@ -72,11 +121,13 @@ export default class HomeScreen extends Component {
         } else {
             this._getLocationAsync();
         }
-        this.setState({user:this.props.navigation.getParam('user'),baseUrl:this.props.navigation.getParam('baseUrl')})
+        this.setState(
+            {user: this.props.navigation.getParam('user'), baseUrl: this.props.navigation.getParam('baseUrl')})
     }
 
     componentDidMount(): void {
-        this.setState({user:this.props.navigation.getParam('user'),baseUrl:this.props.navigation.getParam('baseUrl')})
+        this.setState(
+            {user: this.props.navigation.getParam('user'), baseUrl: this.props.navigation.getParam('baseUrl')})
     }
 
     render() {
@@ -96,10 +147,39 @@ export default class HomeScreen extends Component {
                         <Text style={styles.headerText}>نرم افزار سلامت</Text>
                     </Right>
                 </Header>
-                <Content scrollEnabled={false} style={{flex: 1}}>
+                {/*<Content scrollEnabled={true} style={{flex: 1}}>*/}
 
+                <View style={{flex: 1, width: '100%', height: '100%'}}>
+                    <WebView
+                        scalesPageToFit={true}
+                        startInLoadingState={true}
+                        javaScriptEnabled={true}
+                        domStorageEnabled={true}
+                        originWhitelist={['*']}
+                        mixedContentMode='always'
+                        scalesPageToFit={true}
+                        onLoadStart={() => this.setState({progressModalVisible: true})}
+                        onLoadEnd={() => this.setState({progressModalVisible: false})}
+                        originWhitelist={['*']}
+                        onLoadProgress={()=>this.setState({progressModalVisible:!this.state.progressModalVisible})}
+                        source={{html: map}}
+                        injectedJavaScript={javascript}
+                    />
 
-                </Content>
+                    <Modal style={{opacity: 0.7}}
+                           width={300}
+                           visible={this.state.progressModalVisible}
+                           modalAnimation={new SlideAnimation({
+                               slideFrom: 'bottom'
+                           })}
+                    >
+                        <ModalContent style={[styles.modalContent, {backgroundColor: 'rgba(47,246,246,0.02)'}]}>
+                            <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>
+                        </ModalContent>
+                    </Modal>
+                </View>
+
+                {/*</Content>*/}
                 <Footer style={styles.footer}>
                     <View style={{flex: 1}}>
                     </View>
@@ -153,5 +233,11 @@ const styles = StyleSheet.create({
     },
     footer: {
         backgroundColor: '#23b9b9'
+    },
+    modalContent: {
+        marginTop: 5,
+        padding: 2,
+        alignContent: 'center',
+        backgroundColor: 'rgba(47,246,246,0.06)'
     }
 });
