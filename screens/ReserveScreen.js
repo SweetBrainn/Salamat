@@ -1,11 +1,19 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, StatusBar, TextInput} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    StatusBar,
+    TextInput,
+    AsyncStorage,
+    ActivityIndicator,
+    TouchableOpacity,
+    SafeAreaView
+} from 'react-native';
 import Modal, {ModalButton, ModalFooter, ModalTitle, SlideAnimation, ModalContent} from 'react-native-modals';
 import JalaliCalendarPicker from 'react-native-jalali-calendar-picker';
 import PersianCalendarPicker from 'react-native-persian-calendar-picker';
-import SearchableDropdown from 'react-native-searchable-dropdown';
-import SearchMedicalCenter from "./SearchMedicalCenter";
-import SearchDoctorScreen from "./SearchDoctorScreen";
+import Autocomplete from 'react-native-autocomplete-input'
 import {
     Container,
     Header,
@@ -21,29 +29,37 @@ import {
     Title,
     Card,
     Tab,
-    ActionSheet, Body
+    ActionSheet, Body, Input
 } from 'native-base';
 import MedicalFilesScreen from "./MedicalFilesScreen";
 import ShowReservesScreen from "./ShowReservesScreen";
 import InboxScreen from "./InboxScreen";
+import {ListItem} from "react-native-elements";
 
 //date.format('jYYYY-jM-jD [is] YYYY-M-D')
 
 const CANCEL_TEXT = 'انصراف';
+const SEARCHMEDICALCENTERALLFIELD = '/api/SearchMedicalCenterAllField';
+const SEARCHDOCTORALLFIELD = '/api/SearchDoctorAllField';
 export default class ReserveScreen extends Component {
     _isMounted = false;
 
     constructor(props) {
         super(props);
         this.state = {
-            //-----------------------ActionSheets states--------------------
+            //-----------------------ProgressBar States--------------------
+            progressModalVisible: false,
+            //-----------------------API States--------------------
+            token: null,
+            baseUrl: null,
+            //-----------------------ActionSheets States--------------------
             selectedSkill: {id: -100, value: ' انتخاب تخصص'},
             selectedState: {id: -100, value: 'انتخاب منطقه'},
             selectedGender: {id: -100, value: ' انتخاب جنسیت'},
             //-----------------------Modal states---------------------------
             startDateModalVisible: false,
             endDateModalVisible: false,
-            //-----------------------JalaliCalendar states------------------
+            //-----------------------JalaliCalendar States------------------
             minDate: new Date(),
             selectedStartDate: null,
             selectedEndDate: null,
@@ -142,15 +158,64 @@ export default class ReserveScreen extends Component {
                 {id: 2, value: '14 تا 16'},
                 {id: 3, value: '16 تا 18'},
                 {id: 4, value: '18 تا 20'},
-            ]
+            ],
+            //-----------------------AutoComplete States------------------------
+            medicalCenters: [],
+            medicalCenterText: '',
+            selectedMedicalCenter: {},
+            medicalCenterPreviousLength: -1,
+            doctors: [],
+            doctorText: '',
         };
-        // this.onStartDateChange = this.onStartDateChange.bind(this);
         (this: any).onStartDateChange = this.onStartDateChange.bind(this);
         (this: any).onEndDateChange = this.onEndDateChange.bind(this);
     }
+
+
+    async componentWillMount(): void {
+        var token = await AsyncStorage.getItem('token');
+        var baseUrl = await AsyncStorage.getItem('baseUrl')
+        await this.setState({baseUrl: baseUrl, token: token})
+    }
+
+    async generateMedicalCenterAutoComplete(text) {
+        await this.setState({progressModalVisible: true})
+        await fetch(this.state.baseUrl + SEARCHMEDICALCENTERALLFIELD, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+            body: JSON.stringify({
+                searchWord: text
+            })
+        }).then((response) => response.json())
+            .then((responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        this.setState({progressModalVisible: false}, () => {
+                            this.setState({medicalCenters: data})
+                        })
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert(JSON.stringify('خطا در دسترسی به سرویس'))
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
+    }
+
     onStartDateChange(date) {
         this.setState({selectedStartDate: date});
     }
+
     onEndDateChange(date) {
         this.setState({selectedEndDate: date});
     }
@@ -179,7 +244,7 @@ export default class ReserveScreen extends Component {
         return array.indexOf(CANCEL_TEXT)
     }
 
-    getMaxDate(){
+    getMaxDate() {
         let date = new Date();
         date.setMonth(this.state.minDate.getUTCMonth() + 3)
         return date;
@@ -204,11 +269,54 @@ export default class ReserveScreen extends Component {
                 <Root>
                     <Content padder style={styles.content}>
 
-                        <Card style={styles.card}>
+                        {true && <Card style={styles.card}>
                             <View style={styles.row}>
-                                <TextInput style={styles.input}/>
-                                <Text style={styles.label}>نام مرکز درمانی</Text>
+
+                                <View style={{flex: 3}}>
+                                    <Autocomplete
+                                        data={this.state.medicalCenters}
+                                        placeholder={'جستجوی نام مرکز،خدمات،منطقه و ...'}
+                                        inputContainerStyle={{flexDirection: 'row-reverse'}}
+                                        listStyle={{flexDirection: 'row-reverse'}}
+                                        onChangeText={(searchTerm) => {
+                                            if (searchTerm.length > this.state.medicalCenterPreviousLength) {
+                                                (this.setState({
+                                                        medicalCenterText: searchTerm,
+                                                        medicalCenterPreviousLength: searchTerm.length
+                                                    },
+                                                    async () => {
+
+                                                        if (searchTerm.length === 0) {
+                                                            await this.setState({medicalCenters: []})
+                                                        } else {
+                                                            if (searchTerm.length >= 3) {
+                                                                await this.generateMedicalCenterAutoComplete(searchTerm)
+                                                            }
+                                                        }
+
+                                                    }))
+                                            } else {
+                                                this.setState({
+                                                    medicalCenterText: searchTerm,
+                                                    medicalCenterPreviousLength: searchTerm.length
+                                                })
+                                            }
+                                        }}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        value={this.state.medicalCenterText}
+                                        renderItem={({item, i}) => (
+                                            <View key={i}>
+                                                <TouchableOpacity>
+                                                    <Text>{item.Title}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )}
+                                    />
+                                </View>
+                                <Text style={styles.label}>مرکز درمانی</Text>
                             </View>
+
+
                             <View style={styles.row}>
                                 <TextInput style={styles.input}/>
                                 <Text style={styles.label}>نام پزشک</Text>
@@ -363,7 +471,8 @@ export default class ReserveScreen extends Component {
                                         borderWidth: 1,
                                         borderColor: '#23b9b9',
 
-                                    }}>{this.state.selectedStartDate == null ? 'انتخاب تاریخ' : this.state.selectedStartDate.format('jYYYY-jM-jD')}</Text>
+                                    }}>{this.state.selectedStartDate == null ? 'انتخاب تاریخ' :
+                                        this.state.selectedStartDate.format('jYYYY-jM-jD')}</Text>
                                 </Button>
                                 <Text style={styles.label}>از تاریخ</Text>
                             </View>
@@ -406,12 +515,77 @@ export default class ReserveScreen extends Component {
                                         borderWidth: 1,
                                         borderColor: '#23b9b9',
 
-                                    }}>{this.state.selectedEndDate == null ? 'انتخاب تاریخ' : this.state.selectedEndDate.format('jYYYY-jM-jD')}</Text>
+                                    }}>{this.state.selectedEndDate == null ? 'انتخاب تاریخ' :
+                                        this.state.selectedEndDate.format('jYYYY-jM-jD')}</Text>
                                 </Button>
                                 <Text style={styles.label}>تا تاریخ</Text>
                             </View>
-                        </Card>
+                        </Card>}
 
+                  {false &&      <View style={styles.autocompletesContainer}>
+                            <SafeAreaView>
+                                <Autocomplete
+                                    data={this.state.medicalCenters}
+                                    placeholder={'جستجوی نام مرکز،خدمات،منطقه و ...'}
+                                    inputContainerStyle={{flexDirection: 'row-reverse'}}
+                                    listStyle={{flexDirection: 'row-reverse'}}
+                                    onChangeText={(searchTerm) => {
+                                        if (searchTerm.length > this.state.medicalCenterPreviousLength) {
+                                            (this.setState({
+                                                    medicalCenterText: searchTerm,
+                                                    medicalCenterPreviousLength: searchTerm.length
+                                                },
+                                                async () => {
+
+                                                    if (searchTerm.length === 0) {
+                                                        await this.setState({medicalCenters: []})
+                                                    } else {
+                                                        if (searchTerm.length >= 3) {
+                                                            await this.generateMedicalCenterAutoComplete(searchTerm)
+                                                        }
+                                                    }
+
+                                                }))
+                                        } else {
+                                            this.setState({
+                                                medicalCenterText: searchTerm,
+                                                medicalCenterPreviousLength: searchTerm.length
+                                            })
+                                        }
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    value={this.state.medicalCenterText}
+                                    listStyle={{
+                                        flexDirection: 'row-reverse',
+                                        padding: 2,
+                                        backgroundColor: 'rgba(33,180,180,0.33)',
+                                        marginTop: 3,
+                                        marginBottom: 3,
+                                        borderBottomWidth: 3,
+                                        borderBottomColor: '#fff'
+                                    }}
+                                    renderItem={({item, i}) => (
+                                            <TouchableOpacity style={{
+                                                width: '100%',
+                                                height: 30,
+                                                borderBottomWidth: 1,
+                                                borderBottomColor: '#fff',
+                                                padding: 2
+                                            }}
+                                                              onPress={() => this.setState({
+                                                                  medicalCenterText: item.Title,
+                                                                  selectedMedicalCenter: {
+                                                                      title: item.Title,
+                                                                      id: item.Id
+                                                                  }
+                                                              })}>
+                                                <Text style={{color: '#165e5e', textAlign: 'right'}}>{item.Title}</Text>
+                                            </TouchableOpacity>
+                                    )}
+                                />
+                            </SafeAreaView>
+                        </View>
+}
                         {/*<Card>*/}
                         {/*    <CardItem bordered style={{flexDirection: 'column'}}>*/}
                         {/*        <View style={[styles.row]}>*/}
@@ -712,7 +886,7 @@ export default class ReserveScreen extends Component {
                                 </ModalFooter>
                             }
                         >
-                            <ModalContent style={styles.modalContent}>
+                            <ModalContent style={styles.dateModalContent}>
                                 <View>
                                     <PersianCalendarPicker
                                         enableSwipe={false}
@@ -758,7 +932,7 @@ export default class ReserveScreen extends Component {
                                 </ModalFooter>
                             }
                         >
-                            <ModalContent style={styles.modalContent}>
+                            <ModalContent style={styles.dateModalContent}>
                                 <View>
                                     <PersianCalendarPicker
                                         enableSwipe={false}
@@ -774,6 +948,19 @@ export default class ReserveScreen extends Component {
                                         onDateChange={this.onEndDateChange}
                                     />
                                 </View>
+                            </ModalContent>
+                        </Modal>
+
+
+                        <Modal style={{opacity: 0.7}}
+                               width={300}
+                               visible={this.state.progressModalVisible}
+                               modalAnimation={new SlideAnimation({
+                                   slideFrom: 'bottom'
+                               })}
+                        >
+                            <ModalContent style={[styles.modalContent, {backgroundColor: 'rgba(47,246,246,0.02)'}]}>
+                                <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>
                             </ModalContent>
                         </Modal>
 
@@ -867,31 +1054,36 @@ const styles = StyleSheet.create({
     },
     card: {
         flexDirection: 'column',
-        margin: 5,
-        borderRadius: 5,
-        borderColor: '#23b9b9',
-        borderWidth: 1,
-        shadowColor: '#d8d8d8',
-        shadowOffset: {width: 0, height: 2},
-        shadowRadius: 2,
-        elevation: 8
+        // margin: 5,
+        //  borderRadius: 5,
+        //  borderColor: '#23b9b9',
+        // borderWidth: 1,
+        // shadowColor: '#d8d8d8',
+        // shadowOffset: {width: 0, height: 2},
+        // shadowRadius: 2,
+        //  elevation: 8
     },
     row: {
         flexDirection: 'row',
-        margin: 5,
-        padding: 1
+        // margin: 5,
+        paddingTop: 5,
+        paddingLeft: 1,
+        paddingRight: 1
     },
     label: {
         alignSelf: 'flex-end',
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 1,
         flex: 1,
-        margin: 1,
-        marginBottom: 5,
-        fontSize: 15,
+        height: '100%',
+        fontSize: 13,
         fontWeight: 'bold',
         textAlign: 'right'
     },
-    input: {
+    myInput: {
+        width: '100%',
         margin: 1,
         justifyContent: 'center',
         alignContent: 'center',
@@ -901,21 +1093,19 @@ const styles = StyleSheet.create({
         flex: 3,
         alignSelf: 'flex-start',
         padding: 1,
-        fontSize: 15,
         textAlign: 'right'
-
     },
-    modalTitle:{
+    modalTitle: {
         backgroundColor: '#23b9b9'
     },
-    modalTitleText:{
-        color:'#fff'
+    modalTitleText: {
+        color: '#fff'
     },
-    modalFooter:{
+    modalFooter: {
         padding: 2,
-        backgroundColor:'rgba(47,246,246,0.06)'
+        backgroundColor: 'rgba(47,246,246,0.06)'
     },
-    modalCancelButton:{
+    modalCancelButton: {
         backgroundColor: '#fff',
         borderRadius: 3,
         borderColor: '#23b9b9',
@@ -923,22 +1113,60 @@ const styles = StyleSheet.create({
         padding: 2,
         margin: 5
     },
-    modalSuccessButton:{
+    modalSuccessButton: {
         backgroundColor: '#23b9b9',
         borderRadius: 3,
         padding: 2,
         margin: 5
     },
-    modalSuccessButtonText:{
+    modalSuccessButtonText: {
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 15
     },
-    modalCancelButtonText:{
+    modalCancelButtonText: {
         color: '#23b9b9',
         fontSize: 15
     },
-    modalContent:{
-        backgroundColor:'rgba(47,246,246,0.06)'
-    }
+    dateModalContent: {
+        backgroundColor: 'rgba(47,246,246,0.06)'
+    },
+    modalContent: {
+        marginTop: 5,
+        padding: 2,
+        alignContent: 'center',
+        backgroundColor: 'rgba(47,246,246,0.06)'
+    },
+    //--------------------------------------------------
+    autocompletesContainer: {
+        paddingTop: 0,
+        zIndex: 1,
+        width: "100%",
+        paddingHorizontal: 8,
+    },
+    input: {maxHeight: 40},
+    inputContainer: {
+        display: "flex",
+        flexShrink: 0,
+        flexGrow: 0,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderColor: "#c7c6c1",
+        paddingVertical: 13,
+        paddingLeft: 12,
+        paddingRight: "5%",
+        width: "100%",
+        justifyContent: "flex-start",
+    },
+    container: {
+        flex: 1,
+        backgroundColor: "#ffffff",
+    },
+    plus: {
+        position: "absolute",
+        left: 15,
+        top: 10,
+    },
 });

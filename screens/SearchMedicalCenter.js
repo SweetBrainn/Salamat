@@ -25,7 +25,7 @@ import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimatio
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
 const GETMEDICALCENTERBYID = '/api/GetMedicalCenterById';
-const SEARCHMEDICALCENTERALLFIELD = '/api/SearchMedicalCenterAllField'
+const SEARCHMEDICALCENTERALLFIELD = '/api/SearchMedicalCenterAllField';
 export default class SearchMedicalCenter extends Component {
 
     constructor(props) {
