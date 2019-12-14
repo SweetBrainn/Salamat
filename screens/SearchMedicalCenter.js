@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, AsyncStorage, StatusBar, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ActivityIndicator, AsyncStorage, StatusBar, StyleSheet, Text, Keyboard, View} from 'react-native';
 import {SearchableFlatList, SearchableSectionList} from "react-native-searchable-list";
 import {Alert} from 'react-native'
 import Autocomplete from 'react-native-autocomplete-input';
@@ -18,14 +18,15 @@ import {
     Right,
     Root,
     Input,
-    ListItem
+    ListItem,
 } from 'native-base';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
-const GETMEDICALCENTERBYID = '/api/GetMedicalCenterById';
+
 const SEARCHMEDICALCENTERALLFIELD = '/api/SearchMedicalCenterAllField';
+const GETFAVORITEMEDICALCENTERS = '/api/GetFavoriteMedicalCenters';
 export default class SearchMedicalCenter extends Component {
 
     constructor(props) {
@@ -42,6 +43,7 @@ export default class SearchMedicalCenter extends Component {
             messageOfAlert: '',
             progressModalVisible: false,
             previousLength: -1,
+            favoriteMedicalCenters: []
 
         };
 
@@ -50,48 +52,17 @@ export default class SearchMedicalCenter extends Component {
 
 
     async goToDetailsScreen(value) {
-        // var body = '{ title: ' + value.Title + ',id: ' + value.id + '}'
-        // await this.setState({progressModalVisible: true})
-        // await fetch(this.state.baseUrl + GETMEDICALCENTERBYID, {
-        //     method: 'POST',
-        //     headers: {
-        //         'content-type': 'application/json',
-        //         Accept: 'application/json',
-        //         'Authorization': 'Bearer ' + new String(this.state.token)
-        //     },
-        //     body: JSON.stringify({title: value.Title, id: value.id})
-        // }).then((response) => response.json())
-        //     .then((responseData) => {
-        //         if (responseData['StatusCode'] === 200) {
-        //             if (responseData['Data'] != null) {
-        //                 let data = responseData['Data'];
-        //                 alert(JSON.stringify(data))
-        //             }
-        //         } else {
-        //             this.setState({progressModalVisible: false}, () => {
-        //                 alert(JSON.stringify(responseData))
-        //             })
-        //
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error(error)
-        //         // alert(error)
-        //     })
-        //  this.props.navigation.navigate('DetailsForMedicalCenterScreen', {medicalCenter: value, doctor: null})
-        await AsyncStorage.setItem('medicalCenterTitle', value.Title).then(() => {
-            this.props.navigation.navigate('DetailsForMedicalCenterScreen', {doctor: null})
-        });
-
+        this.props.navigation.navigate('DetailsForMedicalCenterScreen', {medicalCenter: value, doctor: null})
     }
-
-
 
 
     async componentWillMount(): void {
         var token = await AsyncStorage.getItem('token');
         var baseUrl = await AsyncStorage.getItem('baseUrl')
-        await this.setState({baseUrl: baseUrl, token: token})
+        await this.setState({baseUrl: baseUrl, token: token}, () => {
+            this.getFavoriteMedicalCenters()
+        })
+
     }
 
 
@@ -129,6 +100,33 @@ export default class SearchMedicalCenter extends Component {
             })
     }
 
+    async getFavoriteMedicalCenters() {
+        await fetch(this.state.baseUrl + GETFAVORITEMEDICALCENTERS, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+        }).then((response) => response.json())
+            .then((responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        this.setState({favoriteMedicalCenters: data})
+                    }
+                } else {
+
+                    // alert(JSON.stringify('خطا در دسترسی به سرویس'))
+                    alert(JSON.stringify(JSON.stringify(responseData)))
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
+
     render() {
         return (
             <Container>
@@ -142,7 +140,7 @@ export default class SearchMedicalCenter extends Component {
                         </Button>
                     </Left>
                     <Right>
-                        <Text onPress={() => alert(JSON.stringify(this.state.data))} style={styles.headerText}>جستجوی
+                        <Text style={styles.headerText}>جستجوی
                             مرکز درمانی</Text>
                     </Right>
                 </Header>
@@ -154,32 +152,38 @@ export default class SearchMedicalCenter extends Component {
                                    style={{textAlign: 'right', fontSize: 13}}
                                    value={this.state.searchTerm}
                                    onChangeText={(searchTerm) => {
-                                       if (searchTerm.length > this.state.previousLength) {
-                                           (this.setState({searchTerm: searchTerm, previousLength: searchTerm.length},
-                                               async () => {
-
-                                                   if (searchTerm.length === 0) {
-                                                       await this.setState({data: []})
-                                                   } else {
-                                                       if (searchTerm.length >= 3) {
-                                                           await this.search(searchTerm)
+                                       {
+                                           if (searchTerm.length > this.state.previousLength) {
+                                               (this.setState(
+                                                   {searchTerm: searchTerm, previousLength: searchTerm.length},
+                                                   async () => {
+                                                       if (searchTerm.length === 0) {
+                                                           await this.setState({data: []})
+                                                       } else {
+                                                           if (searchTerm.length >= 3) {
+                                                               await this.search(searchTerm)
+                                                           }
                                                        }
-                                                   }
 
-                                               }))
-                                       } else {
-                                           this.setState({searchTerm: searchTerm, previousLength: searchTerm.length})
+                                                   }))
+                                           } else {
+                                               this.setState(
+                                                   {searchTerm: searchTerm, previousLength: searchTerm.length})
+                                           }
                                        }
-                                   }}
-
+                                   }
+                                   }
                             />
                         </Item>
                         <View style={[styles.row, {flexDirection: this.state.flexDirection}]}>
                             <Button transparent style={{alignSelf: 'flex-start', margin: 2, padding: 2}}
-                                    onPress={() => this.props.navigation.navigate('AdvanceSearchScreen', {
-                                        medicalCenter: true,
-                                        doctor: false
-                                    })}>
+                                    onPress={() => {
+                                        Keyboard.dismiss()
+                                        this.props.navigation.navigate('AdvanceSearchScreen', {
+                                            medicalCenter: true,
+                                            doctor: false
+                                        })
+                                    }}>
                                 <Text style={{textAlign: 'right', fontSize: 13, color: '#23b9b9'}}>جستجوی پیشرفته</Text>
                             </Button>
                         </View>
@@ -189,6 +193,7 @@ export default class SearchMedicalCenter extends Component {
                                     <ListItem
                                         style={{width: '100%', height: 50, alignSelf: 'center', padding: 1, marginTop: 2}}
                                         onPress={() => {
+                                            Keyboard.dismiss()
                                             this.setState({selectedMedicalCenter: item, visible: true})
                                         }
                                         }
@@ -206,15 +211,45 @@ export default class SearchMedicalCenter extends Component {
                                     </ListItem>
                                 </View>
                             )) :
-                            this.state.data.length === 0 ? <View style={{
+                            this.state.data.length === 0 ? this.state.favoriteMedicalCenters.map((item, key) => (
+                                    <View key={key}>
+                                        <ListItem
+                                            style={{
+                                                width: '100%',
+                                                height: 50,
+                                                alignSelf: 'center',
+                                                padding: 1,
+                                                marginTop: 2
+                                            }}
+                                            onPress={() => {
+                                                Keyboard.dismiss()
+                                                this.setState({selectedMedicalCenter: item, visible: true})
+                                            }
+                                            }
+
+                                        >
+                                            <Body>
+                                                <Text style={{
+                                                    color: '#000',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    textAlign: 'right',
+                                                    fontSize: 15,
+                                                }}>{item.title}</Text>
+                                            </Body>
+                                        </ListItem>
+                                    </View>
+                                ))
+
+
+                                : <View style={{
                                     flex: 1,
                                     justifyContent: 'center',
                                     alignContent: 'center',
                                     alignItems: 'center'
                                 }}>
                                     <Text style={{color: 'gray'}}>موردی یافت نشد</Text>
-                                </View>
-                                : null}
+                                </View>}
 
                         <Modal
                             width={300}
@@ -222,8 +257,9 @@ export default class SearchMedicalCenter extends Component {
                                 this.setState({visible: false});
                             }}
                             visible={this.state.visible}
-                            modalTitle={<ModalTitle style={styles.modalTitle} textStyle={styles.modalTitleText}
-                                                    title={this.state.selectedMedicalCenter.Title}/>}
+                            modalTitle={
+                                <ModalTitle style={styles.modalTitle} textStyle={styles.modalTitleText}
+                                            title={this.state.selectedMedicalCenter.Title}/>}
                             modalAnimation={new SlideAnimation({
                                 slideFrom: 'bottom'
                             })}
@@ -233,10 +269,10 @@ export default class SearchMedicalCenter extends Component {
                                         style={[styles.modalCancelButton]}
                                         textStyle={styles.modalCancelButtonText}
                                         text="جستجوی پزشک"
-                                        onPress={() => {
+                                        onPress={async () => {
                                             this.setState({visible: false})
                                             this.props.navigation.navigate('SearchDoctorScreen',
-                                                {medicalCenter: (this.state.medicalCenterTitle)})
+                                                {medicalCenter: (this.state.selectedMedicalCenter)})
                                         }}
                                     />
                                     <ModalButton
@@ -255,7 +291,8 @@ export default class SearchMedicalCenter extends Component {
                             <ModalContent style={styles.modalContent}>
                                 <View>
                                     <Text style={[styles.modalCancelButtonText,
-                                        {fontSize: 13}]}>{this.state.selectedMedicalCenter.Description}</Text>
+                                        {fontSize: 13}]}>{this.state.selectedMedicalCenter.Description != null ?
+                                        this.state.selectedMedicalCenter.Description : 'توضیحات'}</Text>
                                 </View>
                             </ModalContent>
                         </Modal>
