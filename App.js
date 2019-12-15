@@ -70,12 +70,12 @@ const HistoryStackNavigator = createStackNavigator({
     }
 });
 const SplashStackNavigator = createStackNavigator({
-    // SplashScreen:{screen:SplashScreen},
-    // GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
+    SplashScreen:{screen:SplashScreen},
+    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
     VerifyScreen : {screen:VerifyScreen}
 },{
-    initialRouteName:'VerifyScreen'
-    // initialRouteName:'SplashScreen'
+    // initialRouteName:'VerifyScreen'
+    initialRouteName:'SplashScreen'
 });
 const AppDrawerNavigator = createDrawerNavigator({
     RegisterScreen:{screen:RegisterScreen},

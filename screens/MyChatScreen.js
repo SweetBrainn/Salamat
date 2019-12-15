@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, ScrollView, ActivityIndicator, StatusBar} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, Keyboard, StatusBar} from 'react-native';
 import {ChatScreen} from 'react-native-easy-chat-ui'
 import * as Font from 'expo-font';
 
@@ -34,6 +34,7 @@ export default class MyChatScreen extends Component {
 
 
     onBackPressed() {
+        Keyboard.dismiss();
         this.props.navigation.goBack()
     }
 
@@ -63,30 +64,29 @@ export default class MyChatScreen extends Component {
                         borderColor: '#20a0a0'
                     }}>
                         <Card transparent>
-                            <CardItem style={{backgroundColor: 'rgba(255,255,255,0)'}}>
-                                <Body style={{backgroundColor: 'rgba(255,255,255,0)'}}>
+                            <CardItem style={{backgroundColor: 'rgba(255,255,255,0)',flexDirection:'row-reverse'}}>
+                                <Right style={{backgroundColor: 'rgba(255,255,255,0)',flex:3,justifyContent:'flex-end'}}>
                                     <Text style={{
-                                        alignSelf: 'flex-end',
-                                        textAlign: 'right',
                                         color: '#fff',
-
+                                        fontSize:18,
+                                        fontWeight:'bold'
 
                                     }}>ارسال پیام
                                         به پزشک</Text>
-                                </Body>
-                                <Left>
-                                    <Icon type={'FontAwesome5'} name={'message'} style={{color: '#fff'}}/>
+                                </Right>
+                                <Left style={{flex:1}}>
+                                    <Icon type={'FontAwesome5'} name={'envelope'} style={{color: '#fff',alignSelf:'flex-end',fontSize:25}}/>
                                 </Left>
                             </CardItem>
                         </Card>
                     </View>
-                    <Form style={{borderWidth: 1, borderColor: '#23b9b9', marginTop: 30}}>
+                    <Form style={{borderWidth: 1, borderColor: '#23b9b9', marginTop: 30,padding:5 , flex:1}}>
                         <Item style={{padding: 1, fontSize: 15, marginBottom: 5, marginTop: 5}}>
                             <Icon active name='person' style={{fontSize: 15, textAlign: 'right'}}/>
                             <Input placeholder='گیرنده پیام' style={{textAlign: 'right'}}/>
                         </Item>
                         <Textarea rowSpan={7} bordered placeholder="متن پیام"
-                                  style={{textAlign: 'right', padding: 2, fontSize: 15}}/>
+                                  style={{textAlign: 'right', padding: 3, fontSize: 15}}/>
                     </Form>
 
                 </Content>
@@ -95,7 +95,7 @@ export default class MyChatScreen extends Component {
                     <Fab
                         direction="up"
                         containerStyle={styles.chatInput}
-                        style={{backgroundColor: '#34A34F'}}
+                        style={{backgroundColor: '#23b9b9'}}
                         position="bottomRight"
                         onPress={() => alert('Sent')}>
                         <Icon name="paper-plane" type="FontAwesome"/>

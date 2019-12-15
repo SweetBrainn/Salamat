@@ -7,6 +7,7 @@ import {
     TextInput,
     AsyncStorage,
     ActivityIndicator,
+    Keyboard
 } from 'react-native';
 import Modal, {ModalButton, ModalFooter, ModalTitle, SlideAnimation, ModalContent} from 'react-native-modals';
 import PersianCalendarPicker from 'react-native-persian-calendar-picker';
@@ -222,9 +223,15 @@ export default class ReserveScreen extends Component {
                 <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.props.navigation.openDrawer()}>
+                                onPress={() => {
+                                    Keyboard.dismiss()
+                                    this.props.navigation.openDrawer()
+                                }}>
                             <Icon style={styles.headerMenuIcon} name='menu'
-                                  onPress={() => this.props.navigation.openDrawer()}/>
+                                  onPress={() => {
+                                      Keyboard.dismiss()
+                                      this.props.navigation.openDrawer()
+                                  }}/>
                         </Button>
                     </Left>
                     <Right>
@@ -252,6 +259,7 @@ export default class ReserveScreen extends Component {
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
+                                        Keyboard.dismiss()
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.skills),
@@ -293,6 +301,7 @@ export default class ReserveScreen extends Component {
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
+                                        Keyboard.dismiss()
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.genders),
@@ -334,6 +343,7 @@ export default class ReserveScreen extends Component {
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
+                                        Keyboard.dismiss()
                                         ActionSheet.show(
                                             {
                                                 options: this.getOptions(this.state.states),
@@ -376,7 +386,10 @@ export default class ReserveScreen extends Component {
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
-                                        this.setState({startDateModalVisible: true})
+                                        Keyboard.dismiss()
+                                        this.setState({startDateModalVisible: true}, () => {
+
+                                        })
                                     }}
                                     bordered style={{
                                     textAlign: 'center',
@@ -419,7 +432,10 @@ export default class ReserveScreen extends Component {
                                         //             this.setState({selectedDay: this.state.days[buttonIndex]});
                                         //     }
                                         // )
-                                        this.setState({endDateModalVisible: true})
+                                        Keyboard.dismiss()
+                                        this.setState({endDateModalVisible: true}, () => {
+                                            Keyboard.dismiss()
+                                        })
                                     }}
                                     bordered style={{
                                     textAlign: 'center',

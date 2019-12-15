@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 import {StyleSheet, View, Text, ImageBackground, Image, ActivityIndicator} from 'react-native';
 import {
     Content,
@@ -25,7 +26,7 @@ export default class SideMenu extends Component {
             animated: true,
             user: null,
             fullName: null,
-            baseUrl:null
+            baseUrl: null
 
         }
     }
@@ -59,7 +60,7 @@ export default class SideMenu extends Component {
         var user = params['user']
         var userInfo = user['userInfo']
         var fullName = userInfo['first_name'] + ' ' + userInfo['last_name']
-        this.setState({fullName: fullName,user:userInfo,baseUrl:params['baseUrl']})
+        this.setState({fullName: fullName, user: userInfo, baseUrl: params['baseUrl']})
     }
 
     render() {
@@ -101,13 +102,13 @@ export default class SideMenu extends Component {
                     <List>
                         {this.getAccess('reserve', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('ReserveScreen')
+                            this.props.navigation.navigate('HomeScreen')
                         }}>
                             <Right>
-                                <Icon type='FontAwesome' name='calendar' style={styles.icons}/>
+                                <Icon type='FontAwesome5' name='map-marked-alt' style={styles.icons}/>
                             </Right>
                             <Body style={styles.body}>
-                                <Text style={styles.text}>نوبت دهی</Text>
+                                <Text style={styles.text}>صفحه اصلی</Text>
                             </Body>
                         </ListItem>}
                         {this.getAccess('personalInfo', 'admin') &&
@@ -121,10 +122,32 @@ export default class SideMenu extends Component {
                                 <Text style={styles.text}>پرونده شخصی</Text>
                             </Body>
                         </ListItem>}
+                        {this.getAccess('reserve', 'admin') &&
+                        <ListItem icon style={styles.listItem} onPress={() => {
+                            this.props.navigation.navigate('ReserveScreen')
+                        }}>
+                            <Right>
+                                <Icon type='FontAwesome' name='calendar' style={styles.icons}/>
+                            </Right>
+                            <Body style={styles.body}>
+                                <Text style={styles.text}>نوبت دهی</Text>
+                            </Body>
+                        </ListItem>}
+                        {false && this.getAccess('personalInfo', 'admin') &&
+                        <ListItem icon style={styles.listItem} onPress={() => {
+                            this.props.navigation.navigate('HistoryScreen')
+                        }}>
+                            <Right>
+                                <Icon type='FontAwesome' name='history' style={styles.icons}/>
+                            </Right>
+                            <Body>
+                                <Text style={styles.text}>پرونده شخصی</Text>
+                            </Body>
+                        </ListItem>}
                         {this.getAccess('notice', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('InfoScreen',{
-                                baseUrl:this.state.baseUrl != null ? this.state.baseUrl : 'empty'
+                            this.props.navigation.navigate('InfoScreen', {
+                                baseUrl: this.state.baseUrl != null ? this.state.baseUrl : 'empty'
                             })
                         }}>
                             <Right>
@@ -158,9 +181,10 @@ export default class SideMenu extends Component {
                         </ListItem>}
                         {this.getAccess('profile', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('ProfileScreen',{user:this.state.user != null ? this.state.user
-                                    :console.error('user == null => when I want to navigate into profile Screen user'),
-                                    baseUrl:this.state.baseUrl != null ? this.state.baseUrl : 'empty'
+                            this.props.navigation.navigate('ProfileScreen', {
+                                user: this.state.user != null ? this.state.user
+                                    : console.error('user == null => when I want to navigate into profile Screen user'),
+                                baseUrl: this.state.baseUrl != null ? this.state.baseUrl : 'empty'
                             })
                         }}>
                             <Right>
@@ -172,9 +196,10 @@ export default class SideMenu extends Component {
                         </ListItem>}
                         {this.getAccess('guide', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('GuideScreen',{user:this.state.user != null ? this.state.user
-                                    :console.error('user == null => when I want to navigate into profile Screen user'),
-                                baseUrl:this.state.baseUrl != null ? this.state.baseUrl : 'empty'
+                            this.props.navigation.navigate('GuideScreen', {
+                                user: this.state.user != null ? this.state.user
+                                    : console.error('user == null => when I want to navigate into profile Screen user'),
+                                baseUrl: this.state.baseUrl != null ? this.state.baseUrl : 'empty'
                             })
                         }}>
                             <Right>
@@ -185,7 +210,9 @@ export default class SideMenu extends Component {
                             </Body>
                         </ListItem>}
                         {this.getAccess('exit', 'admin') &&
-                        <ListItem icon style={styles.listItem}>
+                        <ListItem icon style={styles.listItem} onPress={() => {
+                            RNExitApp.exitApp()
+                        }}>
                             <Right>
                                 <Icon type='FontAwesome' name='power-off' style={styles.icons}/>
                             </Right>
@@ -253,7 +280,7 @@ const styles = StyleSheet.create({
     },
     listItem: {
         flex: 1,
-        margin: 5,
+        margin: 3,
 
     },
     avatar: {
