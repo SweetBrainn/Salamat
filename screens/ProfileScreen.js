@@ -190,7 +190,7 @@ export default class ProfileScreen extends Component {
                                     </Text>
                                 </View>
                                 {/*<View style={{padding: 5, margin: 5, marginTop: 10}}>*/}
-                                <Accordion style={{margin: 5, flexDirection: 'column-reverse', flex: 1}}
+                                <Accordion style={{margin: 5, flexDirection: 'column', flex: 1}}
                                            dataArray={this.state.insurancesForShow}
                                            headerStyle={{
                                                backgroundColor: "rgba(35,185,185,0.72)",
@@ -199,13 +199,12 @@ export default class ProfileScreen extends Component {
                                            contentStyle={{
                                                backgroundColor: "rgba(49,255,255,0)",
                                                flexDirection: 'row-reverse',
-                                               alignContent: 'flex-start',
                                                backfaceVisibility: 'hidden',
-                                               alignItems: 'flex-start',
                                                borderColor: '#23b9b9',
                                                borderWidth: 1
 
                                            }}
+
                                            iconStyle={{color: "white"}}
                                            expandedIconStyle={{color: "white"}}
                                 />

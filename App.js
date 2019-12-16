@@ -70,16 +70,14 @@ const HistoryStackNavigator = createStackNavigator({
     }
 });
 const SplashStackNavigator = createStackNavigator({
-    SplashScreen:{screen:SplashScreen},
-    GetVerificationCodeScreen:{screen:GetVerificationCodeScreen},
-    VerifyScreen : {screen:VerifyScreen}
-},{
-    // initialRouteName:'VerifyScreen'
-    initialRouteName:'SplashScreen'
+    SplashScreen: {screen: SplashScreen},
+    GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
+    VerifyScreen: {screen: VerifyScreen}
+}, {
+    initialRouteName: 'SplashScreen'
 });
 const AppDrawerNavigator = createDrawerNavigator({
-    RegisterScreen:{screen:RegisterScreen},
-    //SplashScreen: {screen: SplashScreen},
+    RegisterScreen: {screen: RegisterScreen},
     HomeScreen: {screen: HomeScreen},
     ReserveScreen: {screen: ReserveScreen},
     HistoryScreen: HistoryStackNavigator,
@@ -93,25 +91,21 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 }, {
     initialRouteName: 'HomeScreen',
-    // initialRouteName: 'RegisterScreen',
-    // initialRouteName:'GetVerificationCodeScreen',
-    // initialRouteName:'VerifyScreen',
     contentComponent: SideMenu,
-    user:{username:'empty',password:'empty',role:'stranger'},
+    user: {username: 'empty', password: 'empty', role: 'stranger'},
     drawerPosition: 'left',
     drawerOpenRoute: 'DrawerOpen',
     drawerCloseRoute: 'DrawerClose',
     drawerToggleRoute: 'DrawerToggle'
 });
 const AppSwitchNavigator = createSwitchNavigator({
-    SplashItem:SplashStackNavigator,
-    HomeItem:AppDrawerNavigator
-},{
-    initialRouteName:'SplashItem'
+    SplashItem: SplashStackNavigator,
+    HomeItem: AppDrawerNavigator
+}, {
+    initialRouteName: 'SplashItem'
 });
 
 export default createAppContainer(AppSwitchNavigator);
-// export default createAppContainer(AppDrawerNavigator);
 
 
 

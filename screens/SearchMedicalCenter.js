@@ -101,6 +101,7 @@ export default class SearchMedicalCenter extends Component {
     }
 
     async getFavoriteMedicalCenters() {
+        await this.setState({progressModalVisible: true})
         await fetch(this.state.baseUrl + GETFAVORITEMEDICALCENTERS, {
             method: 'GET',
             headers: {
@@ -109,11 +110,14 @@ export default class SearchMedicalCenter extends Component {
                 'Authorization': 'Bearer ' + new String(this.state.token)
             },
         }).then((response) => response.json())
-            .then((responseData) => {
+            .then(async (responseData) => {
                 if (responseData['StatusCode'] === 200) {
                     if (responseData['Data'] != null) {
                         let data = responseData['Data'];
-                        this.setState({favoriteMedicalCenters: data})
+                        await this.setState({progressModalVisible: false}, () => {
+                            this.setState({favoriteMedicalCenters: data})
+                        })
+
                     }
                 } else {
 
@@ -235,7 +239,7 @@ export default class SearchMedicalCenter extends Component {
                                                     height: '100%',
                                                     textAlign: 'right',
                                                     fontSize: 15,
-                                                }}>{item.title}</Text>
+                                                }}>{item.Title}</Text>
                                             </Body>
                                         </ListItem>
                                     </View>
@@ -291,8 +295,8 @@ export default class SearchMedicalCenter extends Component {
                             <ModalContent style={styles.modalContent}>
                                 <View>
                                     <Text style={[styles.modalCancelButtonText,
-                                        {fontSize: 13}]}>{this.state.selectedMedicalCenter.Description != null ?
-                                        this.state.selectedMedicalCenter.Description : 'توضیحات'}</Text>
+                                        {fontSize: 13,fontWeight: 'bold'}]}>{this.state.selectedMedicalCenter.Description != null ?
+                                        this.state.selectedMedicalCenter.Description : ''}</Text>
                                 </View>
                             </ModalContent>
                         </Modal>
