@@ -73,7 +73,7 @@ export default class SideMenu extends Component {
                     <ImageBackground style={styles.headerImage}
                                      source={require(
                                          'D:\\E\\react native projects\\salamat\\assets\\images\\BACK.png')}>
-                        <Card style={{backgroundColor: 'rgba(35,185,185,0.41)'}}>
+                        <Card style={{backgroundColor: 'rgba(48,255,255,0)'}}>
                             <CardItem style={{backgroundColor: 'rgba(35,185,185,0.41)'}}>
                                 <Left>
                                     <View>

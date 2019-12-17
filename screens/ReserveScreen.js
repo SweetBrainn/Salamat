@@ -93,12 +93,98 @@ export default class ReserveScreen extends Component {
 
 
     async componentWillMount(): void {
-        var token = await AsyncStorage.getItem('token');
-        var baseUrl = await AsyncStorage.getItem('baseUrl')
-        await this.setState({baseUrl: baseUrl, token: token}, () => {
-            this.getSkills();
-        })
-
+        const token = await AsyncStorage.getItem('token');
+        const baseUrl = await AsyncStorage.getItem('baseUrl');
+        this.setState({
+            token:token,
+            baseUrl : baseUrl
+        },()=>{
+            this.getSkills()
+        });
+        // if (typeof this.props.navigation.getParam('medicalCenter') !== "undefined" &&
+        //     this.props.navigation.getParam('medicalCenter') != null &&
+        //     typeof this.props.navigation.getParam('doctor') !== "undefined" &&
+        //     this.props.navigation.getParam('doctor') != null) {
+        //     const medicalCenter = this.props.navigation.getParam('medicalCenter');
+        //     const doctor = this.props.navigation.getParam('doctor');
+        //     try {
+        //         const length = medicalCenter.Title.length;
+        //         await this.setState({
+        //             selectedMedicalCenter: medicalCenter,
+        //             doctor: doctor,
+        //             baseUrl: baseUrl,
+        //             token: token,
+        //         })
+        //     } catch (e) {
+        //         await this.setState({
+        //                 baseUrl: baseUrl,
+        //                 token: token,
+        //             },
+        //             () => {
+        //
+        //                 this.getSkills();
+        //
+        //             }
+        //         )
+        //     }
+        //
+        // }else if(typeof this.props.navigation.getParam('medicalCenter') !== "undefined" &&
+        //     this.props.navigation.getParam('medicalCenter') != null){
+        //     const medicalCenter = this.props.navigation.getParam('medicalCenter');
+        //     try {
+        //         const length = medicalCenter.Title.length;
+        //         await this.setState({
+        //             selectedMedicalCenter: medicalCenter,
+        //             baseUrl: baseUrl,
+        //             token: token,
+        //         })
+        //     } catch (e) {
+        //         await this.setState({
+        //                 baseUrl: baseUrl,
+        //                 token: token,
+        //             },
+        //             () => {
+        //
+        //                 this.getSkills();
+        //
+        //             }
+        //         )
+        //     }
+        // }
+        // else if(typeof this.props.navigation.getParam('doctor') !== "undefined" &&
+        //     this.props.navigation.getParam('doctor') != null){
+        //     const doctor = this.props.navigation.getParam('doctor');
+        //     try {
+        //         await this.setState({
+        //             doctor: doctor,
+        //             baseUrl: baseUrl,
+        //             token: token,
+        //         })
+        //     } catch (e) {
+        //         await this.setState({
+        //                 baseUrl: baseUrl,
+        //                 token: token,
+        //             },
+        //             () => {
+        //
+        //                 this.getSkills();
+        //
+        //             }
+        //         )
+        //     }
+        // }
+        // else {
+        //     await this.setState({
+        //             baseUrl: baseUrl,
+        //             token: token,
+        //         },
+        //         () => {
+        //
+        //             this.getSkills();
+        //
+        //         }
+        //     )
+        // }
     }
 
 

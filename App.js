@@ -22,19 +22,27 @@ import AdvanceSearchScreen from "./screens/AdvanceSearchScreen"
 import DetailsScreen from "./screens/DetailsScreen"
 import RegisterScreen from "./screens/RegisterScreen";
 import DetailsForMedicalCenterScreen from './screens/DetailsForMedicalCenterScreen'
-
-
-const SearchMedicalCenterNavigator = createStackNavigator({
-    SearchMedicalCenter: {screen: SearchMedicalCenter},
-    AdvanceSearchScreen: {screen: AdvanceSearchScreen},
-    DetailsForMedicalCenterScreen: {screen: DetailsForMedicalCenterScreen},
-    SearchDoctorScreen: {screen: SearchDoctorScreen}
-},);
+import MedicalCentersResult from "./screens/MedicalCentersResult";
 
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen}
+}, {
+    defaultNavigationOptions: {
+        header: null
+    }
+});
+const SearchMedicalCenterNavigator = createStackNavigator({
+    SearchMedicalCenter: {screen: SearchMedicalCenter},
+    AdvanceSearchScreen: {screen: AdvanceSearchScreen},
+    DetailsForMedicalCenterScreen: {screen: DetailsForMedicalCenterScreen},
+    MedicalCenterResultScreen : {screen:MedicalCentersResult},
+    SearchDoctorScreen: SearchDoctorNavigator
+}, {
+    defaultNavigationOptions: {
+        header: null
+    }
 });
 
 const VerificationStackNavigator = createStackNavigator({

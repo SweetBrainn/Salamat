@@ -138,9 +138,14 @@ export default class SearchMedicalCenter extends Component {
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.props.navigation.openDrawer()}>
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                    this.props.navigation.openDrawer()
+                                }}>
                             <Icon style={styles.headerMenuIcon} name='menu'
-                                  onPress={() => this.props.navigation.openDrawer()}/>
+                                  onPress={() => {
+                                      Keyboard.dismiss();
+                                      this.props.navigation.openDrawer()}}/>
                         </Button>
                     </Left>
                     <Right>
