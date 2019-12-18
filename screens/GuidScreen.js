@@ -99,6 +99,7 @@ export default class GuidScreen extends Component {
                     </Right>
                 </Header>
                 <Content padder style={styles.content}>
+
                     <Card style={styles.card} cardItemPadding={14}>
                         <CardItem style={styles.cardHeader} header bordered>
                             <Body style={styles.body}>

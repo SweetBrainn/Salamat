@@ -23,11 +23,13 @@ import DetailsScreen from "./screens/DetailsScreen"
 import RegisterScreen from "./screens/RegisterScreen";
 import DetailsForMedicalCenterScreen from './screens/DetailsForMedicalCenterScreen'
 import MedicalCentersResult from "./screens/MedicalCentersResult";
+import DoctorsResult from "./screens/DoctorsResult";
 
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
-    DetailsScreen: {screen: DetailsScreen}
+    DetailsScreen: {screen: DetailsScreen},
+    DoctorsResultScreen:{screen:DoctorsResult}
 }, {
     defaultNavigationOptions: {
         header: null

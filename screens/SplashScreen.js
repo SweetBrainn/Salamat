@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, ImageBackground} from 'react-native';
+import {StyleSheet, ImageBackground} from 'react-native';
 
 
 export default class SplashScreen extends Component {
+
     performTimeConsumingTask = async () => {
         return new Promise((resolve) =>
             setTimeout(

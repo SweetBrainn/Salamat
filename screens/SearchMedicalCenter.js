@@ -190,7 +190,8 @@ export default class SearchMedicalCenter extends Component {
                                         Keyboard.dismiss()
                                         this.props.navigation.navigate('AdvanceSearchScreen', {
                                             medicalCenter: true,
-                                            doctor: false
+                                            doctor: false,
+                                            // headerFontSize : 20
                                         })
                                     }}>
                                 <Text style={{textAlign: 'right', fontSize: 13, color: '#23b9b9'}}>جستجوی پیشرفته</Text>
