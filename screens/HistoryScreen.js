@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Platform, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar} from 'react-native';
 import {
     Container,
     Header,
-    Title,
-    Content,
-    Footer,
-    FooterTab,
     Button,
     Tabs,
     Tab,
@@ -16,15 +12,12 @@ import {
     Left,
     Right
 } from 'native-base';
-import Drawer from "react-native-drawer";
-import SideMenu from "../Menu/SideMenu";
 import MedicalFilesScreen from "./MedicalFilesScreen";
 import ShowReservesScreen from "./ShowReservesScreen";
-import OldReserveScreen from "./OldReservesScreen";
 import InboxScreen from "./InboxScreen";
 import HomeScreen from "./HomeScreen";
 
-const homeScreen = HomeScreen;
+
 export default class HistoryScreen extends Component {
     render() {
         return (

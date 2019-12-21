@@ -24,12 +24,13 @@ import RegisterScreen from "./screens/RegisterScreen";
 import DetailsForMedicalCenterScreen from './screens/DetailsForMedicalCenterScreen'
 import MedicalCentersResult from "./screens/MedicalCentersResult";
 import DoctorsResult from "./screens/DoctorsResult";
+import ServicePlanResult from "./screens/ServicePlanResult";
 
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen},
-    DoctorsResultScreen:{screen:DoctorsResult}
+    DoctorsResultScreen: {screen: DoctorsResult}
 }, {
     defaultNavigationOptions: {
         header: null
@@ -39,7 +40,7 @@ const SearchMedicalCenterNavigator = createStackNavigator({
     SearchMedicalCenter: {screen: SearchMedicalCenter},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsForMedicalCenterScreen: {screen: DetailsForMedicalCenterScreen},
-    MedicalCenterResultScreen : {screen:MedicalCentersResult},
+    MedicalCenterResultScreen: {screen: MedicalCentersResult},
     SearchDoctorScreen: SearchDoctorNavigator
 }, {
     defaultNavigationOptions: {
@@ -86,10 +87,14 @@ const SplashStackNavigator = createStackNavigator({
 }, {
     initialRouteName: 'SplashScreen'
 });
+const ReserveStackNavigator = createStackNavigator({
+    ReserveScreen: {screen: ReserveScreen},
+    ServicePlanResultScreen: {screen: ServicePlanResult}
+});
 const AppDrawerNavigator = createDrawerNavigator({
     RegisterScreen: {screen: RegisterScreen},
     HomeScreen: {screen: HomeScreen},
-    ReserveScreen: {screen: ReserveScreen},
+    ReserveScreen: ReserveStackNavigator,
     HistoryScreen: HistoryStackNavigator,
     ProfileScreen: {screen: ProfileScreen},
     GuideScreen: GuidStackNavigator,

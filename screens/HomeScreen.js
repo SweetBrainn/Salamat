@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Linking, StatusBar, Platform, AsyncStorage, ActivityIndicator} from 'react-native';
-import {Container, Header, Title, Content, Footer, Fab, Button, Left, Right, Toast, Icon, Text} from 'native-base';
-import HTML from 'react-native-render-html';
+import {StyleSheet, View, Linking, StatusBar, Platform, ActivityIndicator} from 'react-native';
+import {Container, Header, Footer, Fab, Button, Left, Right, Icon, Text} from 'native-base';
 import * as Permissions from 'expo-permissions'
 import * as Location from 'expo-location';
 import Constants from 'expo-constants'
 import {WebView} from 'react-native-webview';
 import * as IntentLauncher from 'expo-intent-launcher';
-import MapView from 'react-native-maps'
 import Modal, {ModalContent, SlideAnimation} from "react-native-modals";
 
 // import DeviceInfo from 'react-native-device-info'
@@ -73,10 +71,10 @@ export default class HomeScreen extends Component {
     }
 
     openSettings = async () => {
-        if (Platform.OS == 'ios') {
-            Linking.openURL('app-settings:');
+        if (Platform.OS === 'ios') {
+            await Linking.openURL('app-settings:');
         } else {
-            IntentLauncher.startActivityAsync(
+            await IntentLauncher.startActivityAsync(
                 IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
             );
         }

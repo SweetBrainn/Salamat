@@ -35,14 +35,15 @@ const GETSERVICEDETAILS = '/api/GetServiceDetails';
 const GETGENDERS = '/api/GetGenders';
 const GETSKILLS = '/api/GetSkills';
 const GETCERTIFICATES = '/api/GetCertificates';
+const SEARCHRESERVES = '/api/SearchReserves';
 export default class ReserveScreen extends Component {
     _isMounted = false;
 
     constructor(props) {
         super(props);
         this.state = {
-            medicalCenterSearchWord: '',
-            doctorSearchWord: '',
+            medicalCenterSearchWord: null,
+            doctorSearchWord: null,
             //-----------------------Progress Modal States--------------------
             progressModalVisible: false,
             //-----------------------API States--------------------
@@ -96,9 +97,9 @@ export default class ReserveScreen extends Component {
         const token = await AsyncStorage.getItem('token');
         const baseUrl = await AsyncStorage.getItem('baseUrl');
         this.setState({
-            token:token,
-            baseUrl : baseUrl
-        },()=>{
+            token: token,
+            baseUrl: baseUrl
+        }, () => {
             this.getSkills()
         });
         // if (typeof this.props.navigation.getParam('medicalCenter') !== "undefined" &&
@@ -252,16 +253,57 @@ export default class ReserveScreen extends Component {
             })
     }
 
-    async searchServicePlans() {
+    searchServicePlans(medicalCenterSearchWord, doctorSearchWord, skill, gender, startDate, endDate) {
         let body = {
-            medicalCenterSearchWord: this.state.medicalCenterSearchWord,
-            doctorSearchWord: this.state.doctorSearchWord,
-            state: this.state.selectedState.id.toString(),
-            gender: this.state.selectedGender.id.toString(),
-            startDate: this.state.selectedStartDate.format('YYYY-M-D'),
-            endDate: this.state.selectedEndDate.format('YYYY-M-D')
+            medicalCenterSearchWord: medicalCenterSearchWord != null ? medicalCenterSearchWord : null,
+            doctorSearchWord: doctorSearchWord != null ? doctorSearchWord : null,
+            skill: skill.id !== -100 ? skill.value : null,
+            gender: gender.id !== -100 ? gender.id.toString() : null,
+            startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
+            endDate: endDate != null ? endDate.format('YYYY-M-D') : null
         }
-        alert(JSON.stringify(body))
+        this.setState({progressModalVisible: true})
+        fetch(this.state.baseUrl + SEARCHRESERVES, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+            body: JSON.stringify(body)
+        }).then((response) => response.json())
+            .then((responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        this.setState({progressModalVisible: false}, () => {
+                            if (data.length <= 0) {
+                                alert('موردی یافت نشد')
+                            } else {
+                                // alert(JSON.stringify(data))
+                                this.props.navigation.navigate('ServicePlanResultScreen',{
+                                    result : data,
+                                    medicalCenterSearchWord: medicalCenterSearchWord != null ? medicalCenterSearchWord : null,
+                                    doctorSearchWord: doctorSearchWord != null ? doctorSearchWord : null,
+                                    skill: skill.id !== -100 ? skill.value : null,
+                                    gender: gender.id !== -100 ? gender.value : null,
+                                    startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
+                                    endDate: endDate != null ? endDate.format('YYYY-M-D') : null
+                                })
+                            }
+                        })
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert('خطا در اتصال به سرویس')
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
     }
 
     onStartDateChange(date) {
@@ -949,7 +991,14 @@ export default class ReserveScreen extends Component {
                 </Root>
                 <Footer style={styles.footer}>
                     <Button style={styles.button} onPress={() => {
-                        this.searchServicePlans()
+                        this.searchServicePlans(
+                            this.state.medicalCenterSearchWord,
+                            this.state.doctorSearchWord,
+                            this.state.selectedSkill,
+                            this.state.selectedGender,
+                            this.state.selectedStartDate,
+                            this.state.selectedEndDate
+                        )
                     }}>
                         <Text style={[{color: '#fff', fontSize: 15}]}>جستجو</Text>
                     </Button>
