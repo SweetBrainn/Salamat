@@ -33,13 +33,27 @@ const map = '<!DOCTYPE html>\n' +
     '    var marker;\n' +
     '\n' +
     '\n' +
+    '\n' +
+    '\n' +
+    '\n' +
     '    function LoadMap(panelId) {\n' +
-    '        map = new MPS.Map(panelId, {controls: [\'Navigation\'], zoom: 3});\n' +
+    '        map = new MPS.Map(panelId, {controls: [\'Navigation\',\'ZoomBar\',\'ScaleLine\',\'Navigator\'], zoom: 1});\n' +
     '        marker = null;\n' +
+    '        map.setCenter(new MPS.LonLat(35.637911, 51.390477), 3);\n' +
+    '        var size = new MPS.Size(34, 34);\n' +
+    '        var offset = new MPS.Pixel(-size.w / 2,(-size.h));\n' +
+    '        var icon = new\n' +
+    '        MPS.Icon(\'https://i.dlpng.com/static/png/1465417-download-this-image-as-map-marker-png-600_498_preview.png\',\n' +
+    '            size, offset);\n' +
+    '        var marker = new MPS.Marker(new MPS.LonLat(35.637911, 51.390477), icon);\n' +
+    '        map.addMarker(marker);\n' +
+    '\n' +
     '    }\n' +
     '\n' +
     '    LoadMap(\'mapId\');\n' +
-    '</script>\n' +
+    '\n' +
+    '\n' +
+    '</script>\n\n' +
     '\n' +
     '\n' +
     '</html>';
@@ -49,13 +63,27 @@ const javascript = '<script src="http://tmap.tehran.ir/app/pub/index.php/applica
     '    var marker;\n' +
     '\n' +
     '\n' +
+    '\n' +
+    '\n' +
+    '\n' +
     '    function LoadMap(panelId) {\n' +
-    '        map = new MPS.Map(panelId, {controls: [\'Navigation\'], zoom: 3});\n' +
+    '        map = new MPS.Map(panelId, {controls: [\'Navigation\',\'ZoomBar\',\'ScaleLine\',\'Navigator\'], zoom: 1});\n' +
     '        marker = null;\n' +
+    '        map.setCenter(new MPS.LonLat(35.637911, 51.390477), 3);\n' +
+    '        var size = new MPS.Size(34, 34);\n' +
+    '        var offset = new MPS.Pixel(-size.w / 2,(-size.h));\n' +
+    '        var icon = new\n' +
+    '        MPS.Icon(\'https://i.dlpng.com/static/png/1465417-download-this-image-as-map-marker-png-600_498_preview.png\',\n' +
+    '            size, offset);\n' +
+    '        var marker = new MPS.Marker(new MPS.LonLat(35.637911, 51.390477), icon);\n' +
+    '        map.addMarker(marker);\n' +
+    '\n' +
     '    }\n' +
     '\n' +
     '    LoadMap(\'mapId\');\n' +
-    '</script>\n';
+    '\n' +
+    '\n' +
+    '</script>\n'
 export default class HomeScreen extends Component {
 
     constructor(props) {
@@ -159,7 +187,7 @@ export default class HomeScreen extends Component {
                         onLoadStart={() => this.setState({progressModalVisible: true})}
                         onLoadEnd={() => this.setState({progressModalVisible: false})}
                         originWhitelist={['*']}
-                        onLoadProgress={()=>this.setState({progressModalVisible:!this.state.progressModalVisible})}
+                        onLoadProgress={() => this.setState({progressModalVisible: !this.state.progressModalVisible})}
                         source={{html: map}}
                         injectedJavaScript={javascript}
                     />

@@ -6,7 +6,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import AbortController from "abort-controller/dist/abort-controller";
 import Dialog from "react-native-dialog";
 import {
-    ActionSheet,
+    List,
     Button,
     Body,
     Container,
@@ -18,15 +18,14 @@ import {
     Right,
     Root,
     Input,
-    ListItem,
+    ListItem, Thumbnail,
 } from 'native-base';
-import SearchableDropdown from 'react-native-searchable-dropdown';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
-import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
 
 const SEARCHMEDICALCENTERALLFIELD = '/api/SearchMedicalCenterAllField';
 const GETFAVORITEMEDICALCENTERS = '/api/GetFavoriteMedicalCenters';
+
 export default class SearchMedicalCenter extends Component {
 
     constructor(props) {
@@ -145,7 +144,8 @@ export default class SearchMedicalCenter extends Component {
                             <Icon style={styles.headerMenuIcon} name='menu'
                                   onPress={() => {
                                       Keyboard.dismiss();
-                                      this.props.navigation.openDrawer()}}/>
+                                      this.props.navigation.openDrawer()
+                                  }}/>
                         </Button>
                     </Left>
                     <Right>
@@ -198,69 +198,117 @@ export default class SearchMedicalCenter extends Component {
                             </Button>
                         </View>
 
-                        {(this.state.data != null && this.state.data.length >= 1) ? this.state.data.map((item, key) => (
-                                <View key={key}>
-                                    <ListItem
-                                        style={{width: '100%', height: 50, alignSelf: 'center', padding: 1, marginTop: 2}}
-                                        onPress={() => {
-                                            Keyboard.dismiss()
-                                            this.setState({selectedMedicalCenter: item, visible: true})
-                                        }
-                                        }
+                        <List>
+                            {(this.state.data != null && this.state.data.length >= 1) ?
+                                this.state.data.map((item, key) => (
 
-                                    >
-                                        <Body>
-                                            <Text style={{
-                                                color: '#000',
-                                                width: '100%',
-                                                height: '100%',
-                                                textAlign: 'right',
-                                                fontSize: 15,
-                                            }}>{item.Title}</Text>
-                                        </Body>
-                                    </ListItem>
-                                </View>
-                            )) :
-                            this.state.data.length === 0 ? this.state.favoriteMedicalCenters.map((item, key) => (
                                     <View key={key}>
-                                        <ListItem
-                                            style={{
-                                                width: '100%',
-                                                height: 50,
-                                                alignSelf: 'center',
-                                                padding: 1,
-                                                marginTop: 2
-                                            }}
-                                            onPress={() => {
-                                                Keyboard.dismiss()
-                                                this.setState({selectedMedicalCenter: item, visible: true})
-                                            }
-                                            }
+                                        <View key={key} style={{borderBottomColor: '#e9e9e9', borderBottomWidth: 1}}>
+                                            <ListItem noBorder
+                                                      style={{
+                                                          width: '100%',
+                                                          alignSelf: 'center',
+                                                          padding: 1,
+                                                          marginTop: 2,
+                                                          borderColor: '#fff',
+                                                          justifyContent: 'center',
+                                                          alignContent: 'center',
+                                                          alignItems: 'center',
+                                                      }}
+                                                      onPress={() => {
+                                                          Keyboard.dismiss()
+                                                          this.setState({selectedMedicalCenter: item, visible: true})
+                                                      }
+                                                      }
 
-                                        >
-                                            <Body>
-                                                <Text style={{
-                                                    color: '#000',
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    textAlign: 'right',
-                                                    fontSize: 15,
-                                                }}>{item.Title}</Text>
-                                            </Body>
-                                        </ListItem>
+                                            >
+                                                <Body style={{height: '100%', marginRight: 5, alignSelf: 'center'}}>
+                                                    <Text style={{
+                                                        color: '#000',
+                                                        textAlign: 'right',
+                                                        fontSize: 15,
+                                                        marginRight: 1,
+                                                        marginTop: 5,
+
+                                                    }}>{item.Title}</Text>
+                                                    {(item.Facility != null || item.ServiceDetail != null ||
+                                                        item.Service != null) && <Text style={{
+                                                        color: '#23b9b9',
+                                                        textAlign: 'right',
+                                                        fontSize: 13,
+                                                        fontWeight: 'bold',
+                                                        marginTop: 5,
+                                                        marginRight: 1
+                                                    }}>{item.ServiceDetail != null ? ' ' + item.ServiceDetail + ' ' :
+                                                        null}{item.Service != null ? item.Service + ' ، ' :
+                                                        null}{item.Facility}</Text>}
+
+
+                                                    {item.Phone != null && <Text style={{
+                                                        color: '#a9a9a9',
+                                                        textAlign: 'right',
+                                                        fontWeight: 'bold',
+                                                        fontSize: 13,
+                                                        marginTop: 5,
+                                                        marginRight: 1
+                                                    }}> تلفن : {item.Phone}</Text>}
+                                                    {item.Address != null && <Text style={{
+                                                        color: '#a9a9a9',
+                                                        textAlign: 'right',
+                                                        fontWeight: 'bold',
+                                                        fontSize: 13,
+                                                        marginTop: 5,
+                                                        marginRight: 1
+                                                    }}>{item.Address}</Text>}
+                                                </Body>
+                                            </ListItem>
+                                        </View>
+
+
                                     </View>
-                                ))
 
 
-                                : <View style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Text style={{color: 'gray'}}>موردی یافت نشد</Text>
-                                </View>}
+                                )) :
+                                this.state.data.length === 0 ? this.state.favoriteMedicalCenters.map((item, key) => (
+                                        <View key={key}>
+                                            <ListItem
+                                                style={{
+                                                    width: '100%',
+                                                    height: 50,
+                                                    alignSelf: 'center',
+                                                    padding: 1,
+                                                    marginTop: 2
+                                                }}
+                                                onPress={() => {
+                                                    Keyboard.dismiss()
+                                                    this.setState({selectedMedicalCenter: item, visible: true})
+                                                }
+                                                }
 
+                                            >
+                                                <Body>
+                                                    <Text style={{
+                                                        color: '#000',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        textAlign: 'right',
+                                                        fontSize: 15,
+                                                    }}>{item.Title}</Text>
+                                                </Body>
+                                            </ListItem>
+                                        </View>
+                                    ))
+
+
+                                    : <View style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <Text style={{color: 'gray'}}>موردی یافت نشد</Text>
+                                    </View>}
+                        </List>
                         <Modal
                             width={300}
                             onTouchOutside={() => {
@@ -301,7 +349,11 @@ export default class SearchMedicalCenter extends Component {
                             <ModalContent style={styles.modalContent}>
                                 <View>
                                     <Text style={[styles.modalCancelButtonText,
-                                        {fontSize: 13,fontWeight: 'bold'}]}>{this.state.selectedMedicalCenter.Description != null ?
+                                        {
+                                            color: '#000',
+                                            fontSize: 15,
+
+                                        }]}>{this.state.selectedMedicalCenter.Description != null ?
                                         this.state.selectedMedicalCenter.Description : ''}</Text>
                                 </View>
                             </ModalContent>
@@ -325,6 +377,8 @@ export default class SearchMedicalCenter extends Component {
 
     }
 }
+
+
 SearchMedicalCenter.navigationOptions = {
     header: null,
     title: 'جستجوی مرکز درمانی',
