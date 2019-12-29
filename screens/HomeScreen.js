@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Linking, StatusBar, Platform, ActivityIndicator} from 'react-native';
-import {Container, Header, Footer, Fab, Button, Left, Right, Icon, Text} from 'native-base';
+import {Container, Header, Footer, Fab, Button, Left, Right, Icon, Text, Content} from 'native-base';
 import * as Permissions from 'expo-permissions'
 import * as Location from 'expo-location';
 import Constants from 'expo-constants'
@@ -160,7 +160,8 @@ export default class HomeScreen extends Component {
 
         return (
             <Container>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}

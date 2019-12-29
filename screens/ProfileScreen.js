@@ -87,7 +87,7 @@ export default class ProfileScreen extends Component {
     render() {
         return (
             <Container>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={{
                     backgroundColor: '#23b9b9', shadowOffset: {height: 0, width: 0},
                     shadowOpacity: 0, shadowColor: '#23b9b9'

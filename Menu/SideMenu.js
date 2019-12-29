@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {StyleSheet, View, Text, ImageBackground, Image, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Image, ActivityIndicator, StatusBar} from 'react-native';
 import {
     Content,
     Container,
@@ -36,6 +36,10 @@ export default class SideMenu extends Component {
 
     }
 
+    componentDidMount(): void {
+        StatusBar.setHidden(true)
+    }
+
     getAccess(menuItem, role) {
         if (role !== 'admin') {
             if (menuItem === 'guide') {
@@ -68,6 +72,7 @@ export default class SideMenu extends Component {
         let PARAMS = {};
         return (
             <Container>
+
                 {/*<View style={{height: '100%', width: '100%', backgroundColor: '#23b9b9'}}>*/}
                 <View style={{height: '20%', width: '100%', backgroundColor: '#23b9b9'}}>
                     <ImageBackground style={styles.headerImage}

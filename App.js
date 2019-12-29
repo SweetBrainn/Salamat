@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {StatusBar} from "react-native";
 import {createDrawerNavigator, createAppContainer, createStackNavigator, createSwitchNavigator} from "react-navigation";
 import HomeScreen from './screens/HomeScreen'
 import SplashScreen from "./screens/SplashScreen";
@@ -33,7 +34,8 @@ const SearchDoctorNavigator = createStackNavigator({
     DoctorsResultScreen: {screen: DoctorsResult}
 }, {
     defaultNavigationOptions: {
-        header: null
+        gesturesEnabled:false,
+        header: null,
     }
 });
 const SearchMedicalCenterNavigator = createStackNavigator({
@@ -44,7 +46,8 @@ const SearchMedicalCenterNavigator = createStackNavigator({
     SearchDoctorScreen: SearchDoctorNavigator
 }, {
     defaultNavigationOptions: {
-        header: null
+        header: null,
+        gesturesEnabled:false,
     }
 });
 
@@ -58,13 +61,18 @@ const ChatStackNavigator = createStackNavigator({
     ChatScreen: {screen: ChatScreen}
 }, {
     defaultNavigationOptions: {
-        header: null
+        header: null,
+        gesturesEnabled:false,
     }
 });
 
 const GuidStackNavigator = createStackNavigator({
     GuideScreen: {screen: GuidScreen},
     MoreInfo: {screen: MoreInfo}
+},{
+    defaultNavigationOptions:{
+        gesturesEnabled:false,
+    }
 })
 const HistoryStackNavigator = createStackNavigator({
     HistoryScreen: {screen: HistoryScreen},
@@ -77,7 +85,8 @@ const HistoryStackNavigator = createStackNavigator({
 }, {
     initialRouteName: 'HistoryScreen',
     defaultNavigationOptions: {
-        header: null
+        header: null,
+        gesturesEnabled:false,
     }
 });
 const SplashStackNavigator = createStackNavigator({
@@ -85,7 +94,10 @@ const SplashStackNavigator = createStackNavigator({
     GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
     VerifyScreen: {screen: VerifyScreen}
 }, {
-    initialRouteName: 'SplashScreen'
+    initialRouteName: 'SplashScreen',
+    defaultNavigationOptions:{
+        gesturesEnabled:false,
+    }
 });
 const ReserveStackNavigator = createStackNavigator({
     ReserveScreen: {screen: ReserveScreen},
@@ -105,6 +117,9 @@ const AppDrawerNavigator = createDrawerNavigator({
     VerifyScreen: VerificationStackNavigator
 
 }, {
+    defaultNavigationOptions:{
+        gesturesEnabled:false,
+    },
     initialRouteName: 'HomeScreen',
     contentComponent: SideMenu,
     user: {username: 'empty', password: 'empty', role: 'stranger'},
@@ -113,11 +128,27 @@ const AppDrawerNavigator = createDrawerNavigator({
     drawerCloseRoute: 'DrawerClose',
     drawerToggleRoute: 'DrawerToggle'
 });
+
+const defaultGetStateForAction = AppDrawerNavigator.router.getStateForAction;
+
+AppDrawerNavigator.router.getStateForAction = (action, state) => {
+    if (state && action.type === 'Navigation/NAVIGATE' && action.routeName === 'DrawerClose') {
+        StatusBar.setHidden(false);
+    }
+
+    if (state && action.type === 'Navigation/NAVIGATE' && action.routeName === 'DrawerOpen') {
+        StatusBar.setHidden(true);
+    }
+
+
+    return defaultGetStateForAction(action, state);
+};
+
 const AppSwitchNavigator = createSwitchNavigator({
     SplashItem: SplashStackNavigator,
     HomeItem: AppDrawerNavigator
 }, {
-    initialRouteName: 'SplashItem'
+    initialRouteName: 'SplashItem',
 });
 
 export default createAppContainer(AppSwitchNavigator);

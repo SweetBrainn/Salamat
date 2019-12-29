@@ -29,13 +29,9 @@ import {
 //date.format('jYYYY-jM-jD [is] YYYY-M-D')
 
 const CANCEL_TEXT = 'انصراف';
-const GETSERVICES = '/api/GetServices';
-const GETFACILITIES = '/api/GetFacilities';
-const GETSERVICEDETAILS = '/api/GetServiceDetails';
 const GETGENDERS = '/api/GetGenders';
 const GETSKILLS = '/api/GetSkills';
-const GETCERTIFICATES = '/api/GetCertificates';
-const SEARCHRESERVES = '/api/SearchReserves';
+const SEARCHSERVICEPLAN = '/api/SearchServicePlan';
 export default class ReserveScreen extends Component {
     _isMounted = false;
 
@@ -262,48 +258,64 @@ export default class ReserveScreen extends Component {
             startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
             endDate: endDate != null ? endDate.format('YYYY-M-D') : null
         }
-        this.setState({progressModalVisible: true})
-        fetch(this.state.baseUrl + SEARCHRESERVES, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + new String(this.state.token)
-            },
-            body: JSON.stringify(body)
-        }).then((response) => response.json())
-            .then((responseData) => {
-                if (responseData['StatusCode'] === 200) {
-                    if (responseData['Data'] != null) {
-                        let data = responseData['Data'];
+        console.log(JSON.stringify(body))
+        if (body.startDate === null || body.endDate === null) {
+            alert('لطفا بازه زمانی مورد نظر را انتخاب کنید')
+        } else {
+            this.setState({progressModalVisible: true})
+            fetch(this.state.baseUrl + SEARCHSERVICEPLAN, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    Accept: 'application/json',
+                    'Authorization': 'Bearer ' + new String(this.state.token)
+                },
+                body: JSON.stringify(body)
+            }).then((response) => response.json())
+                .then((responseData) => {
+                    if (responseData['StatusCode'] === 200) {
+                        if (responseData['Data'] != null) {
+                            let data = responseData['Data'];
+                            this.setState({progressModalVisible: false}, () => {
+                                if (data.length <= 0) {
+                                    alert('موردی یافت نشد')
+                                } else {
+                                    // alert(JSON.stringify(data))
+                                    this.props.navigation.navigate('ServicePlanResultScreen', {
+                                        result: data,
+                                        medicalCenterSearchWord: medicalCenterSearchWord != null ?
+                                            medicalCenterSearchWord :
+                                            null,
+                                        doctorSearchWord: doctorSearchWord != null ? doctorSearchWord : null,
+                                        skill: skill.id !== -100 ? skill.value : null,
+                                        gender: gender.id !== -100 ? gender.value : null,
+                                        startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
+                                        endDate: endDate != null ? endDate.format('YYYY-M-D') : null
+                                    })
+                                }
+                            })
+                        }
+                    } else if (responseData['StatusCode'] === 100019) {
                         this.setState({progressModalVisible: false}, () => {
-                            if (data.length <= 0) {
-                                alert('موردی یافت نشد')
-                            } else {
-                                // alert(JSON.stringify(data))
-                                this.props.navigation.navigate('ServicePlanResultScreen',{
-                                    result : data,
-                                    medicalCenterSearchWord: medicalCenterSearchWord != null ? medicalCenterSearchWord : null,
-                                    doctorSearchWord: doctorSearchWord != null ? doctorSearchWord : null,
-                                    skill: skill.id !== -100 ? skill.value : null,
-                                    gender: gender.id !== -100 ? gender.value : null,
-                                    startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
-                                    endDate: endDate != null ? endDate.format('YYYY-M-D') : null
-                                })
-                            }
+                            alert('توالی تاریخ رعایت نشده است !')
                         })
-                    }
-                } else {
-                    this.setState({progressModalVisible: false}, () => {
-                        alert('خطا در اتصال به سرویس')
-                    })
+                    } else if (responseData['StatusCode'] === 100020) {
+                        this.setState({progressModalVisible: false}, () => {
+                            alert('لطفا بازه تاریخی را کمتر از 5 ماه وارد کنید !')
+                        })
+                    } else {
+                        this.setState({progressModalVisible: false}, () => {
+                            // alert('خطا در اتصال به سرویس')
+                            alert(JSON.stringify(responseData))
+                        })
 
-                }
-            })
-            .catch((error) => {
-                console.error(error)
-                // alert(error)
-            })
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                    // alert(error)
+                })
+        }
     }
 
     onStartDateChange(date) {
@@ -347,7 +359,7 @@ export default class ReserveScreen extends Component {
     render() {
         return (
             <Container>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}

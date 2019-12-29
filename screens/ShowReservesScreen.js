@@ -210,7 +210,7 @@ export default class ShowReservesScreen extends Component {
 
         return (
             <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Content>
                     <View style={styles.container}>
                         <ScrollView>

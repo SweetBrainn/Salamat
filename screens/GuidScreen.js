@@ -85,7 +85,8 @@ export default class GuidScreen extends Component {
         return (
 
             <Container>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+
                 <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}

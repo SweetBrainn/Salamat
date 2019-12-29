@@ -133,7 +133,7 @@ export default class SearchMedicalCenter extends Component {
     render() {
         return (
             <Container>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
