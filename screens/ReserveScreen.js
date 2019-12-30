@@ -359,7 +359,7 @@ export default class ReserveScreen extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -1015,7 +1015,11 @@ export default class ReserveScreen extends Component {
                         <Text style={[{color: '#fff', fontSize: 15}]}>جستجو</Text>
                     </Button>
                 </Footer>
+                <ActionSheet ref={(c) => {
+                    ActionSheet.actionsheetInstance = c;
+                }}/>
             </Container>
+
         );
     }
 
@@ -1024,6 +1028,7 @@ export default class ReserveScreen extends Component {
 ReserveScreen.navigationOptions = {
     header: null,
     title: 'نوبت دهی',
+    gesturesEnabled: false,
     headerStyle: {
         backgroundColor: '#23b9b9'
     },

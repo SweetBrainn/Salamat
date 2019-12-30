@@ -6,7 +6,9 @@ import {
     ScrollView,
     ActivityIndicator,
     StatusBar,
-    AsyncStorage, Keyboard,
+    AsyncStorage,
+    Keyboard,
+    Alert
 } from 'react-native';
 import {
     Container,
@@ -22,7 +24,9 @@ import {
     Text,
     Thumbnail,
     Badge,
-    Root, ListItem, ActionSheet,
+    Root,
+    ListItem,
+    ActionSheet,
 } from 'native-base';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
 
@@ -100,7 +104,7 @@ export default class ServicePlanResult extends Component {
             days: [],
             times: [],
             selectedMedicalCenter: {Id: -100, Value: ' انتخاب مرکز درمانی'},
-            selectedDay: {id: -100, value: ' انتخاب روز'},
+            selectedDay: {id: -100, value: ' انتخاب روز', Day: {}},
             selectedTime: {id: -100, value: 'انتخاب ساعت'}
         }
     }
@@ -132,10 +136,37 @@ export default class ServicePlanResult extends Component {
 
     }
 
+    generateDayTitle(day) {
+        return day.Day.PersianDayName + '  ' + day.Day.PersianDate.substring(0, 10)
+    }
+
+    closeModal() {
+        this.setState({
+            visible: false,
+            medicalCanters: [],
+            days: [],
+            times: [],
+            selectedMedicalCenter: {Id: -100, Value: ' انتخاب مرکز درمانی'},
+            selectedDay: {id: -100, value: ' انتخاب روز', Day: {}},
+            selectedTime: {id: -100, value: 'انتخاب ساعت'}
+        })
+    }
+
     getMedicalCenterOptions(array) {
         let options = [];
         for (let item of array) {
             options.push(item.Value)
+        }
+        options.push(CANCEL_TEXT)
+        return options;
+    }
+
+    getTimeOptions(array) {
+        let options = [];
+        for (let item of array) {
+            if(item.Valid){
+                options.push(item.TimeSlice.substring(0, 5))
+            }
         }
         options.push(CANCEL_TEXT)
         return options;
@@ -144,20 +175,12 @@ export default class ServicePlanResult extends Component {
     getDayOptions(array) {
         let options = [];
         for (let item of array) {
-            options.push(item.Value)
+            options.push(this.generateDayTitle(item))
         }
         options.push(CANCEL_TEXT)
         return options;
     }
 
-    getMedicalCenterOptions(array) {
-        let options = [];
-        for (let item of array) {
-            options.push(item.Value)
-        }
-        options.push(CANCEL_TEXT)
-        return options;
-    }
 
     getCancelButtonIndex(array) {
         return array.indexOf(CANCEL_TEXT)
@@ -181,22 +204,39 @@ export default class ServicePlanResult extends Component {
             },
             body: JSON.stringify(body),
         }).then((response) => response.json())
-            .then((responseData) => {
+            .then(async (responseData) => {
                 if (responseData['StatusCode'] === 200) {
                     if (responseData['Data'] != null) {
                         let data = responseData['Data'];
-                        if (data.length <= 0) {
-                            alert("روز خالی جهت نوبت دهی در این درمانگاه وجود ندهرد")
-                        } else {
-                            this.setState({progressModalVisible: false}, () => {
-                                this.setState({days: data})
-                                console.log(JSON.stringify(this.state.days))
+                        console.log("Data ----->  " + JSON.stringify(data))
+                        await this.setState({progressModalVisible: false}, async () => {
+                            await this.setState({days: data}, () => {
+                                console.log(JSON.stringify(this.state.days + this.state.days.length))
+                                if (this.state.days.length <= 0) {
+                                    Alert.alert(
+                                        "روز خالی جهت نوبت دهی در این درمانگاه وجود ندارد",
+                                        '',
+                                        [
+                                            {
+                                                text: "بازگشت", onPress: async () => {
+                                                    await this.closeModal()
+                                                }
+                                            }
+                                        ],
+                                        {
+                                            cancelable: false,
+                                        }
+                                    )
+                                }
+
                             })
-                        }
+                        })
                     }
+
                 } else {
                     this.setState({progressModalVisible: false}, () => {
                         alert('خطا در اتصال به سرویس')
+                        console.log(JSON.stringify(responseData))
                     })
 
                 }
@@ -207,6 +247,18 @@ export default class ServicePlanResult extends Component {
             })
     }
 
+    onBackPressed() {
+        this.props.navigation.navigate('ReserveScreen')
+    }
+
+    findDay(input) {
+        let options = [];
+        for (let item of this.state.days) {
+            if (item.Day.PersianDayName + '  ' + item.Day.PersianDate.substring(0, 10) === input) {
+                return Day;
+            }
+        }
+    }
 
     render() {
         return (
@@ -215,9 +267,9 @@ export default class ServicePlanResult extends Component {
                 <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon style={styles.headerMenuIcon} name='menu'
-                                  onPress={() => this.props.navigation.openDrawer()}/>
+                                onPress={() => this.onBackPressed()}>
+                            <Icon style={styles.headerMenuIcon} name='arrow-back'
+                                  onPress={() => this.onBackPressed()}/>
                         </Button>
                     </Left>
                     <Right>
@@ -263,89 +315,6 @@ export default class ServicePlanResult extends Component {
 
                             </CardItem>
                         </Card>
-
-                        {false && <ScrollView style={{flex: 1, width: '100%', height: '100%'}}>
-                            {this.state.result.map((item, key) => (
-                                <TouchableOpacity key={key}
-                                                  onPress={() => this.setState({selectedServicePlan: item},
-                                                      async () => {
-                                                          await this.generateModal()
-                                                      })}>
-                                    <View>
-                                        <Card
-                                            style={{padding: 5, borderColor: '#23b9b9', elevation: 8, borderWidth: 1}}>
-                                            {<CardItem style={{marginTop: 5, flexDirection: 'row-reverse'}}>
-                                                <Body style={{flexDirection: 'row-reverse'}}>
-                                                    <Text style={{
-                                                        textAlign: 'right',
-                                                        alignSelf: 'flex-start',
-                                                        fontSize: 20,
-                                                        fontWeight: 'bold',
-                                                        padding: 1
-                                                    }}>{item.Doctor}</Text>
-                                                </Body>
-                                                <Left style={{alignSelf: 'flex-end'}}>
-                                                    <Thumbnail
-                                                        circular
-                                                        source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
-                                                </Left>
-                                            </CardItem>}
-
-                                            {<CardItem style={{marginTop: 5}}>
-                                                <Left>
-                                                    <Text style={{
-                                                        flex: 1,
-                                                        justifyContent: 'flex-start',
-                                                        textAlign: 'right',
-                                                        flexDirection: 'row-reverse',
-                                                        fontSize: 13,
-                                                        color: '#000',
-                                                        padding: 1
-                                                    }}>
-                                                        {item.MedicalCenter}
-                                                    </Text>
-                                                </Left>
-                                            </CardItem>}
-
-                                            {<CardItem style={{marginTop: 5}}>
-                                                <Body>
-                                                    <Text style={{
-                                                        textAlign: 'right',
-                                                        alignSelf: 'flex-end',
-                                                        fontSize: 12,
-                                                        color: '#a7a7a7',
-                                                        padding: 1
-                                                    }}> جنسیت : {item.Gender}</Text>
-                                                </Body>
-                                            </CardItem>}
-
-                                            {false && <CardItem style={{marginTop: 5}}>
-                                                <Body style={{flexDirection: 'row-reverse'}}>
-                                                    <Text style={{
-                                                        textAlign: 'right',
-                                                        alignSelf: 'flex-end',
-                                                        fontSize: 12,
-                                                        color: '#a7a7a7',
-                                                        padding: 1
-                                                    }}>از تاریخ : {item.StartDate}</Text>
-                                                    <Text style={{
-                                                        textAlign: 'right',
-                                                        alignSelf: 'flex-end',
-                                                        fontSize: 12,
-                                                        color: '#a7a7a7',
-                                                        padding: 1,
-                                                        marginRight: 20,
-                                                        marginLeft: 2
-                                                    }}>تا تاریخ : {item.EndDate}</Text>
-                                                </Body>
-                                            </CardItem>}
-                                        </Card>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>}
-
-
                         <ScrollView style={{flex: 1, width: '100%', height: '100%'}}>
 
                             {(this.state.result != null) ? this.state.result.map((item, key) => (
@@ -363,12 +332,29 @@ export default class ServicePlanResult extends Component {
                                                       alignItems: 'center',
                                                   }}
                                                   onPress={async () => {
-                                                      Keyboard.dismiss()
-                                                      await this.setState({
-                                                          selectedServicePlan: item,
-                                                          medicalCanters: item.MedicalCenters,
-                                                          visible: true
-                                                      })
+                                                      if (item.MedicalCenters.length === 1) {
+                                                          await this.setState({
+                                                              selectedServicePlan: item,
+                                                              medicalCanters: item.MedicalCenters,
+                                                              selectedMedicalCenter: item.MedicalCenters[0],
+                                                          }, async () => {
+                                                              await this.getServicePlanDetail(
+                                                                  this.state.selectedServicePlan.DoctorId,
+                                                                  this.state.selectedMedicalCenter.Id,
+                                                                  this.state.startDate,
+                                                                  this.state.endDate
+                                                              ).then(this.state.days.length > 0)
+                                                              {
+                                                                  this.setState({visible: true})
+                                                              }
+                                                          })
+                                                      } else {
+                                                          await this.setState({
+                                                              selectedServicePlan: item,
+                                                              medicalCanters: item.MedicalCenters,
+                                                              visible: true
+                                                          })
+                                                      }
                                                   }
                                                   }
 
@@ -383,13 +369,6 @@ export default class ServicePlanResult extends Component {
                                                     marginTop: 5,
 
                                                 }}>{item.Doctor}</Text>
-                                                {false && <Text style={{
-                                                    color: '#a9a9a9',
-                                                    textAlign: 'right',
-                                                    fontSize: 12,
-                                                    marginTop: 5,
-                                                    marginRight: 1
-                                                }}>{item.Description}</Text>}
                                             </Body>
                                             <Right>
                                                 <Thumbnail circular
@@ -417,8 +396,8 @@ export default class ServicePlanResult extends Component {
 
                         <Modal
                             width={300}
-                            onTouchOutside={() => {
-                                this.setState({visible: false});
+                            onTouchOutside={async () => {
+                                await this.closeModal()
                             }}
                             visible={this.state.visible}
                             modalTitle={
@@ -435,7 +414,7 @@ export default class ServicePlanResult extends Component {
                                         textStyle={[styles.modalCancelButtonText]}
                                         text="انصراف"
                                         onPress={async () => {
-                                            await this.setState({visible: false})
+                                            await this.closeModal()
                                         }
                                         }
                                     />
@@ -443,9 +422,18 @@ export default class ServicePlanResult extends Component {
                                         style={[styles.modalSuccessButton]}
                                         textStyle={styles.modalSuccessButtonText}
                                         text="انتخاب"
-                                        onPress={async () => {
-                                            this.setState({visible: false})
-                                            alert('clicked')
+                                        onPress={() => {
+                                             this.closeModal()
+
+                                                    let body = {
+                                                        MedicalCenterId:  this.state.selectedMedicalCenter.Id.toString(),
+                                                        ActorId: this.state.selectedServicePlan.DoctorId.toString(),
+                                                        ReserveDate: this.state.selectedDay.Day.Day.Date.toString().substring(0,10),
+                                                        StartTime: this.state.selectedTime.value.toString()
+                                                    }
+
+
+                                            console.log(JSON.stringify(body))
                                         }}
                                     />
                                 </ModalFooter>
@@ -453,56 +441,82 @@ export default class ServicePlanResult extends Component {
                         >
                             <ModalContent style={styles.modalContent}>
                                 {this.state.medicalCanters.length > 0 && <View style={{minHeight: 60, maxHeight: 65}}>
-                                    <Button
-                                        onPress={() => {
-                                            Keyboard.dismiss()
-                                            ActionSheet.show(
-                                                {
-                                                    options: this.getMedicalCenterOptions(this.state.medicalCanters),
-                                                    cancelButtonIndex: this.getCancelButtonIndex(
-                                                        this.getMedicalCenterOptions(this.state.medicalCanters)),
-                                                    title: "انتخاب مرکز درمانی"
-                                                },
-                                                buttonIndex => {
-                                                    if (this.state.medicalCanters.length > 0) {
-                                                        if (buttonIndex <= this.state.medicalCanters.length - 1)
-                                                            this.setState(
-                                                                {selectedMedicalCenter: this.state.medicalCanters[buttonIndex]},
-                                                                async () => {
-                                                                    await this.getServicePlanDetail(
-                                                                        this.state.selectedServicePlan.DoctorId,
-                                                                        this.state.selectedMedicalCenter.Id,
-                                                                        this.state.startDate,
-                                                                        this.state.endDate
-                                                                    )
-                                                                });
+                                    {this.state.selectedMedicalCenter.Id === -100 ? <Button
+                                            onPress={() => {
+                                                Keyboard.dismiss()
+                                                ActionSheet.show(
+                                                    {
+                                                        options: this.getMedicalCenterOptions(this.state.medicalCanters),
+                                                        cancelButtonIndex: this.getCancelButtonIndex(
+                                                            this.getMedicalCenterOptions(this.state.medicalCanters)),
+                                                        title: "انتخاب مرکز درمانی"
+                                                    },
+                                                    buttonIndex => {
+                                                        if (this.state.medicalCanters.length > 0) {
+                                                            if (buttonIndex <= this.state.medicalCanters.length - 1)
+                                                                this.setState(
+                                                                    {selectedMedicalCenter: this.state.medicalCanters[buttonIndex]},
+                                                                    async () => {
+                                                                        await this.getServicePlanDetail(
+                                                                            this.state.selectedServicePlan.DoctorId,
+                                                                            this.state.selectedMedicalCenter.Id,
+                                                                            this.state.startDate,
+                                                                            this.state.endDate
+                                                                        )
+                                                                    });
+                                                        }
                                                     }
-                                                }
-                                            )
-                                        }}
-                                        bordered style={{
-                                        textAlign: 'center',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        borderRadius: 2,
-                                        margin: 1,
-                                        flex: 3,
-                                        borderWidth: 1,
-                                        borderColor: '#fff',
-
-                                    }}>
-                                        <Text style={{
-                                            padding: 1,
+                                                )
+                                            }}
+                                            bordered style={{
                                             textAlign: 'center',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
                                             borderRadius: 2,
-                                            flex: 2,
-                                            fontSize: 13,
-                                            color: '#23b9b9',
+                                            margin: 1,
+                                            flex: 3,
                                             borderWidth: 1,
-                                            borderColor: '#23b9b9',
+                                            borderColor: '#fff',
 
-                                        }}>{this.state.selectedMedicalCenter.Value}</Text>
-                                    </Button>
+                                        }}>
+                                            <Text style={{
+                                                padding: 1,
+                                                textAlign: 'center',
+                                                borderRadius: 2,
+                                                flex: 2,
+                                                fontSize: 13,
+                                                color: '#23b9b9',
+                                                borderWidth: 1,
+                                                borderColor: '#23b9b9',
+
+                                            }}>{this.state.selectedMedicalCenter.Value}</Text>
+                                        </Button> :
+                                        <Button
+
+                                            bordered style={{
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: 2,
+                                            margin: 1,
+                                            flex: 3,
+                                            borderWidth: 1,
+                                            borderColor: '#fff',
+
+                                        }}>
+                                            <Text style={{
+                                                padding: 1,
+                                                textAlign: 'center',
+                                                borderRadius: 2,
+                                                flex: 2,
+                                                fontSize: 13,
+                                                color: '#23b9b9',
+                                                borderWidth: 1,
+                                                borderColor: '#23b9b9',
+
+                                            }}>{this.state.selectedMedicalCenter.Value}</Text>
+                                        </Button>
+                                    }
                                 </View>}
                                 {this.state.selectedMedicalCenter.Id != -100 && this.state.days.length > 0 &&
                                 <View style={{minHeight: 60, maxHeight: 65}}>
@@ -511,16 +525,26 @@ export default class ServicePlanResult extends Component {
                                             Keyboard.dismiss()
                                             ActionSheet.show(
                                                 {
-                                                    options: this.getMedicalCenterOptions(this.state.days),
+                                                    options: this.getDayOptions(this.state.days),
                                                     cancelButtonIndex: this.getCancelButtonIndex(
-                                                        this.getMedicalCenterOptions(this.state.days)),
+                                                        this.getDayOptions(this.state.days)),
                                                     title: "انتخاب روز"
                                                 },
                                                 buttonIndex => {
                                                     if (this.state.days.length > 0) {
                                                         if (buttonIndex <= this.state.days.length - 1)
                                                             this.setState(
-                                                                {selectedDay: this.state.days[buttonIndex]});
+                                                                {
+                                                                    selectedDay: {
+                                                                        id: 0,
+                                                                        value: this.generateDayTitle(
+                                                                            this.state.days[buttonIndex]),
+                                                                        Day: this.state.days[buttonIndex]
+                                                                    }
+                                                                }, () => {
+                                                                    this.setState(
+                                                                        {times: this.state.selectedDay.Day.Times})
+                                                                });
                                                     }
                                                 }
                                             )
@@ -556,16 +580,22 @@ export default class ServicePlanResult extends Component {
                                             Keyboard.dismiss()
                                             ActionSheet.show(
                                                 {
-                                                    options: this.getMedicalCenterOptions(this.state.times),
+                                                    options: this.getTimeOptions(this.state.times),
                                                     cancelButtonIndex: this.getCancelButtonIndex(
-                                                        this.getMedicalCenterOptions(this.state.times)),
-                                                    title: "انتخاب مرکز درمانی"
+                                                        this.getTimeOptions(this.state.times)),
+                                                    title: "انتخابی ساعت"
                                                 },
                                                 buttonIndex => {
                                                     if (this.state.times.length > 0) {
                                                         if (buttonIndex <= this.state.times.length - 1)
                                                             this.setState(
-                                                                {selectedTime: this.state.times[buttonIndex]});
+                                                                {
+                                                                    selectedTime: {
+                                                                        Id: 0,
+                                                                        value: this.state.times[buttonIndex].TimeSlice.substring(
+                                                                            0, 5)
+                                                                    }
+                                                                });
                                                     }
                                                 }
                                             )
@@ -611,6 +641,7 @@ export default class ServicePlanResult extends Component {
 ServicePlanResult.navigationOptions = {
     header: null,
     title: 'اطلاع رسانی',
+    gesturesEnabled: false,
     headerStyle: {
         backgroundColor: '#23b9b9'
     },
