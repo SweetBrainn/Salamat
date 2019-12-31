@@ -29,54 +29,12 @@ import {
     ActionSheet,
 } from 'native-base';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
+import {NavigationActions} from "react-navigation";
 
 const GETNOTICES = '/api/GetNotices';
 const GETSERVICEPLANDETAIL = '/api/SearchServicePlanDetail';
 const CANCEL_TEXT = 'انصراف';
-
-class Post extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            animate: props.animate,
-        }
-    }
-
-    render() {
-        if (this.state.showForPatient) {
-            return (
-
-                <Card style={[styles.post]}>
-                    <CardItem header>
-                        <Body>
-                            {/*<Image*/}
-                            {/*    onLoadEnd={() => {*/}
-                            {/*        this.setState({animate: !this.state.animate})*/}
-                            {/*    }}*/}
-                            {/*    style={[styles.postImage]}*/}
-                            {/*    source={{uri: this.state.postContentImage}}/>*/}
-                        </Body>
-                    </CardItem>
-                    <CardItem footer>
-                        <Body>
-                            <Text style={styles.postText}>{this.state.postContentText}</Text>
-                        </Body>
-                    </CardItem>
-                    {/*<CardItem>*/}
-                    {/*    <Left>*/}
-                    {/*        <Button transparent>*/}
-                    {/*            <Icon type='FontAwesome' name="heart" style={{color: '#ba150b'}}/>*/}
-                    {/*            <Text style={{color: '#ba150b'}}>{props.likes} نفر پسندیده اند</Text>*/}
-                    {/*        </Button>*/}
-                    {/*    </Left>*/}
-                    {/*</CardItem>*/}
-                </Card>
-            );
-        }
-
-    }
-}
-
+const RESERVE = '/api/Reserve';
 
 export default class ServicePlanResult extends Component {
 
@@ -105,7 +63,10 @@ export default class ServicePlanResult extends Component {
             times: [],
             selectedMedicalCenter: {Id: -100, Value: ' انتخاب مرکز درمانی'},
             selectedDay: {id: -100, value: ' انتخاب روز', Day: {}},
-            selectedTime: {id: -100, value: 'انتخاب ساعت'}
+            selectedTime: {id: -100, value: 'انتخاب ساعت'},
+            activeColor: '#23b9b9',
+            inactiveColor: '#aaaaaa',
+            reservationButtonColor: '#aaaaaa'
         }
     }
 
@@ -133,6 +94,101 @@ export default class ServicePlanResult extends Component {
         }, () => {
             // this.getNotices()
         })
+
+    }
+
+    async reserve(body) {
+        this.setState({progressModalVisible: true})
+        await fetch(this.state.baseUrl + RESERVE, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+            body: JSON.stringify(body),
+        }).then((response) => response.json())
+            .then(async (responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        console.log("Data ----->  " + JSON.stringify(data))
+                        await this.setState({progressModalVisible: false}, async () => {
+                            Alert.alert(
+                                data['Message'],
+                                '',
+                                [
+                                    {
+                                        text: "تایید", onPress: async () => {
+                                            await this.closeModal()
+                                        }
+                                    }
+                                ],
+                                {
+                                    cancelable: false,
+                                }
+                            )
+                        })
+                    }
+
+                } else if (responseData['StatusCode'] === 701) {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert(responseData['StatusMessage'])
+                        console.log(JSON.stringify(responseData))
+                        this.closeModal()
+                    })
+
+                } else if (responseData['StatusCode'] === 700) {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert(responseData['StatusMessage'])
+                        console.log(JSON.stringify(responseData))
+                        this.closeModal()
+                    })
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert('خطا در اتصال به سرویس')
+                        console.log(JSON.stringify(responseData))
+                        this.closeModal()
+                    })
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
+    }
+
+    async generateReservationButton() {
+        if (this.state.selectedMedicalCenter.Id === -100) {
+            await this.setState({reservationButtonColor: this.state.inactiveColor}, () => {
+                alert('لطفا مرکز درمانی مورد نظر خود را انتخاب کنید')
+
+            })
+            return false;
+        }
+        if (this.state.selectedServicePlan.ActorId === null) {
+            await this.setState({reservationButtonColor: this.state.inactiveColor}, () => {
+                alert('پزشک به درستی انتخاب نشده است')
+
+            })
+            return false;
+        }
+        if (this.state.selectedDay.Id === -100) {
+            await this.setState({reservationButtonColor: this.state.inactiveColor}, () => {
+                alert('روز مورد نظر خود را انتخاب کنید')
+
+            })
+            return false;
+        }
+        if (this.state.selectedTime.Id === -100) {
+            await this.setState({reservationButtonColor: this.state.inactiveColor}, () => {
+                alert('ساعت مورد نظر خود را انتخاب کنید')
+
+            })
+            return false;
+        }
+        await this.setState({reservationButtonColor: this.state.activeColor})
+        return true;
 
     }
 
@@ -164,7 +220,7 @@ export default class ServicePlanResult extends Component {
     getTimeOptions(array) {
         let options = [];
         for (let item of array) {
-            if(item.Valid){
+            if (item.Valid) {
                 options.push(item.TimeSlice.substring(0, 5))
             }
         }
@@ -193,7 +249,7 @@ export default class ServicePlanResult extends Component {
             StartDate: startDate,
             EndDate: endDate
         }
-        console.log(JSON.stringify(body))
+        console.log("detaaaiiiiiil" + JSON.stringify(body))
         this.setState({progressModalVisible: true})
         await fetch(this.state.baseUrl + GETSERVICEPLANDETAIL, {
             method: 'POST',
@@ -248,8 +304,18 @@ export default class ServicePlanResult extends Component {
     }
 
     onBackPressed() {
-        this.props.navigation.navigate('ReserveScreen')
+        //this.props.navigation.navigate('ReserveScreen')
+        // this.props.navigation.dispatch('ReserveScreen')
+        const navigateAction = NavigationActions.navigate({
+            routeName: 'ServicePlanResultScreen',
+            params: {},
+
+            // navigate can have a nested navigate action that will be run inside the child router
+            action: NavigationActions.navigate({routeName: 'ReserveScreen'}),
+        });
+        this.props.navigation.dispatch(navigateAction);
     }
+
 
     findDay(input) {
         let options = [];
@@ -369,6 +435,20 @@ export default class ServicePlanResult extends Component {
                                                     marginTop: 5,
 
                                                 }}>{item.Doctor}</Text>
+                                                {item.Description != "" ? <Text style={{
+                                                        color: '#a9a9a9',
+                                                        textAlign: 'right',
+                                                        fontSize: 12,
+                                                        marginTop: 5,
+                                                        marginRight: 1
+                                                    }}>{item.Description}</Text> :
+                                                    <Text style={{
+                                                        color: '#a9a9a9',
+                                                        textAlign: 'right',
+                                                        fontSize: 12,
+                                                        marginTop: 5,
+                                                        marginRight: 1
+                                                    }}>توضیحات در مورد پزشک</Text>}
                                             </Body>
                                             <Right>
                                                 <Thumbnail circular
@@ -409,33 +489,80 @@ export default class ServicePlanResult extends Component {
                             })}
                             footer={
                                 <ModalFooter style={styles.modalFooter}>
-                                    <ModalButton
-                                        style={[styles.modalCancelButton]}
-                                        textStyle={[styles.modalCancelButtonText]}
-                                        text="انصراف"
+                                    <TouchableOpacity
+                                        style={[styles.modalCancelButton, {
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            alignContent: 'center'
+                                        }]}
+                                        // textStyle={[styles.modalCancelButtonText]}
+                                        // text="انصراف"
                                         onPress={async () => {
                                             await this.closeModal()
                                         }
                                         }
-                                    />
-                                    <ModalButton
-                                        style={[styles.modalSuccessButton]}
-                                        textStyle={styles.modalSuccessButtonText}
-                                        text="انتخاب"
+                                    >
+                                        <Text style={[styles.modalCancelButtonText,
+                                            {alignSelf: 'center', textAlignVertical: 'center'}]}>انصراف</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[styles.modalSuccessButton, {
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            alignContent: 'center'
+                                        }]}
+                                        //textStyle={styles.modalSuccessButtonText}
+                                        //text="رزرو نوبت"
                                         onPress={() => {
-                                             this.closeModal()
 
-                                                    let body = {
-                                                        MedicalCenterId:  this.state.selectedMedicalCenter.Id.toString(),
-                                                        ActorId: this.state.selectedServicePlan.DoctorId.toString(),
-                                                        ReserveDate: this.state.selectedDay.Day.Day.Date.toString().substring(0,10),
-                                                        StartTime: this.state.selectedTime.value.toString()
-                                                    }
+                                            if (this.state.selectedMedicalCenter.Id === -100) {
+                                                this.setState({reservationButtonColor: this.state.inactiveColor},
+                                                    () => {
+                                                        alert('لطفا مرکز درمانی مورد نظر خود را انتخاب کنید')
 
+                                                    })
+                                                return;
+                                            }
+                                            if (this.state.selectedServicePlan.ActorId === null) {
+                                                this.setState({reservationButtonColor: this.state.inactiveColor},
+                                                    () => {
+                                                        alert('پزشک به درستی انتخاب نشده است')
 
+                                                    })
+                                                return
+                                            }
+                                            if (this.state.selectedDay.Id === -100) {
+                                                this.setState({reservationButtonColor: this.state.inactiveColor},
+                                                    () => {
+                                                        alert('روز مورد نظر خود را انتخاب کنید')
+
+                                                    })
+                                                return
+                                            }
+                                            if (this.state.selectedTime.Id === -100) {
+                                                this.setState({reservationButtonColor: this.state.inactiveColor},
+                                                    () => {
+                                                        alert('ساعت مورد نظر خود را انتخاب کنید')
+
+                                                    })
+                                                return
+                                            }
+
+                                            let body = {
+                                                MedicalCenterId: this.state.selectedMedicalCenter.Id.toString(),
+                                                ActorId: this.state.selectedServicePlan.DoctorId.toString(),
+                                                ReserveDate: this.state.selectedDay.Day.Day.Date.toString()
+                                                    .substring(0, 10),
+                                                StartTime: this.state.selectedTime.value.toString()
+                                            }
+                                            this.reserve(body)
                                             console.log(JSON.stringify(body))
-                                        }}
-                                    />
+                                        }
+
+                                        }
+                                    >
+                                        <Text style={styles.modalSuccessButtonText}>رزرو نوبت</Text>
+                                    </TouchableOpacity>
                                 </ModalFooter>
                             }
                         >
@@ -722,6 +849,8 @@ const styles = StyleSheet.create({
         textAlign: 'right'
     },
     modalFooter: {
+        minHeight: 60,
+        maxHeight: 70,
         padding: 2,
         backgroundColor: 'rgba(47,246,246,0.06)'
     },
@@ -744,12 +873,12 @@ const styles = StyleSheet.create({
     modalSuccessButtonText: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 12,
-        textAlign: 'right'
+        fontSize: 15,
+        textAlign: 'center'
     },
     modalCancelButtonText: {
         color: '#23b9b9',
-        fontSize: 12,
-        textAlign: 'right'
+        fontSize: 15,
+        textAlign: 'center'
     },
 });

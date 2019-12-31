@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Platform, StatusBar} from 'react-native';
+import {StyleSheet, View, Platform, StatusBar, TextInput} from 'react-native';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import SearchMedicalCenter from "./SearchMedicalCenter";
 import SearchDoctorScreen from "./SearchDoctorScreen";
@@ -17,7 +17,7 @@ import {
     Icon,
     Text,
     Title,
-    Card, Tab
+    Card, Tab, Accordion
 } from 'native-base';
 import MedicalFilesScreen from "./MedicalFilesScreen";
 import ShowReservesScreen from "./ShowReservesScreen";
@@ -29,7 +29,16 @@ export default class ReserveScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            initialPage: 1,
+            patientUsername: '',
+            nationalCode: '',
+            cellPhone: '',
+            firstName: '',
+            lastName: '',
+            birthDate: '',
+            gender: '',
+            description: '',
+            address: '',
+            zipCode: '',
         }
     }
 
@@ -37,7 +46,7 @@ export default class ReserveScreen extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -59,279 +68,104 @@ export default class ReserveScreen extends Component {
                     </Tab>
                 </Tabs>
                 <Content padder style={styles.content}>
-                    {/*<Card>*/}
-                    {/*    <CardItem bordered style={{flexDirection: 'column'}}>*/}
-                    {/*        <View style={[styles.row]}>*/}
-                    {/*            <SearchableDropdown style={{alignSelf: 'flex-end', width: '100%',}}*/}
-                    {/*                                multi={false}*/}
-                    {/*                                onItemSelect={(item) => {*/}
+                    <View style={styles.body}>
+                        <View style={styles.card}>
+                            <View style={styles.row}>
+                                <TextInput
+                                    style={[styles.textInput, {color: this.state.TextInputColor}]}
+                                    value={this.state.user['user_name'] != null ? this.state.user['user_name'] :
+                                        'نا مشخص'}
+                                    onChangeText={(text) => {
+                                        this.setState({username: text})
+                                    }}
+                                    multiline={false}
+                                    editable={false}/>
+                                <Text style={styles.label}>نام کاربری</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput style={[styles.textInput, {color: this.state.TextInputColor}]}
+                                           value={this.state.user['first_name'] != null ?
+                                               this.state.user['first_name'] : 'نا مشخص'}
+                                           onChangeText={(text) => {
+                                               this.setState({name: text})
+                                           }}
+                                           multiline={false}
+                                           editable={this.state.TextInputEditable}/>
+                                <Text style={styles.label}>نام</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput style={[styles.textInput, {color: this.state.TextInputColor,}]}
+                                           value={this.state.user['last_name'] != null ?
+                                               this.state.user['last_name'] : 'نا مشخص'}
+                                           multiline={false}
+                                           onChangeText={(text) => {
+                                               this.setState({family: text})
+                                           }}
+                                           multiline={false}
+                                           editable={false}/>
+                                <Text style={styles.label}>نام خانوادگی</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput style={[styles.textInput, {color: this.state.TextInputColor}]}
+                                           value={this.state.user['nationalCode'] != null ?
+                                               this.state.user['nationalCode'] : 'نا مشخص'}
+                                           onChangeText={(text) => {
+                                               this.setState({nationalCode: text})
+                                           }}
+                                           multiline={false}
+                                           editable={false}/>
+                                <Text style={styles.label}>کد ملی</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <TextInput style={[styles.textInput, {color: this.state.TextInputColor}]}
+                                           value={this.state.user['birthDate'] != null ?
+                                               this.state.user['birthDate'] : 'نا مشخص'}
+                                           onChangeText={(text) => {
+                                               this.setState({birthDate: text})
+                                           }}
+                                           multiline={false}
+                                           editable={this.state.TextInputEditable}/>
+                                <Text style={styles.label}>تاریخ تولد</Text>
+                            </View>
+                            <View style={[styles.row, {
+                                borderWidth: 0,
+                                borderColor: '#fff',
+                                borderBottomWidth: 0,
+                                borderBottomColor: '#fff'
+                            }]}>
+                                <TextInput style={[styles.textInput]}
+                                           value={this.state.user['gender'] != null ? this.state.user['gender'] :
+                                               'نا مشخص'}
+                                           multiline={false}
+                                           editable={false}/>
+                                <Text style={styles.label}>جنسیت</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>
+                                    بیمه های من :
+                                </Text>
+                            </View>
+                            {/*<View style={{padding: 5, margin: 5, marginTop: 10}}>*/}
+                            <Accordion style={{margin: 5, flexDirection: 'column', flex: 1}}
+                                       dataArray={this.state.insurancesForShow}
+                                       headerStyle={{
+                                           backgroundColor: "rgba(35,185,185,0.72)",
+                                           flexDirection: 'row-reverse'
+                                       }}
+                                       contentStyle={{
+                                           backgroundColor: "rgba(49,255,255,0)",
+                                           flexDirection: 'row-reverse',
+                                           backfaceVisibility: 'hidden',
+                                           borderColor: '#23b9b9',
+                                           borderWidth: 1
 
-                    {/*                                }}*/}
-                    {/*                                containerStyle={{padding: 5}}*/}
-                    {/*                                onRemoveItem={(item, index) => {*/}
+                                       }}
 
-                    {/*                                }}*/}
-                    {/*                                itemStyle={{*/}
-                    {/*                                    padding: 10,*/}
-                    {/*                                    marginTop: 2,*/}
-                    {/*                                    backgroundColor: '#fff',*/}
-                    {/*                                    borderBottomColor: 'rgba(35,185,185,0.49)',*/}
-                    {/*                                    borderTopColor: '#fff',*/}
-                    {/*                                    borderRightColor: '#fff',*/}
-                    {/*                                    borderLeftColor: '#fff',*/}
-                    {/*                                    borderWidth: 1,*/}
-                    {/*                                    borderRadius: 2,*/}
-                    {/*                                }}*/}
-                    {/*                                itemTextStyle={{*/}
-                    {/*                                    color: 'rgba(34,34,34,0.72)',*/}
-                    {/*                                    textAlign: 'right'*/}
-                    {/*                                }}*/}
-                    {/*                                itemsContainerStyle={{maxHeight: 200}}*/}
-                    {/*                                items={medicalItems}*/}
-                    {/*                                chip={false}*/}
-                    {/*                                resetValue={false}*/}
-                    {/*                                textInputProps={*/}
-                    {/*                                    {*/}
-                    {/*                                        placeholder: "جستجوی مرکز دزمانی",*/}
-                    {/*                                        underlineColorAndroid: "transparent",*/}
-                    {/*                                        placeholderTextColor: '#23b9b9',*/}
-                    {/*                                        style: {*/}
-                    {/*                                            padding: 12,*/}
-                    {/*                                            borderWidth: 1,*/}
-                    {/*                                            borderColor: '#ccc',*/}
-                    {/*                                            borderRadius: 5,*/}
-                    {/*                                            width: '100%',*/}
-                    {/*                                            flex: 1*/}
-                    {/*                                        },*/}
-                    {/*                                        onTextChange: text => (this.search(text))*/}
-                    {/*                                    }*/}
-                    {/*                                }*/}
-                    {/*                                listProps={*/}
-                    {/*                                    {*/}
-                    {/*                                        nestedScrollEnabled: true,*/}
-                    {/*                                    }*/}
-                    {/*                                }*/}
-                    {/*            />*/}
-                    {/*            <SearchableDropdown*/}
-                    {/*                multi={false}*/}
-                    {/*                onItemSelect={(item) => {*/}
-
-                    {/*                }}*/}
-                    {/*                containerStyle={{padding: 5}}*/}
-                    {/*                onRemoveItem={(item, index) => {*/}
-
-                    {/*                }}*/}
-                    {/*                itemStyle={{*/}
-                    {/*                    padding: 10,*/}
-                    {/*                    marginTop: 2,*/}
-                    {/*                    backgroundColor: '#fff',*/}
-                    {/*                    borderBottomColor: 'rgba(35,185,185,0.49)',*/}
-                    {/*                    borderTopColor: '#fff',*/}
-                    {/*                    borderRightColor: '#fff',*/}
-                    {/*                    borderLeftColor: '#fff',*/}
-                    {/*                    borderWidth: 1,*/}
-                    {/*                    borderRadius: 2,*/}
-                    {/*                }}*/}
-                    {/*                itemTextStyle={{*/}
-                    {/*                    color: 'rgba(34,34,34,0.72)',*/}
-                    {/*                    textAlign: 'right'*/}
-                    {/*                }}*/}
-                    {/*                itemsContainerStyle={{maxHeight: 200}}*/}
-                    {/*                items={medicalItems}*/}
-                    {/*                chip={false}*/}
-                    {/*                resetValue={false}*/}
-                    {/*                textInputProps={*/}
-                    {/*                    {*/}
-                    {/*                        placeholder: "منطقه",*/}
-                    {/*                        underlineColorAndroid: "transparent",*/}
-                    {/*                        placeholderTextColor: '#23b9b9',*/}
-                    {/*                        style: {*/}
-                    {/*                            padding: 12,*/}
-                    {/*                            borderWidth: 1,*/}
-                    {/*                            borderColor: '#ccc',*/}
-                    {/*                            borderRadius: 5,*/}
-                    {/*                            width: '100%',*/}
-                    {/*                            flex: 1*/}
-                    {/*                        },*/}
-                    {/*                        onTextChange: text => (this.search(text))*/}
-                    {/*                    }*/}
-                    {/*                }*/}
-                    {/*                listProps={*/}
-                    {/*                    {*/}
-                    {/*                        nestedScrollEnabled: true,*/}
-                    {/*                    }*/}
-                    {/*                }*/}
-                    {/*            />*/}
-                    {/*            <SearchableDropdown*/}
-                    {/*                multi={false}*/}
-                    {/*                onItemSelect={(item) => {*/}
-
-                    {/*                }}*/}
-                    {/*                containerStyle={{padding: 5}}*/}
-                    {/*                onRemoveItem={(item, index) => {*/}
-
-                    {/*                }}*/}
-                    {/*                itemStyle={{*/}
-                    {/*                    padding: 10,*/}
-                    {/*                    marginTop: 2,*/}
-                    {/*                    backgroundColor: '#fff',*/}
-                    {/*                    borderBottomColor: 'rgba(35,185,185,0.49)',*/}
-                    {/*                    borderTopColor: '#fff',*/}
-                    {/*                    borderRightColor: '#fff',*/}
-                    {/*                    borderLeftColor: '#fff',*/}
-                    {/*                    borderWidth: 1,*/}
-                    {/*                    borderRadius: 2,*/}
-                    {/*                }}*/}
-                    {/*                itemTextStyle={{*/}
-                    {/*                    color: 'rgba(34,34,34,0.72)',*/}
-                    {/*                    textAlign: 'right'*/}
-                    {/*                }}*/}
-                    {/*                itemsContainerStyle={{maxHeight: 200}}*/}
-                    {/*                items={medicalItems}*/}
-                    {/*                chip={false}*/}
-                    {/*                resetValue={false}*/}
-                    {/*                textInputProps={*/}
-                    {/*                    {*/}
-                    {/*                        placeholder: "خدمات",*/}
-                    {/*                        underlineColorAndroid: "transparent",*/}
-                    {/*                        placeholderTextColor: '#23b9b9',*/}
-                    {/*                        style: {*/}
-                    {/*                            padding: 12,*/}
-                    {/*                            borderWidth: 1,*/}
-                    {/*                            borderColor: '#ccc',*/}
-                    {/*                            borderRadius: 5,*/}
-                    {/*                            width: '100%',*/}
-                    {/*                            flex: 1*/}
-                    {/*                        },*/}
-                    {/*                        onTextChange: text => (this.search(text))*/}
-                    {/*                    }*/}
-                    {/*                }*/}
-                    {/*                listProps={*/}
-                    {/*                    {*/}
-                    {/*                        nestedScrollEnabled: true,*/}
-                    {/*                    }*/}
-                    {/*                }*/}
-                    {/*            />*/}
-                    {/*            <SearchableDropdown*/}
-                    {/*                multi={false}*/}
-                    {/*                onItemSelect={(item) => {*/}
-
-                    {/*                }}*/}
-                    {/*                containerStyle={{padding: 5}}*/}
-                    {/*                onRemoveItem={(item, index) => {*/}
-
-                    {/*                }}*/}
-                    {/*                itemStyle={{*/}
-                    {/*                    padding: 10,*/}
-                    {/*                    marginTop: 2,*/}
-                    {/*                    backgroundColor: '#fff',*/}
-                    {/*                    borderBottomColor: 'rgba(35,185,185,0.49)',*/}
-                    {/*                    borderTopColor: '#fff',*/}
-                    {/*                    borderRightColor: '#fff',*/}
-                    {/*                    borderLeftColor: '#fff',*/}
-                    {/*                    borderWidth: 1,*/}
-                    {/*                    borderRadius: 2,*/}
-                    {/*                }}*/}
-                    {/*                itemTextStyle={{*/}
-                    {/*                    color: 'rgba(34,34,34,0.72)',*/}
-                    {/*                    textAlign: 'right'*/}
-                    {/*                }}*/}
-                    {/*                itemsContainerStyle={{maxHeight: 200}}*/}
-                    {/*                items={medicalItems}*/}
-                    {/*                chip={false}*/}
-                    {/*                resetValue={false}*/}
-                    {/*                textInputProps={*/}
-                    {/*                    {*/}
-                    {/*                        placeholder: "سرویس",*/}
-                    {/*                        underlineColorAndroid: "transparent",*/}
-                    {/*                        placeholderTextColor: '#23b9b9',*/}
-                    {/*                        style: {*/}
-                    {/*                            padding: 12,*/}
-                    {/*                            borderWidth: 1,*/}
-                    {/*                            borderColor: '#ccc',*/}
-                    {/*                            borderRadius: 5,*/}
-                    {/*                            width: '100%',*/}
-                    {/*                            flex: 1*/}
-                    {/*                        },*/}
-                    {/*                        onTextChange: text => (this.search(text))*/}
-                    {/*                    }*/}
-                    {/*                }*/}
-                    {/*                listProps={*/}
-                    {/*                    {*/}
-                    {/*                        nestedScrollEnabled: true,*/}
-                    {/*                    }*/}
-                    {/*                }*/}
-                    {/*            />*/}
-
-                    {/*        </View>*/}
-                    {/*    </CardItem>*/}
-
-
-                    {/*    <CardItem bordered style={{flexDirection: 'column'}}>*/}
-                    {/*        <View style={styles.viewStyle}>*/}
-                    {/*            <View style={[styles.row]}>*/}
-                    {/*                <SearchableDropdown style={{flex: 1, width: '100%',}}*/}
-                    {/*                                    multi={false}*/}
-                    {/*                                    onItemSelect={(item) => {*/}
-
-                    {/*                                    }}*/}
-                    {/*                                    containerStyle={{padding: 5}}*/}
-                    {/*                                    onRemoveItem={(item, index) => {*/}
-
-                    {/*                                    }}*/}
-                    {/*                                    itemStyle={{*/}
-                    {/*                                        padding: 10,*/}
-                    {/*                                        marginTop: 2,*/}
-                    {/*                                        backgroundColor: '#fff',*/}
-                    {/*                                        borderBottomColor: 'rgba(35,185,185,0.49)',*/}
-                    {/*                                        borderTopColor: '#fff',*/}
-                    {/*                                        borderRightColor: '#fff',*/}
-                    {/*                                        borderLeftColor: '#fff',*/}
-                    {/*                                        borderWidth: 1,*/}
-                    {/*                                        borderRadius: 2,*/}
-                    {/*                                    }}*/}
-                    {/*                                    itemTextStyle={{*/}
-                    {/*                                        color: 'rgba(34,34,34,0.72)',*/}
-                    {/*                                        textAlign: 'right'*/}
-                    {/*                                    }}*/}
-                    {/*                                    itemsContainerStyle={{maxHeight: 200}}*/}
-                    {/*                                    items={medicalItems}*/}
-                    {/*                                    chip={false}*/}
-                    {/*                                    resetValue={false}*/}
-                    {/*                                    textInputProps={*/}
-                    {/*                                        {*/}
-                    {/*                                            placeholder: " جستجوی پزشک",*/}
-                    {/*                                            underlineColorAndroid: "transparent",*/}
-                    {/*                                            placeholderTextColor: '#23b9b9',*/}
-                    {/*                                            style: {*/}
-                    {/*                                                padding: 12,*/}
-                    {/*                                                borderWidth: 1,*/}
-                    {/*                                                borderColor: '#ccc',*/}
-                    {/*                                                borderRadius: 5,*/}
-                    {/*                                                width: '100%'*/}
-                    {/*                                            },*/}
-                    {/*                                            // onTextChange: text => alert(text)*/}
-                    {/*                                        }*/}
-                    {/*                                    }*/}
-                    {/*                                    listProps={*/}
-                    {/*                                        {*/}
-                    {/*                                            nestedScrollEnabled: true,*/}
-                    {/*                                        }*/}
-                    {/*                                    }*/}
-                    {/*                />*/}
-                    {/*            </View>*/}
-                    {/*        </View>*/}
-                    {/*    </CardItem>*/}
-
-                    {/*    <CardItem footer bordered style={{flexDirection: 'column'}}>*/}
-                    {/*        <Button success*/}
-                    {/*                style={{alignContent: 'center', justifyContent: 'center', alignSelf: 'center'}}>*/}
-                    {/*            <Text>رزرو نوبت</Text>*/}
-                    {/*        </Button>*/}
-                    {/*    </CardItem>*/}
-                    {/*</Card>*/}
-
-
+                                       iconStyle={{color: "white"}}
+                                       expandedIconStyle={{color: "white"}}
+                            />
+                        </View>
+                    </View>
                 </Content>
             </Container>
         );

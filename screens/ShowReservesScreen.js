@@ -1,5 +1,14 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, ScrollView, Alert, StatusBar, AsyncStorage, ActivityIndicator} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Image,
+    ScrollView,
+    StatusBar,
+    AsyncStorage,
+    ActivityIndicator,
+    Alert
+} from 'react-native';
 import Swipeable from 'react-native-swipeable-row'
 import {
     Container,
@@ -23,6 +32,7 @@ import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimatio
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 
 const GETRESREVATIONREPORTS = '/api/GetReservationReports';
+const DISABLERESERVATION = '/api/DisableReservation';
 const MyPost = (props) => {
     return (
         <Card style={[styles.post]}>
@@ -104,6 +114,63 @@ export default class ShowReservesScreen extends Component {
     }
 
 
+    async disableReservation(value) {
+        this.setState({progressModalVisible: true})
+        fetch(this.state.baseUrl + DISABLERESERVATION, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+            body: JSON.stringify({
+                actor: value.actor,
+                medicalCenter: value.medicalCenter,
+                startTime: value.StartTime,
+                type: value.type,
+                date: value.date,
+                status: value.status,
+                statusValue: value.statusValue,
+            })
+        }).then((response) => response.json())
+            .then((responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        this.setState({array: data}, async () => {
+                            this.setState({progressModalVisible: false})
+                            Alert.alert(
+                                'لغو نوبت با موفقیت انجام شد',
+                                '',
+                                [
+                                    {
+                                        text: "تایید", onPress: async () => {
+                                            await this.getReservationReports()
+
+                                        }
+                                    }
+                                ],
+                                {
+                                    cancelable: false,
+                                }
+                            )
+
+                        })
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        alert('خطا در اتصال به سرویس')
+                       // alert(JSON.stringify(responseData))
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
+    }
+
     async getReservationReports() {
         this.setState({progressModalVisible: true})
         fetch(this.state.baseUrl + GETRESREVATIONREPORTS, {
@@ -120,6 +187,7 @@ export default class ShowReservesScreen extends Component {
                         let data = responseData['Data'];
                         this.setState({array: data}, () => {
                             this.setState({progressModalVisible: false})
+                            console.log(JSON.stringify(this.state.array))
                         })
                     }
                 } else {
@@ -145,13 +213,14 @@ export default class ShowReservesScreen extends Component {
             return (
                 <View key={index}>
                     <Swipeable>
-                        <MyPost time={value.StartTime.substring(0,5)} type={value.type} status={value.status}
-                                medicalCenter={value.medicalCenter} actor={value.actor} date={value.date.substring(0,10)}
+                        <MyPost time={value.StartTime.substring(0, 5)} type={value.type} status={value.status}
+                                medicalCenter={value.medicalCenter} actor={value.actor}
+                                date={value.date.substring(0, 10)}
                                 myColor={'#cfcfcf'}
                                 headerColor={'rgba(215,1,0,0.75)'}
 
 
-                    />
+                        />
                     </Swipeable>
                 </View>
             )
@@ -166,7 +235,7 @@ export default class ShowReservesScreen extends Component {
                                 [
                                     {
                                         text: 'بله',
-                                        onPress: () => this.deleteMessage({value, index})
+                                        onPress: () => this.disableReservation(value)
                                     },
                                     {
                                         text: 'انصراف',
@@ -210,7 +279,7 @@ export default class ShowReservesScreen extends Component {
 
         return (
             <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Content>
                     <View style={styles.container}>
                         <ScrollView>

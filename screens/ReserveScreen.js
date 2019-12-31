@@ -89,6 +89,8 @@ export default class ReserveScreen extends Component {
     }
 
 
+
+
     async componentWillMount(): void {
         const token = await AsyncStorage.getItem('token');
         const baseUrl = await AsyncStorage.getItem('baseUrl');

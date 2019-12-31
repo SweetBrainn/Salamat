@@ -72,7 +72,6 @@ export default class VerifyScreen extends Component {
                     <View style={{width: '100%', height: '50%'}}>
                         <Image style={styles.container}
                                source={require('D:\\E\\react native projects\\salamat\\assets\\images\\splash.png')}>
-
                         </Image>
                     </View>
                     <View style={[styles.main, {width: '100%', height: '50%'}]}>
