@@ -27,14 +27,19 @@ import MedicalCentersResult from "./screens/MedicalCentersResult";
 import DoctorsResult from "./screens/DoctorsResult";
 import ServicePlanResult from "./screens/ServicePlanResult";
 
+const ReserveStackNavigator = createStackNavigator({
+    ReserveScreen: {screen: ReserveScreen},
+    ServicePlanResultScreen: {screen: ServicePlanResult},
+});
 const SearchDoctorNavigator = createStackNavigator({
     SearchDoctorScreen: {screen: SearchDoctorScreen},
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsScreen: {screen: DetailsScreen},
-    DoctorsResultScreen: {screen: DoctorsResult}
+    DoctorsResultScreen: {screen: DoctorsResult},
+    ReserveScreen: ReserveStackNavigator,
 }, {
     defaultNavigationOptions: {
-        gesturesEnabled:false,
+        gesturesEnabled: false,
         header: null,
     }
 });
@@ -43,13 +48,30 @@ const SearchMedicalCenterNavigator = createStackNavigator({
     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
     DetailsForMedicalCenterScreen: {screen: DetailsForMedicalCenterScreen},
     MedicalCenterResultScreen: {screen: MedicalCentersResult},
-    SearchDoctorScreen: SearchDoctorNavigator
+    SearchDoctorScreen: SearchDoctorNavigator,
+    ReserveScreen: ReserveStackNavigator
+
 }, {
     defaultNavigationOptions: {
         header: null,
-        gesturesEnabled:false,
+        gesturesEnabled: false,
     }
 });
+
+
+// const SearchDoctorNavigator = createStackNavigator({
+//     SearchDoctorScreen: {screen: SearchDoctorScreen},
+//     AdvanceSearchScreen: {screen: AdvanceSearchScreen},
+//     DetailsScreen: {screen: DetailsScreen},
+//     DoctorsResultScreen: {screen: DoctorsResult},
+//     ReserveScreen: ReserveStackNavigator,
+// }, {
+//     defaultNavigationOptions: {
+//         gesturesEnabled: false,
+//         header: null,
+//     }
+// });
+
 
 const VerificationStackNavigator = createStackNavigator({
     GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
@@ -62,16 +84,16 @@ const ChatStackNavigator = createStackNavigator({
 }, {
     defaultNavigationOptions: {
         header: null,
-        gesturesEnabled:false,
+        gesturesEnabled: false,
     }
 });
 
 const GuidStackNavigator = createStackNavigator({
     GuideScreen: {screen: GuidScreen},
     MoreInfo: {screen: MoreInfo}
-},{
-    defaultNavigationOptions:{
-        gesturesEnabled:false,
+}, {
+    defaultNavigationOptions: {
+        gesturesEnabled: false,
     }
 })
 const HistoryStackNavigator = createStackNavigator({
@@ -86,23 +108,21 @@ const HistoryStackNavigator = createStackNavigator({
     initialRouteName: 'HistoryScreen',
     defaultNavigationOptions: {
         header: null,
-        gesturesEnabled:false,
+        gesturesEnabled: false,
     }
 });
 const SplashStackNavigator = createStackNavigator({
     SplashScreen: {screen: SplashScreen},
     GetVerificationCodeScreen: {screen: GetVerificationCodeScreen},
-    VerifyScreen: {screen: VerifyScreen}
+    VerifyScreen: {screen: VerifyScreen},
+    RegisterScreen: {screen: RegisterScreen}
 }, {
     initialRouteName: 'SplashScreen',
-    defaultNavigationOptions:{
-        gesturesEnabled:false,
+    defaultNavigationOptions: {
+        gesturesEnabled: false,
     }
 });
-const ReserveStackNavigator = createStackNavigator({
-    ReserveScreen: {screen: ReserveScreen},
-    ServicePlanResultScreen: {screen: ServicePlanResult}
-});
+
 const AppDrawerNavigator = createDrawerNavigator({
     RegisterScreen: {screen: RegisterScreen},
     HomeScreen: {screen: HomeScreen},
@@ -117,8 +137,8 @@ const AppDrawerNavigator = createDrawerNavigator({
     VerifyScreen: VerificationStackNavigator
 
 }, {
-    defaultNavigationOptions:{
-        gesturesEnabled:false,
+    defaultNavigationOptions: {
+        gesturesEnabled: false,
     },
     initialRouteName: 'HomeScreen',
     contentComponent: SideMenu,
@@ -146,7 +166,8 @@ AppDrawerNavigator.router.getStateForAction = (action, state) => {
 
 const AppSwitchNavigator = createSwitchNavigator({
     SplashItem: SplashStackNavigator,
-    HomeItem: AppDrawerNavigator
+    HomeItem: AppDrawerNavigator,
+
 }, {
     initialRouteName: 'SplashItem',
 });

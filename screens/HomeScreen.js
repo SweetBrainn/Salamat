@@ -160,7 +160,7 @@ export default class HomeScreen extends Component {
 
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
 
                 <Header style={styles.header}>
                     <Left>
@@ -185,7 +185,8 @@ export default class HomeScreen extends Component {
                         originWhitelist={['*']}
                         mixedContentMode='always'
                         scalesPageToFit={true}
-                        onLoadStart={() => this.setState({progressModalVisible: true})}
+                        // onLoadStart={() => this.setState({progressModalVisible: true})}
+                        onLoadStart={() => this.setState({progressModalVisible: false})}
                         onLoadEnd={() => this.setState({progressModalVisible: false})}
                         originWhitelist={['*']}
                         onLoadProgress={() => this.setState({progressModalVisible: !this.state.progressModalVisible})}

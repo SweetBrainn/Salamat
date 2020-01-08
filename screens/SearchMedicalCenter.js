@@ -133,7 +133,7 @@ export default class SearchMedicalCenter extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -350,7 +350,7 @@ export default class SearchMedicalCenter extends Component {
                                 <View>
                                     <Text style={[styles.modalCancelButtonText,
                                         {
-                                            color: '#000',
+                                            color: '#23b9b9',
                                             fontSize: 15,
 
                                         }]}>{this.state.selectedMedicalCenter.Description != null ?

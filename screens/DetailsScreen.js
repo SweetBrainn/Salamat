@@ -53,6 +53,14 @@ export default class DetailsScreen extends Component {
         this.setState({region});
     }
 
+    goToReserveScreen() {
+
+        this.props.navigation.navigate('ReserveScreen', {
+            doctor: this.state.doctor
+        });
+
+    }
+
     async componentWillMount(): void {
         var token = await AsyncStorage.getItem('token');
         var baseUrl = await AsyncStorage.getItem('baseUrl')
@@ -105,7 +113,7 @@ export default class DetailsScreen extends Component {
         return (
 
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
 
                 <Header span style={styles.header}>
                     <Left>
@@ -136,7 +144,11 @@ export default class DetailsScreen extends Component {
                                             alignContent: 'center',
                                             backgroundColor: '#23b9b9',
                                             borderColor: '#23b9b9'
-                                        }}>
+                                        }}
+                                                onPress={() => {
+                                                    this.goToReserveScreen()
+                                                }}
+                                        >
                                             <Text style={{color: '#fff'}}>رزرو نوبت</Text>
                                         </Button>
                                     </Body>
@@ -252,7 +264,8 @@ export default class DetailsScreen extends Component {
                                                     margin: 2,
                                                     padding: 1,
                                                     color: '#a7a7a7'
-                                                }}> - {item.Title?item.Title : null} : {item.Address ? item.Address : null}</Text>
+                                                }}> - {item.Title ? item.Title : null} : {item.Address ? item.Address :
+                                                    null}</Text>
                                             </View>
                                         ))}
 

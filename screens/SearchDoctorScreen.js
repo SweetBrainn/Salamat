@@ -62,6 +62,20 @@ export default class SearchMedicalCenter extends Component {
 
     }
 
+    async goToReserveScreen() {
+        if (this.state.selectedMedicalCenter != null) {
+            this.props.navigation.navigate('ReserveScreen', {
+                doctor: this.state.selectedDoctor,
+                medicalCenter: this.state.selectedMedicalCenter
+            })
+        } else {
+            this.props.navigation.navigate('ReserveScreen', {
+                doctor: this.state.selectedDoctor,
+            })
+        }
+
+    }
+
     renderList() {
 
         this.state.medicalCenters.map((value, index) => {
@@ -233,7 +247,7 @@ export default class SearchMedicalCenter extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={styles.header}>
                     <Left style={{flex: 1}}>
                         <Button transparent style={styles.headerMenuIcon}
@@ -404,8 +418,6 @@ export default class SearchMedicalCenter extends Component {
                                                         Skill: item.Skills[0].Title,
                                                     }, visible: true
                                                 })
-
-
                                             }
                                             }
                                         >
@@ -452,7 +464,9 @@ export default class SearchMedicalCenter extends Component {
                                         textStyle={styles.modalCancelButtonText}
                                         text="رزرو نوبت"
                                         onPress={() => {
-                                            alert('clicked')
+                                            this.setState({visible: false}, () => {
+                                                this.goToReserveScreen()
+                                            })
                                         }}
                                     />
                                     <ModalButton

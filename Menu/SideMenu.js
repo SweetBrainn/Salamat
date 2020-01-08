@@ -129,7 +129,10 @@ export default class SideMenu extends Component {
                         </ListItem>}
                         {this.getAccess('reserve', 'admin') &&
                         <ListItem icon style={styles.listItem} onPress={() => {
-                            this.props.navigation.navigate('ReserveScreen')
+                            this.props.navigation.navigate('ReserveScreen', {
+                                medicalCenter: null,
+                                doctor: null
+                            })
                         }}>
                             <Right>
                                 <Icon type='FontAwesome' name='calendar' style={styles.icons}/>

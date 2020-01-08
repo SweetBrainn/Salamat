@@ -47,6 +47,7 @@
     "react-native-image-progress": "^1.1.1",
     "react-native-jalali-calendar-picker": "^0.2.6",
     "react-native-modals": "^0.19.9",
+    "react-native-number-picker-ultra": "^1.2.1",
     "react-native-persian-calendar-picker": "^3.0.1",
     "react-native-picker-module": "^1.2.3",
     "react-native-picker-select": "^6.3.3",
@@ -58,6 +59,7 @@
     "react-native-table-component": "^1.2.1",
     "react-native-web": "^0.11.7",
     "react-native-webview": "7.0.5",
+    "react-native-wheel-scroll-picker": "^0.2.4",
     "react-navigation": "^3.12.0",
     "react-persian": "^1.1.1",
     "vazir-font": "^21.1.1"
@@ -76,6 +78,7 @@
     "react-native-paper": "^3.1.1",
     "react-native-render-html": "latest",
     "react-native-rtl-layout": "0.0.1",
+    "react-native-simple-radio-button": "^2.7.4",
     "react-native-woodpicker": "0.0.17"
   },
   "private": true

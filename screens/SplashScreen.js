@@ -21,7 +21,9 @@ export default class SplashScreen extends Component {
         if (data !== null) {
             //this.props.navigation.navigate('HomeScreen', {user: {username: 'adrian', password: '1234', role:
             // 'stranger'}});
-            this.props.navigation.navigate('GetVerificationCodeScreen', {user: {username: 'adrian', password: '1234', role: 'stranger'}});
+            // this.props.navigation.navigate('GetVerificationCodeScreen',
+            //     {user: {username: 'adrian', password: '1234', role: 'stranger'}});
+            this.props.navigation.navigate('RegisterScreen');
         }
     }
 
@@ -40,13 +42,18 @@ export default class SplashScreen extends Component {
                                  //         role: 'stranger'
                                  //     }
                                  // })
-                                 this.props.navigation.navigate('GetVerificationCodeScreen', {
-                                     user: {
-                                         username: 'adrian',
-                                         password: '1234',
-                                         role: 'stranger'
-                                     }
-                                 })
+
+                                 //
+                                 // this.props.navigation.navigate('GetVerificationCodeScreen', {
+                                 //     user: {
+                                 //         username: 'adrian',
+                                 //         password: '1234',
+                                 //         role: 'stranger'
+                                 //     }
+                                 // })
+
+                                 this.props.navigation.navigate('RegisterScreen');
+
                              }}>
             </ImageBackground>
         );

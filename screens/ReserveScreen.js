@@ -89,14 +89,19 @@ export default class ReserveScreen extends Component {
     }
 
 
-
-
     async componentWillMount(): void {
         const token = await AsyncStorage.getItem('token');
         const baseUrl = await AsyncStorage.getItem('baseUrl');
+        const MEDICALCENTER = this.props.navigation.getParam('medicalCenter');
+        const DOCTOR = this.props.navigation.getParam('doctor');
         this.setState({
             token: token,
-            baseUrl: baseUrl
+            baseUrl: baseUrl,
+            medicalCenterSearchWord: (typeof MEDICALCENTER != 'undefined' && MEDICALCENTER != null) ?
+                MEDICALCENTER.Title :
+                null,
+            doctorSearchWord: (typeof DOCTOR != 'undefined' && DOCTOR != null) ? DOCTOR.FirstName + " " +
+                DOCTOR.LastName : null
         }, () => {
             this.getSkills()
         });
@@ -307,8 +312,8 @@ export default class ReserveScreen extends Component {
                         })
                     } else {
                         this.setState({progressModalVisible: false}, () => {
-                            // alert('خطا در اتصال به سرویس')
-                            alert(JSON.stringify(responseData))
+                            alert('خطا در اتصال به سرویس')
+                            //alert(JSON.stringify(responseData))
                         })
 
                     }
@@ -358,12 +363,25 @@ export default class ReserveScreen extends Component {
         return date;
     }
 
+    onBackPressed() {
+        // this.props.navigation.navigate('HomeScreen')
+        this.props.navigation.goBack(null)
+    }
+
     render() {
+        const MEDICALCENTER = this.props.navigation.getParam('medicalCenter');
+        const DOCTOR = this.props.navigation.getParam('doctor');
         return (
             <Container>
                 <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
-                    <Left>
+                    {(typeof DOCTOR != 'undefined' || typeof MEDICALCENTER != 'undefined') ? <Left>
+                        <Button transparent style={styles.headerMenuIcon}
+                                onPress={() => this.onBackPressed()}>
+                            <Icon style={styles.headerMenuIcon} name='arrow-back'
+                                  onPress={() => this.onBackPressed()}/>
+                        </Button>
+                    </Left> : <Left>
                         <Button transparent style={styles.headerMenuIcon}
                                 onPress={() => {
                                     Keyboard.dismiss()
@@ -375,7 +393,7 @@ export default class ReserveScreen extends Component {
                                       this.props.navigation.openDrawer()
                                   }}/>
                         </Button>
-                    </Left>
+                    </Left>}
                     <Right>
                         <Text style={styles.headerText}>جستجوی نوبت</Text>
                     </Right>
@@ -386,13 +404,14 @@ export default class ReserveScreen extends Component {
                         <Card style={styles.card}>
 
                             <View style={styles.row}>
-                                <TextInput placeholder={'نام مرکز،خدمات،منطقه و ...'}
+                                <TextInput placeholder={'نام مرکز'}
                                            onChangeText={(text) => this.setState({medicalCenterSearchWord: text})}
-                                           value={this.state.medicalCenterSearchWord} style={styles.Input}/>
+                                           value={this.state.medicalCenterSearchWord}
+                                           style={styles.Input}/>
                                 <Text style={[styles.label, {marginBottom: 8}]}> مرکز درمانی</Text>
                             </View>
                             <View style={styles.row}>
-                                <TextInput placeholder={'نام پزشک،تخصص و ...'}
+                                <TextInput placeholder={'نام پزشک'}
                                            onChangeText={(text) => this.setState({doctorSearchWord: text})}
                                            value={this.state.doctorSearchWord} style={styles.Input}/>
                                 <Text style={[styles.label, {marginBottom: 8}]}> پزشک</Text>

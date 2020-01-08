@@ -501,7 +501,7 @@ export default class AdvanceSearchScreen extends Component {
         if (this.props.navigation.getParam('doctor')) {
             return (
                 <Container>
-                    <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                    <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                     <Header style={styles.header}>
                         <Left style={{flex: 1}}>
                             <Button transparent style={styles.headerMenuIcon}
