@@ -1,17 +1,18 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, StatusBar, TextInput, Keyboard} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button'
-import ScrollPicker from "react-native-wheel-scroll-picker";
+import DatePicker from 'react-native-jalaali-date-picker'
 
+let moment = require('moment')
 import {
     Container,
     Header,
-    Body,
+    Thumbnail,
     Content,
     CardItem,
-    TabHeading,
+    Textarea,
     Button,
-    Left,
+    Footer,
     Right,
     Tabs,
     Icon,
@@ -19,8 +20,14 @@ import {
     Card, Tab, Accordion
 } from 'native-base';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
-import PersianCalendarPicker from "react-native-persian-calendar-picker";
+// import ImagePicker from 'react-native-image-picker';
 
+
+const options = {
+    title: 'My Title',
+    takePhotoButtonTitle: 'take photo',
+    chooseFromLibraryButtonTitle: 'from library'
+};
 
 export default class ReserveScreen extends Component {
 
@@ -37,9 +44,11 @@ export default class ReserveScreen extends Component {
             description: '',
             address: '',
             zipCode: '',
+            patientPassword: '',
             selectedStartDate: null,
             minDate: new Date(),
             startDateModalVisible: false,
+            imageFromDevice: null,
             radioProps: [
                 {label: 'مرد', value: 11},
                 {label: 'زن', value: 12}
@@ -61,10 +70,12 @@ export default class ReserveScreen extends Component {
     }
 
     render() {
+
+
         return (
             <Container>
                 <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
-                <Header span style={{backgroundColor: '#23b9b9'}}>
+                <Header style={{backgroundColor: '#23b9b9'}}>
                     <Right>
                         <Text style={styles.headerText}>ثبت نام</Text>
                     </Right>
@@ -73,6 +84,49 @@ export default class ReserveScreen extends Component {
                     <View style={styles.body}>
                         <View style={styles.card}>
                             <Card>
+                                <CardItem bordered style={[styles.row,
+                                    {
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignContent: 'center',
+                                        backgroundColor: '#fff',
+                                        borderBottomColor: '#1a8787'
+                                    }]}>
+                                    {this.state.imageFromDevice != null ?
+                                        <Thumbnail large source={{uri: this.state.imageFromDevice}}/> :
+                                        <Button style={{
+                                            backgroundColor: 'rgba(195,195,195,0.56)',
+                                            width: 75,
+                                            height: 75,
+                                            borderRadius: 75 / 2,
+                                            justifyContent: 'center'
+                                        }}
+                                                onPress={() => {
+                                                    // ImagePicker.showImagePicker(options, (response) => {
+                                                    //     console.log('Response = ', response);
+                                                    //
+                                                    //     if (response.didCancel) {
+                                                    //         console.log('User cancelled image picker');
+                                                    //     } else if (response.error) {
+                                                    //         console.log('ImagePicker Error: ', response.error);
+                                                    //     } else if (response.customButton) {
+                                                    //         console.log('User tapped custom button: ',
+                                                    //             response.customButton);
+                                                    //     } else {
+                                                    //         const source = {uri: response.uri};
+                                                    //         this.setState({
+                                                    //             imageFromDevice: source,
+                                                    //         });
+                                                    //     }
+                                                    // });
+                                                    alert('clicked')
+                                                }
+                                                }
+                                        >
+                                            <Icon name={"camera"} type={"FontAwesome5"} color={'#949494'}/>
+                                        </Button>
+                                    }
+                                </CardItem>
                                 <CardItem style={styles.row}>
                                     <Text style={styles.label}>نام</Text>
                                     <TextInput
@@ -111,7 +165,16 @@ export default class ReserveScreen extends Component {
                                         multiline={false}
                                     />
                                 </CardItem>
-
+                                <CardItem style={styles.row}>
+                                    <Text style={styles.label}>رمز عبور</Text>
+                                    <TextInput
+                                        secureTextEntry={true}
+                                        value={this.state.patientPassword}
+                                        onChangeText={(text) => this.setState({patientPassword: text})}
+                                        style={[styles.textInput]}
+                                        multiline={false}
+                                    />
+                                </CardItem>
                                 <CardItem style={styles.row}>
                                     <Text style={styles.label}>موبایل</Text>
                                     <TextInput
@@ -122,28 +185,24 @@ export default class ReserveScreen extends Component {
                                         multiline={false}
                                     />
                                 </CardItem>
-
-
-                                <CardItem style={styles.row}>
-                                    <Text style={styles.label}>تاریخ تولد</Text>
+                                <CardItem style={[styles.row]}>
+                                    <Text style={[styles.label, {}]}>تاریخ تولد</Text>
                                     <Button
-                                        onPress={() => {
+                                        onPress={async () => {
                                             Keyboard.dismiss()
-                                            this.setState({startDateModalVisible: true}, () => {
-
-                                            })
-
+                                            await this.setState({startDateModalVisible: true})
                                         }}
-                                        bordered style={{
-                                        textAlign: 'center',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        borderRadius: 2,
-                                        flex: 3,
-                                        borderWidth: 1,
-                                        borderColor: '#fff',
+                                        bordered
+                                        style={{
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: 2,
+                                            flex: 3,
+                                            borderWidth: 1,
+                                            borderColor: '#fff',
 
-                                    }}>
+                                        }}>
                                         <Text style={{
                                             padding: 1,
                                             textAlign: 'center',
@@ -179,27 +238,34 @@ export default class ReserveScreen extends Component {
                                     />
                                 </CardItem>
                                 <CardItem style={styles.row}>
-                                    <Text style={styles.label}>توضیحات</Text>
-                                    <TextInput
-                                        value={this.state.description}
-                                        onChangeText={(text) => this.setState({description: text})}
-                                        style={[styles.textInput]}
-                                        multiline={false}
-                                    />
+                                    <Textarea style={{padding: 2, margin: 2, flex: 1, textAlign: 'right'}} rowSpan={3}
+                                              bordered
+                                              placeholder="آدرس"/>
+                                    {/*<Text style={styles.label}>توضیحات</Text>*/}
+                                    {/*<TextInput*/}
+                                    {/*    value={this.state.description}*/}
+                                    {/*    onChangeText={(text) => this.setState({description: text})}*/}
+                                    {/*    style={[styles.textInput]}*/}
+                                    {/*    multiline={false}*/}
+                                    {/*/>*/}
                                 </CardItem>
                                 <CardItem style={styles.row}>
-                                    <Text style={styles.label}>آدرس</Text>
-                                    <TextInput
-                                        value={this.state.address}
-                                        onChangeText={(text) => this.setState({address: text})}
-                                        style={[styles.textInput]}
-                                        multiline={false}
-                                    />
+                                    <Textarea style={{padding: 5, margin: 2, flex: 1, textAlign: 'right'}} rowSpan={3}
+                                              bordered
+                                              placeholder="توضیحات"/>
+                                    {/*<Text style={styles.label}>آدرس</Text>*/}
+                                    {/*<TextInput*/}
+                                    {/*    value={this.state.address}*/}
+                                    {/*    onChangeText={(text) => this.setState({address: text})}*/}
+                                    {/*    style={[styles.textInput]}*/}
+                                    {/*    multiline={false}*/}
+                                    {/*/>*/}
                                 </CardItem>
                             </Card>
+
                             <Modal
-                                onTouchOutside={() => {
-                                    this.setState({startDateModalVisible: false});
+                                onTouchOutside={async () => {
+                                    await this.setState({startDateModalVisible: false});
                                 }}
                                 visible={this.state.startDateModalVisible}
                                 modalTitle={<ModalTitle style={styles.modalTitle} textStyle={styles.modalTitleText}
@@ -213,54 +279,28 @@ export default class ReserveScreen extends Component {
                                             style={styles.modalCancelButton}
                                             textStyle={styles.modalCancelButtonText}
                                             text="انصراف"
-                                            onPress={() => this.setState({startDateModalVisible: false})}
+                                            onPress={async () => await this.setState({startDateModalVisible: false})}
                                         />
                                         <ModalButton
                                             style={styles.modalSuccessButton}
                                             textStyle={styles.modalSuccessButtonText}
                                             text="تایید"
-                                            onPress={() => this.setState({startDateModalVisible: false})}
+                                            onPress={async () => await this.setState({startDateModalVisible: false})}
                                         />
                                     </ModalFooter>
                                 }
                             >
                                 <ModalContent style={styles.dateModalContent}>
                                     <View>
-                                        {/*<PersianCalendarPicker*/}
-
-                                        {/*    initDate={this.state.minDate}*/}
-                                        {/*    minDate={new Date('1900-01-01T00:00:00')}*/}
-                                        {/*    maxDate={this.getMaxDate()}*/}
-                                        {/*    previousTitle={'ماه قبل'}*/}
-                                        {/*    nextTitle={'ماه بعد'}*/}
-                                        {/*    selectedDayColor={'#23b9b9'}*/}
-                                        {/*    selectedDayTextColor={'#fff'}*/}
-                                        {/*    todayBackgroundColor={'#e6e6e6'}*/}
-                                        {/*    textStyle={{color: '#000'}}*/}
-                                        {/*    onDateChange={this.onStartDateChange}*/}
-                                        {/*/>*/}
-                                        <ScrollPicker
-                                            ref={(sp) => {this.sp = sp}}
-                                            dataSource={[
-                                                'a',
-                                                'b',
-                                                'c',
-                                                'd',
-                                            ]}
-                                            selectedIndex={0}
-                                            itemHeight={50}
-                                            wrapperHeight={250}
-                                            wrapperColor="#fafafa"
-                                            highlightColor="#d8d8d8"
-                                            renderItem={(data, index, isSelected) => {
-                                                return(
-                                                    <View>
-                                                        <Text >{data}</Text>
-                                                    </View>
-                                                )
-                                            }}
-                                            onValueChange={(data, selectedIndex) => {
-                                                //
+                                        <DatePicker
+                                            defDateString={this.state.selectedStartDate != null ?
+                                                this.state.selectedStartDate : moment([1950, 2, 21])}
+                                            refDate={moment([1921, 3, 21])}
+                                            style={{marginTop: 5}}
+                                            btnUnderlayColor={'#23b9b9'}
+                                            TitleDateStyle={{backgroundColor: '#23b9b9'}}
+                                            onChangeDate={(date) => {
+                                                this.setState({selectedStartDate: date, birthDate: date})
                                             }}
                                         />
                                     </View>
@@ -270,8 +310,45 @@ export default class ReserveScreen extends Component {
                         </View>
                     </View>
                 </Content>
+                <Footer style={styles.footer}>
+                    <Button style={styles.button} onPress={() => {
+
+                        if (
+                            this.state.patientUsername === '' ||
+                            this.state.nationalCode === '' ||
+                            this.state.cellPhone === '' ||
+                            this.state.firstName === '' ||
+                            this.state.lastName === '' ||
+                            this.state.birthDate === '' ||
+                            this.state.gender === '' ||
+                            this.state.patientPassword === '' ||
+                            this.state.selectedStartDate === null
+                        ) {
+                            alert('لطفا اطلاعات خود را به درستی وارد کنید')
+                        } else {
+                            //myString.replace(/\D/g,'');
+                            let body = {
+                                patientUsername: this.state.patientUsername,
+                                nationalCode: this.state.nationalCode,
+                                cellPhone: this.state.cellPhone,
+                                firstName: this.state.firstName,
+                                lastName: this.state.lastName,
+                                birthDate: this.state.selectedStartDate.format("YYYY/MM/DD"),
+                                gender: this.state.gender,
+                                description: this.state.description,
+                                address: this.state.address,
+                                zipCode: ''
+                            }
+                            console.log(JSON.stringify(body))
+                        }
+
+                    }}>
+                        <Text style={[{color: '#fff', fontSize: 15}]}>ثبت نام</Text>
+                    </Button>
+                </Footer>
             </Container>
         );
+
     }
 
 
@@ -345,9 +422,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     label: {
-        alignSelf: 'flex-end',
-        alignContent: 'center',
-        justifyContent: 'center',
         padding: 1,
         flex: 1,
         margin: 1,
@@ -396,5 +470,20 @@ const styles = StyleSheet.create({
         padding: 2,
         alignContent: 'center',
         backgroundColor: 'rgba(47,246,246,0.06)'
+    },
+    footer: {
+        backgroundColor: '#fff'
+    },
+    button: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center',
+        flex: 1,
+        marginRight: 20,
+        marginLeft: 20,
+        marginTop: 5,
+        marginBottom: 5,
+        borderRadius: 5,
+        backgroundColor: '#23b9b9'
     },
 });

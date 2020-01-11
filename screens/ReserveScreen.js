@@ -270,6 +270,7 @@ export default class ReserveScreen extends Component {
             alert('لطفا بازه زمانی مورد نظر را انتخاب کنید')
         } else {
             this.setState({progressModalVisible: true})
+            console.log(JSON.stringify(body))
             fetch(this.state.baseUrl + SEARCHSERVICEPLAN, {
                 method: 'POST',
                 headers: {
@@ -312,8 +313,8 @@ export default class ReserveScreen extends Component {
                         })
                     } else {
                         this.setState({progressModalVisible: false}, () => {
-                            alert('خطا در اتصال به سرویس')
-                            //alert(JSON.stringify(responseData))
+                            // alert('خطا در اتصال به سرویس')
+                            alert(JSON.stringify(responseData))
                         })
 
                     }
