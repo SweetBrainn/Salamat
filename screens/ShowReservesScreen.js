@@ -116,6 +116,17 @@ export default class ShowReservesScreen extends Component {
 
     async disableReservation(value) {
         this.setState({progressModalVisible: true})
+        let body = {
+            id: value.id,
+            actor: value.actor,
+            medicalCenter: value.medicalCenter,
+            startTime: value.StartTime,
+            type: value.type,
+            date: value.date,
+            status: value.status,
+            statusValue: value.statusValue,
+        }
+        console.log("body : " + JSON.stringify(body))
         fetch(this.state.baseUrl + DISABLERESERVATION, {
             method: 'POST',
             headers: {
@@ -123,29 +134,23 @@ export default class ShowReservesScreen extends Component {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + new String(this.state.token)
             },
-            body: JSON.stringify({
-                actor: value.actor,
-                medicalCenter: value.medicalCenter,
-                startTime: value.StartTime,
-                type: value.type,
-                date: value.date,
-                status: value.status,
-                statusValue: value.statusValue,
-            })
+            body: JSON.stringify(body)
         }).then((response) => response.json())
             .then((responseData) => {
                 if (responseData['StatusCode'] === 200) {
                     if (responseData['Data'] != null) {
                         let data = responseData['Data'];
-                        this.setState({array: data}, async () => {
-                            this.setState({progressModalVisible: false})
+
+                        this.setState({progressModalVisible: false}, async () => {
+
                             Alert.alert(
-                                'لغو نوبت با موفقیت انجام شد',
+                                'عملیات لغو با موفقیت انجام شد',
                                 '',
                                 [
                                     {
                                         text: "تایید", onPress: async () => {
-                                            await this.getReservationReports()
+                                            // await this.getReservationReports()
+                                            this.componentWillMount();
 
                                         }
                                     }
@@ -157,10 +162,12 @@ export default class ShowReservesScreen extends Component {
 
                         })
                     }
+                } else if (responseData['StatusCode'] === 10010) {
+                    alert('عملیات لغو با شکست مواجه شد')
                 } else {
                     this.setState({progressModalVisible: false}, () => {
                         alert('خطا در اتصال به سرویس')
-                       // alert(JSON.stringify(responseData))
+                        console.log(JSON.stringify(responseData))
                     })
 
                 }
@@ -209,7 +216,7 @@ export default class ShowReservesScreen extends Component {
     }
 
     renderList(value, index) {
-        if (value.statusValue === '1' || value.status === 'لغو شده') {
+        if (value.statusValue === '8' ||value.statusValue === '1' ||value.status === 'لغو شده' || value.status === 'لغو حضور توسط مراجعه کننده') {
             return (
                 <View key={index}>
                     <Swipeable>
@@ -253,7 +260,8 @@ export default class ShowReservesScreen extends Component {
                             [
                                 {
                                     text: 'بله',
-                                    onPress: () => this.deleteMessage({value, index})
+                                    //onPress: () => this.deleteMessage({value, index})
+                                    onPress: () => this.disableReservation(value)
                                 },
                                 {
                                     text: 'انصراف',
@@ -279,7 +287,7 @@ export default class ShowReservesScreen extends Component {
 
         return (
             <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
-                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar showHideTransition={"slide"} barStyle="light-content" hidden={false} backgroundColor="#23b9b9" translucent={true}/>
                 <Content>
                     <View style={styles.container}>
                         <ScrollView>

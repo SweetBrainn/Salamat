@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Linking, StatusBar, Platform, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Linking, StatusBar, Platform, ActivityIndicator, Dimensions} from 'react-native';
 import {Container, Header, Footer, Fab, Button, Left, Right, Icon, Text, Content} from 'native-base';
 import * as Permissions from 'expo-permissions'
 import * as Location from 'expo-location';
@@ -7,6 +7,8 @@ import Constants from 'expo-constants'
 import {WebView} from 'react-native-webview';
 import * as IntentLauncher from 'expo-intent-launcher';
 import Modal, {ModalContent, SlideAnimation} from "react-native-modals";
+import MapView from 'react-native-maps';
+import {Marker} from 'react-native-maps'
 
 // import DeviceInfo from 'react-native-device-info'
 
@@ -160,8 +162,7 @@ export default class HomeScreen extends Component {
 
         return (
             <Container>
-                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
-
+                <StatusBar showHideTransition={"slide"} barStyle="light-content" hidden={false} backgroundColor="#23b9b9" translucent={true}/>
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -174,25 +175,78 @@ export default class HomeScreen extends Component {
                         <Text style={styles.headerText}>نرم افزار سلامت</Text>
                     </Right>
                 </Header>
-                {/*<Content scrollEnabled={true} style={{flex: 1}}>*/}
+                <Content scrollEnabled={true} style={{flex: 1, backgroundColor: 'red'}}>
 
-                <View style={{flex: 1, width: '100%', height: '100%'}}>
-                    <WebView
-                        scalesPageToFit={true}
-                        startInLoadingState={true}
-                        javaScriptEnabled={true}
-                        domStorageEnabled={true}
-                        originWhitelist={['*']}
-                        mixedContentMode='always'
-                        scalesPageToFit={true}
-                        // onLoadStart={() => this.setState({progressModalVisible: true})}
-                        onLoadStart={() => this.setState({progressModalVisible: false})}
-                        onLoadEnd={() => this.setState({progressModalVisible: false})}
-                        originWhitelist={['*']}
-                        onLoadProgress={() => this.setState({progressModalVisible: !this.state.progressModalVisible})}
-                        source={{html: map}}
-                        injectedJavaScript={javascript}
-                    />
+                    {/*<View style={{flex: 1, width: '100%', height: '100%'}}>*/}
+                    {/*<WebView*/}
+                    {/*    scalesPageToFit={true}*/}
+                    {/*    startInLoadingState={true}*/}
+                    {/*    javaScriptEnabled={true}*/}
+                    {/*    domStorageEnabled={true}*/}
+                    {/*    originWhitelist={['*']}*/}
+                    {/*    mixedContentMode='always'*/}
+                    {/*    scalesPageToFit={true}*/}
+                    {/*    // onLoadStart={() => this.setState({progressModalVisible: true})}*/}
+                    {/*    onLoadStart={() => this.setState({progressModalVisible: false})}*/}
+                    {/*    onLoadEnd={() => this.setState({progressModalVisible: false})}*/}
+                    {/*    originWhitelist={['*']}*/}
+                    {/*    onLoadProgress={() => this.setState({progressModalVisible: !this.state.progressModalVisible})}*/}
+                    {/*    source={{html: map}}*/}
+                    {/*    injectedJavaScript={javascript}*/}
+                    {/*/>*/}
+
+                    <MapView
+                        style={{
+                            width: Dimensions.get('window').width,
+                            height: Dimensions.get('window').height,
+                        }}
+
+                        initialRegion={{
+                            latitude: 35.715559,
+                            longitude: 51.425621,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }}>
+
+                        <Marker
+                            pinColor={'#23b9b9'}
+                            coordinate={{
+                                latitude: 35.715559,
+                                longitude: 51.425621,
+                            }}></Marker>
+
+                        <Marker
+                            pinColor={'#23b9b9'}
+                            coordinate={{
+                                latitude: 35.717301,
+                                longitude: 51.423658,
+                            }}></Marker>
+
+                        <Marker
+                            pinColor={'#23b9b9'}
+                            coordinate={{
+                                latitude: 35.719252,
+                                longitude: 51.420552,
+                            }}></Marker>
+
+
+                        <Marker
+                            pinColor={'#23b9b9'}
+                            coordinate={{
+                                latitude: 35.718311,
+                                longitude: 51.421577,
+                            }}></Marker>
+
+
+                        <Marker
+                            pinColor={'#23b9b9'}
+                            coordinate={{
+                                latitude: 35.717801,
+                                longitude: 51.425209,
+                            }}></Marker>
+
+                    </MapView>
+
 
                     <Modal style={{opacity: 0.7}}
                            width={300}
@@ -205,9 +259,9 @@ export default class HomeScreen extends Component {
                             <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>
                         </ModalContent>
                     </Modal>
-                </View>
+                    {/*</View>*/}
 
-                {/*</Content>*/}
+                </Content>
                 <Footer style={styles.footer}>
                     <View style={{flex: 1}}>
                     </View>

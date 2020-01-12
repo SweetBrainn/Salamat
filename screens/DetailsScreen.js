@@ -28,7 +28,8 @@ export default class DetailsScreen extends Component {
             baseUrl: null,
             selectedDoctor: null,
             progressModalVisible: false,
-            doctor: null
+            doctor: null,
+            photoDetection: ''
         }
 
 
@@ -87,9 +88,10 @@ export default class DetailsScreen extends Component {
                 if (responseData['StatusCode'] === 200) {
                     if (responseData['Data'] != null) {
                         let data = responseData['Data'];
-                        this.setState({progressModalVisible: false}, async () => {
+                        await this.setState({progressModalVisible: false}, () => {
+                            console.log(JSON.stringify(data))
                             this.setState({
-                                doctor: data[0]
+                                doctor: data[0],
                             }, async () => {
                                 // alert(JSON.stringify(this.state.doctor))
                             })
@@ -131,12 +133,30 @@ export default class DetailsScreen extends Component {
                     <Content padder style={styles.content}>
 
                         <Card style={{padding: 5, borderColor: '#23b9b9', elevation: 8, borderWidth: 1}}>
-                            {!this.state.progressModalVisible && <CardItem style={{marginTop: 5}}>
+                            {!this.state.progressModalVisible && this.state.doctor != null &&
+                            <CardItem style={{marginTop: 5}}>
                                 <Left>
-                                    <Thumbnail large style={{
-                                        alignSelf: 'center',
-                                    }}
-                                               source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
+                                    {(this.state.doctor.Gender !== null && this.state.doctor.Gender !==
+                                        'زن') ?
+                                        <Thumbnail large style={{
+                                            alignSelf: 'center',
+                                            borderColor: '#c5c5c5',
+                                            borderWidth: 1,
+                                            padding: 2
+                                        }}
+                                                   defaultSource={require(
+                                                       'D:\\E\\react native' +
+                                                       ' projects\\salamat\\assets\\images\\doctor.png')}
+                                                   source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/> :
+                                        <Thumbnail large style={{
+                                            alignSelf: 'center',
+                                            borderColor: '#c5c5c5',
+                                            borderWidth: 1,
+                                            padding: 2
+                                        }}
+                                                   defaultSource={require(
+                                                       'D:\\E\\react native projects\\salamat\\assets\\images\\veil.png')}
+                                                   source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>}
                                     <Body style={{justifyContent: 'center', alignContent: 'center'}}>
                                         <Button bordered info style={{
                                             padding: 2,

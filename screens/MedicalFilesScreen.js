@@ -101,7 +101,7 @@ export default class MedicalFilesScreen extends Component {
 
         return (
             <Container style={{backgroundColor: 'rgba(34,166,166,0.72)',}}>
-                <StatusBar hidden translucent backgroundColor="transparent"/>
+                <StatusBar showHideTransition={"slide"} barStyle="light-content" hidden={false} backgroundColor="#23b9b9" translucent={true}/>
                 <Content>
                     <ScrollView>
                         {this.state.array.map((value, index) =>

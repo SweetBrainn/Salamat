@@ -243,6 +243,9 @@ export default class SearchMedicalCenter extends Component {
             })
     }
 
+    onBackPressed() {
+        this.props.navigation.goBack(null)
+    }
 
     render() {
         return (
@@ -250,17 +253,25 @@ export default class SearchMedicalCenter extends Component {
                 <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={styles.header}>
                     <Left style={{flex: 1}}>
-                        <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => {
-                                    Keyboard.dismiss()
-                                    this.props.navigation.openDrawer()
-                                }}>
-                            <Icon style={styles.headerMenuIcon} name='menu'
-                                  onPress={() => {
-                                      Keyboard.dismiss()
-                                      this.props.navigation.openDrawer()
-                                  }}/>
-                        </Button>
+
+                        {this.state.selectedMedicalCenter != null ?
+                            <Button transparent style={styles.headerMenuIcon}
+                                    onPress={() => this.onBackPressed()}>
+                                <Icon style={styles.headerMenuIcon} name='arrow-back'
+                                      onPress={() => this.onBackPressed()}/>
+                            </Button>
+                            :
+                            <Button transparent style={styles.headerMenuIcon}
+                                    onPress={() => {
+                                        Keyboard.dismiss()
+                                        this.props.navigation.openDrawer()
+                                    }}>
+                                <Icon style={styles.headerMenuIcon} name='menu'
+                                      onPress={() => {
+                                          Keyboard.dismiss()
+                                          this.props.navigation.openDrawer()
+                                      }}/>
+                            </Button>}
                     </Left>
                     <Right style={{flex: 6}}>
                         <Text style={[styles.headerText, {fontSize: this.state.headerFontSize}]}>{

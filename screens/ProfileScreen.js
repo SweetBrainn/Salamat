@@ -87,7 +87,7 @@ export default class ProfileScreen extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={{
                     backgroundColor: '#23b9b9', shadowOffset: {height: 0, width: 0},
                     shadowOpacity: 0, shadowColor: '#23b9b9'
@@ -106,11 +106,22 @@ export default class ProfileScreen extends Component {
                 <Content scrollEnabled={true} style={[styles.content]}>
                     <View style={styles.container}>
                         <View style={styles.header}></View>
-                        <Image style={styles.avatar}
-                               onLoadEnd={() => {
-                                   this.setState({animated: !this.state.animated})
-                               }}
-                               source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
+                        {this.state.user['gender'] !== 'زن' ?
+                            <Image style={styles.avatar}
+                                   onLoadEnd={() => {
+                                       this.setState({animated: !this.state.animated})
+                                   }}
+                                   defaultSource={require(
+                                       'D:\\E\\react native projects\\salamat\\assets\\images\\account.png')}
+                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/> :
+                            <Image style={styles.avatar}
+                                   onLoadEnd={() => {
+                                       this.setState({animated: !this.state.animated})
+                                   }}
+                                   defaultSource={require(
+                                       'D:\\E\\react native projects\\salamat\\assets\\images\\hijab.png')}
+                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
+                        }
                         <ActivityIndicator size={'small'} color={'gray'} animating={this.state.animated}/>
                         <View style={styles.body}>
                             <View style={styles.card}>

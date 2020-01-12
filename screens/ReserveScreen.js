@@ -37,6 +37,9 @@ export default class ReserveScreen extends Component {
 
     constructor(props) {
         super(props);
+        this.firstActionSheet = null;
+        this.secondActionSheet = null;
+        this.thirdActionSheet = null;
         this.state = {
             medicalCenterSearchWord: null,
             doctorSearchWord: null,
@@ -89,7 +92,17 @@ export default class ReserveScreen extends Component {
     }
 
 
+
+    componentWillUnmount(): void {
+        console.log('reserve will unmounted')
+    }
+
+    componentDidMount(): void {
+        console.log('reserve did mounted')
+    }
+
     async componentWillMount(): void {
+        console.log('reserve will mount')
         const token = await AsyncStorage.getItem('token');
         const baseUrl = await AsyncStorage.getItem('baseUrl');
         const MEDICALCENTER = this.props.navigation.getParam('medicalCenter');
@@ -262,10 +275,13 @@ export default class ReserveScreen extends Component {
             doctorSearchWord: doctorSearchWord != null ? doctorSearchWord : null,
             skill: skill.id !== -100 ? skill.value : null,
             gender: gender.id !== -100 ? gender.id.toString() : null,
-            startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
-            endDate: endDate != null ? endDate.format('YYYY-M-D') : null
+            startDate: startDate != null ? startDate : null,
+            endDate: endDate != null ? endDate : null
         }
         console.log(JSON.stringify(body))
+        console.log("start : " + typeof (body.startDate))
+        console.log("end :" + typeof (body.endDate))
+        // alert(JSON.stringify(body))
         if (body.startDate === null || body.endDate === null) {
             alert('لطفا بازه زمانی مورد نظر را انتخاب کنید')
         } else {
@@ -297,8 +313,8 @@ export default class ReserveScreen extends Component {
                                         doctorSearchWord: doctorSearchWord != null ? doctorSearchWord : null,
                                         skill: skill.id !== -100 ? skill.value : null,
                                         gender: gender.id !== -100 ? gender.value : null,
-                                        startDate: startDate != null ? startDate.format('YYYY-M-D') : null,
-                                        endDate: endDate != null ? endDate.format('YYYY-M-D') : null
+                                        startDate: startDate != null ? startDate : null,
+                                        endDate: endDate != null ? endDate : null
                                     })
                                 }
                             })
@@ -313,8 +329,8 @@ export default class ReserveScreen extends Component {
                         })
                     } else {
                         this.setState({progressModalVisible: false}, () => {
-                            // alert('خطا در اتصال به سرویس')
-                            alert(JSON.stringify(responseData))
+                            alert('خطا در اتصال به سرویس')
+                            // alert(JSON.stringify(responseData))
                         })
 
                     }
@@ -373,33 +389,33 @@ export default class ReserveScreen extends Component {
         const MEDICALCENTER = this.props.navigation.getParam('medicalCenter');
         const DOCTOR = this.props.navigation.getParam('doctor');
         return (
-            <Container>
-                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
-                <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
-                    {(typeof DOCTOR != 'undefined' || typeof MEDICALCENTER != 'undefined') ? <Left>
-                        <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => this.onBackPressed()}>
-                            <Icon style={styles.headerMenuIcon} name='arrow-back'
-                                  onPress={() => this.onBackPressed()}/>
-                        </Button>
-                    </Left> : <Left>
-                        <Button transparent style={styles.headerMenuIcon}
-                                onPress={() => {
-                                    Keyboard.dismiss()
-                                    this.props.navigation.openDrawer()
-                                }}>
-                            <Icon style={styles.headerMenuIcon} name='menu'
-                                  onPress={() => {
-                                      Keyboard.dismiss()
-                                      this.props.navigation.openDrawer()
-                                  }}/>
-                        </Button>
-                    </Left>}
-                    <Right>
-                        <Text style={styles.headerText}>جستجوی نوبت</Text>
-                    </Right>
-                </Header>
-                <Root>
+            <Root>
+                <Container>
+                    <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                    <Header hasTabs style={{backgroundColor: '#23b9b9'}}>
+                        {(typeof DOCTOR != 'undefined' || typeof MEDICALCENTER != 'undefined') ? <Left>
+                            <Button transparent style={styles.headerMenuIcon}
+                                    onPress={() => this.onBackPressed()}>
+                                <Icon style={styles.headerMenuIcon} name='arrow-back'
+                                      onPress={() => this.onBackPressed()}/>
+                            </Button>
+                        </Left> : <Left>
+                            <Button transparent style={styles.headerMenuIcon}
+                                    onPress={() => {
+                                        Keyboard.dismiss()
+                                        this.props.navigation.openDrawer()
+                                    }}>
+                                <Icon style={styles.headerMenuIcon} name='menu'
+                                      onPress={() => {
+                                          Keyboard.dismiss()
+                                          this.props.navigation.openDrawer()
+                                      }}/>
+                            </Button>
+                        </Left>}
+                        <Right>
+                            <Text style={styles.headerText}>جستجوی نوبت</Text>
+                        </Right>
+                    </Header>
                     <Content padder style={styles.content}>
 
                         <Card style={styles.card}>
@@ -582,18 +598,6 @@ export default class ReserveScreen extends Component {
                             <View style={styles.row}>
                                 <Button
                                     onPress={() => {
-                                        // ActionSheet.show(
-                                        //     {
-                                        //         options: this.getOptions(this.state.days),
-                                        //         cancelButtonIndex: this.getCancelButtonIndex(
-                                        //             this.getOptions(this.state.days)),
-                                        //         title: "انتخاب تاریخ"
-                                        //     },
-                                        //     buttonIndex => {
-                                        //         if (buttonIndex <= this.state.days.length - 1)
-                                        //             this.setState({selectedDay: this.state.days[buttonIndex]});
-                                        //     }
-                                        // )
                                         Keyboard.dismiss()
                                         this.setState({endDateModalVisible: true}, () => {
                                             Keyboard.dismiss()
@@ -1022,26 +1026,25 @@ export default class ReserveScreen extends Component {
                         </Modal>
 
                     </Content>
-                </Root>
-                <Footer style={styles.footer}>
-                    <Button style={styles.button} onPress={() => {
-                        this.searchServicePlans(
-                            this.state.medicalCenterSearchWord,
-                            this.state.doctorSearchWord,
-                            this.state.selectedSkill,
-                            this.state.selectedGender,
-                            this.state.selectedStartDate,
-                            this.state.selectedEndDate
-                        )
-                    }}>
-                        <Text style={[{color: '#fff', fontSize: 15}]}>جستجو</Text>
-                    </Button>
-                </Footer>
-                <ActionSheet ref={(c) => {
-                    ActionSheet.actionsheetInstance = c;
-                }}/>
-            </Container>
-
+                    <Footer style={styles.footer}>
+                        <Button style={styles.button} onPress={() => {
+                            this.searchServicePlans(
+                                this.state.medicalCenterSearchWord,
+                                this.state.doctorSearchWord,
+                                this.state.selectedSkill,
+                                this.state.selectedGender,
+                                this.state.selectedStartDate,
+                                this.state.selectedEndDate
+                            )
+                        }}>
+                            <Text style={[{color: '#fff', fontSize: 15}]}>جستجو</Text>
+                        </Button>
+                    </Footer>
+                    <ActionSheet ref={(c) => {
+                        ActionSheet.actionsheetInstance = c;
+                    }}/>
+                </Container>
+            </Root>
         );
     }
 

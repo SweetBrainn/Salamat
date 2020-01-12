@@ -1,31 +1,33 @@
 import React, {Component} from 'react';
+import {Root} from 'native-base';
 import {StatusBar} from "react-native";
 import {createDrawerNavigator, createAppContainer, createStackNavigator, createSwitchNavigator} from "react-navigation";
-import HomeScreen from './screens/HomeScreen'
+import HomeScreen from './screens/HomeScreen';
 import SplashScreen from "./screens/SplashScreen";
 import SideMenu from "./Menu/SideMenu";
 import ReserveScreen from "./screens/ReserveScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import GuidScreen from "./screens/GuidScreen";
-import NoticeScreen from "./screens/NoticeScreen"
+import NoticeScreen from "./screens/NoticeScreen";
 import MoreInfo from "./screens/MoreInfo";
 import SearchMedicalCenter from "./screens/SearchMedicalCenter";
 import ShowReservesScreen from "./screens/ShowReservesScreen"
-import InboxScreen from "./screens/InboxScreen"
-import MedicalFilesScreen from "./screens/MedicalFilesScreen"
+import InboxScreen from "./screens/InboxScreen";
+import MedicalFilesScreen from "./screens/MedicalFilesScreen";
 import OldReservesScreen from "./screens/OldReservesScreen";
-import ChatScreen from "./screens/MyChatScreen"
+import ChatScreen from "./screens/MyChatScreen";
 import GetVerificationCodeScreen from "./screens/GetVerificationCodeScreen";
 import VerifyScreen from "./screens/VerifyScreen";
 import SearchDoctorScreen from "./screens/SearchDoctorScreen";
-import AdvanceSearchScreen from "./screens/AdvanceSearchScreen"
-import DetailsScreen from "./screens/DetailsScreen"
+import AdvanceSearchScreen from "./screens/AdvanceSearchScreen";
+import DetailsScreen from "./screens/DetailsScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import DetailsForMedicalCenterScreen from './screens/DetailsForMedicalCenterScreen'
+import DetailsForMedicalCenterScreen from './screens/DetailsForMedicalCenterScreen';
 import MedicalCentersResult from "./screens/MedicalCentersResult";
 import DoctorsResult from "./screens/DoctorsResult";
 import ServicePlanResult from "./screens/ServicePlanResult";
+import {render} from "react-native-web";
 
 const ReserveStackNavigator = createStackNavigator({
     ReserveScreen: {screen: ReserveScreen},
@@ -172,7 +174,18 @@ const AppSwitchNavigator = createSwitchNavigator({
     initialRouteName: 'SplashItem',
 });
 
-export default createAppContainer(AppSwitchNavigator);
+// const MyContainer = () => {
+//     return (createAppContainer(AppSwitchNavigator))
+// }
+const MyContainer = createAppContainer(AppSwitchNavigator);
+// export default createAppContainer(AppSwitchNavigator);
+export default () =>
+    <Root>
+        <MyContainer/>
+    </Root>
+
+
+
 
 
 

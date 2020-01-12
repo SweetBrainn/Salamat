@@ -306,14 +306,15 @@ export default class ServicePlanResult extends Component {
     onBackPressed() {
         //this.props.navigation.navigate('ReserveScreen')
         // this.props.navigation.dispatch('ReserveScreen')
-        const navigateAction = NavigationActions.navigate({
-            routeName: 'ServicePlanResultScreen',
-            params: {},
-
-            // navigate can have a nested navigate action that will be run inside the child router
-            action: NavigationActions.navigate({routeName: 'ReserveScreen'}),
-        });
-        this.props.navigation.dispatch(navigateAction);
+        // const navigateAction = NavigationActions.navigate({
+        //     routeName: 'ServicePlanResultScreen',
+        //     params: {},
+        //
+        //     // navigate can have a nested navigate action that will be run inside the child router
+        //     action: NavigationActions.navigate({routeName: 'ReserveScreen'}),
+        // });
+        // this.props.navigation.dispatch(navigateAction);
+        this.props.navigation.push('ReserveScreen');
     }
 
 
@@ -373,10 +374,10 @@ export default class ServicePlanResult extends Component {
                                     <Text style={styles.badgeText}>{this.state.gender}</Text>
                                 </Badge>}
                                 {this.state.startDate != null && <Badge style={styles.badgeStyle}>
-                                    <Text style={styles.badgeText}>{this.state.startDate}</Text>
+                                    <Text style={styles.badgeText}>{this.state.startDate.format('jYYYY-jM-jD')}</Text>
                                 </Badge>}
                                 {this.state.endDate != null && <Badge style={styles.badgeStyle}>
-                                    <Text style={styles.badgeText}>{this.state.endDate}</Text>
+                                    <Text style={styles.badgeText}>{this.state.endDate.format('jYYYY-jM-jD')}</Text>
                                 </Badge>}
 
                             </CardItem>
@@ -451,8 +452,28 @@ export default class ServicePlanResult extends Component {
                                                     }}>توضیحات در مورد پزشک</Text>}
                                             </Body>
                                             <Right>
-                                                <Thumbnail circular
-                                                           source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
+                                                {item.Gender == 12 ? <Thumbnail
+                                                        style={{
+                                                            borderColor: '#c5c5c5',
+                                                            borderWidth: 1,
+                                                            padding:2
+                                                        }}
+                                                        circular
+                                                        defaultSource={require(
+                                                            'D:\\E\\react native projects\\salamat\\assets\\images\\veil.png')}
+                                                        source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/> :
+                                                    <Thumbnail
+                                                        style={{
+                                                            borderColor: '#c5c5c5',
+                                                            borderWidth: 1,
+                                                            padding:2
+                                                        }}
+                                                        circular
+                                                        defaultSource={require(
+                                                            'D:\\E\\react native projects\\salamat\\assets\\images\\doctor.png')}
+                                                        source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
+                                                }
+
                                             </Right>
                                         </ListItem>
                                     </TouchableOpacity>

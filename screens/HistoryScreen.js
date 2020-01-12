@@ -22,7 +22,7 @@ export default class HistoryScreen extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar showHideTransition={"slide"} barStyle="light-content" hidden={false} backgroundColor="#23b9b9" translucent={true}/>
                 <Header style={{backgroundColor: '#23b9b9'}}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}

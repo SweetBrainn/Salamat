@@ -130,7 +130,7 @@ export default class DetailsForMedicalCenterScreen extends Component {
 
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header span style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -148,11 +148,16 @@ export default class DetailsForMedicalCenterScreen extends Component {
                         <Card style={{padding: 5, borderColor: '#23b9b9', elevation: 8, borderWidth: 1}}>
                             {!this.state.progressModalVisible && <CardItem style={{marginTop: 5}}>
                                 <Left>
-                                    <Thumbnail
-                                        square large style={{
+                                    <Thumbnail circular
+                                               large style={{
                                         alignSelf: 'center',
                                     }}
-                                        source={{uri: 'http://shahresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(37).JPG'}}/>
+
+                                               resizeMethod={"resize"}
+
+                                               defaultSource={require(
+                                                   'D:\\E\\react native projects\\salamat\\assets\\images\\cross.png')}
+                                               source={{uri: 'http://shahresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(37).JPG'}}/>
                                     <Body style={{justifyContent: 'center', alignContent: 'center'}}>
                                         <Button bordered info style={{
                                             padding: 2,
