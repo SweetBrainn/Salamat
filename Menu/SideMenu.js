@@ -81,20 +81,35 @@ export default class SideMenu extends Component {
                         <Card style={{backgroundColor: 'rgba(48,255,255,0)'}}>
                             <CardItem style={{backgroundColor: 'rgba(35,185,185,0.41)'}}>
                                 <Left>
-                                    <View>
-                                        <Thumbnail large circular style={{
-                                            alignContent: 'center',
-                                            alignSelf: 'center',
-                                            margin: 1,
-                                            opacity: 1,
-                                            borderWidth: 2,
-                                            borderColor: '#fff'
-                                        }}
-                                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
-                                    </View>
+                                    {this.state.user != null ? <View>
+                                        {this.state.user.gender !== 'زن' ? <Thumbnail large circular style={{
+                                                alignContent: 'center',
+                                                alignSelf: 'center',
+                                                margin: 1,
+                                                opacity: 1,
+                                                borderWidth: 2,
+                                                borderColor: '#fff'
+                                            }}
+                                                                                      defaultSource={require(
+                                                                                          'D:\\E\\react native projects\\salamat\\assets\\images\\account.png')}
+                                                                                      source={{uri: 'https://i.spinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/> :
+                                            <Thumbnail large circular style={{
+                                                alignContent: 'center',
+                                                alignSelf: 'center',
+                                                margin: 1,
+                                                opacity: 1,
+                                                borderWidth: 2,
+                                                borderColor: '#fff'
+                                            }}
+                                                       defaultSource={require(
+                                                           'D:\\E\\react native projects\\salamat\\assets\\images\\veil.png')}
+                                                       source={{uri: 'https://i.spinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
+                                        }
+                                    </View> : null}
                                 </Left>
                                 <Right>
-                                    <Text style={[styles.text, {color: '#fff'}]}>
+                                    <Text
+                                        style={[styles.text, {color: '#fff'}]}>
                                         {this.state.fullName != null ? this.state.fullName : ''}
                                     </Text>
                                 </Right>

@@ -102,9 +102,11 @@ export default class SearchMedicalCenter extends Component {
     async componentWillMount(): void {
         const token = await AsyncStorage.getItem('token');
         const baseUrl = await AsyncStorage.getItem('baseUrl');
+        alert(JSON.stringify(this.props.navigation.state))
 
         if (typeof this.props.navigation.getParam('medicalCenter') !== "undefined" &&
-            this.props.navigation.getParam('medicalCenter') != null) {
+            this.props.navigation.getParam('medicalCenter') != null &&
+            typeof this.props.navigation.getParam('medicalCenter') != '') {
             const medicalCenter = this.props.navigation.getParam('medicalCenter');
             try {
                 const length = medicalCenter.Title.length;

@@ -91,7 +91,8 @@ export default class VerifyScreen extends Component {
                                        }}/>
                             </Item>
                             <Button light style={styles.buttonStyle}>
-                                <Text style={styles.textStyle} onPress={()=>alert('clicked')}>ارسال مجدد کد فعال سازی</Text>
+                                <Text style={styles.textStyle} onPress={() => alert('clicked')}>ارسال مجدد کد فعال
+                                    سازی</Text>
                             </Button>
                             <Text style={[styles.textStyle, {color: '#23b9b9', marginTop: 40}]} onPress={() => {
                                 this.props.navigation.goBack()

@@ -20,6 +20,7 @@ import SearchableDropdown from "react-native-searchable-dropdown";
 import Modal, {ModalContent, SlideAnimation} from "react-native-modals";
 
 const GETMEDICALCENTERBYID = '/api/GetMedicalCenterById';
+const GETLOCATION = '/api/GetLocation';
 const MySpinner = () => {
     return (
         <Spinner color={'#23b9b9'}/>
@@ -30,6 +31,7 @@ export default class DetailsForMedicalCenterScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: null,
             title: null,
             description: null,
             contract: null,
@@ -57,6 +59,51 @@ export default class DetailsForMedicalCenterScreen extends Component {
         await this.setState({baseUrl: baseUrl, token: token, selectedMedicalCenter: medicalCenter}, () => {
             this.getMedicalCenterDetails()
         })
+    }
+
+
+    async getLocation() {
+        this.setState({progressModalVisible: true})
+        const value = this.state.selectedMedicalCenter;
+        let body = '{ Id: ' + JSON.stringify(value.Id) + ',Title:' +
+            JSON.stringify(value.Title) + '}';
+        console.log(body);
+        await fetch(this.state.baseUrl + GETLOCATION, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + new String(this.state.token)
+            },
+            body: body
+        }).then((response) => response.json())
+            .then(async (responseData) => {
+                if (responseData['StatusCode'] === 200) {
+                    if (responseData['Data'] != null) {
+                        let data = responseData['Data'];
+                        await this.setState({progressModalVisible: false}, async () => {
+                            console.log((data.Latitude + ',' + data.Longitude))
+
+                            await AsyncStorage.setItem("Latitude", data.Latitude)
+                            await AsyncStorage.setItem("Longitude", data.Longitude)
+                            // await AsyncStorage.setItem("Longitude", "51.425232")
+                            // await AsyncStorage.setItem("Latitude", "35.715376")
+                            this.props.navigation.navigate('MapScreen')
+                        });
+
+                    }
+                } else {
+                    this.setState({progressModalVisible: false}, () => {
+                        // alert(JSON.stringify('خطا در دسترسی به سرویس'))
+                        alert(JSON.stringify(responseData))
+                    })
+
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+                // alert(error)
+            })
     }
 
     onBackPressed() {
@@ -98,6 +145,7 @@ export default class DetailsForMedicalCenterScreen extends Component {
                         let data = responseData['Data'];
                         this.setState({progressModalVisible: false}, () => {
                             this.setState({
+                                id: data['Id'],
                                 title: data['Title'],
                                 description: data['Description'],
                                 contract: data['Contract'],
@@ -165,7 +213,11 @@ export default class DetailsForMedicalCenterScreen extends Component {
                                             alignContent: 'center',
                                             backgroundColor: '#23b9b9',
                                             borderColor: '#23b9b9',
-                                        }}>
+                                        }}
+                                                onPress={async () => {
+                                                    this.getLocation()
+                                                }}
+                                        >
                                             <Text style={{color: '#fff'}}>مشاهده روی نقشه</Text>
                                         </Button>
                                     </Body>

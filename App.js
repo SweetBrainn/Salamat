@@ -28,6 +28,7 @@ import MedicalCentersResult from "./screens/MedicalCentersResult";
 import DoctorsResult from "./screens/DoctorsResult";
 import ServicePlanResult from "./screens/ServicePlanResult";
 import {render} from "react-native-web";
+import MapScreen from "./screens/MapScreen";
 
 const ReserveStackNavigator = createStackNavigator({
     ReserveScreen: {screen: ReserveScreen},
@@ -39,6 +40,7 @@ const SearchDoctorNavigator = createStackNavigator({
     DetailsScreen: {screen: DetailsScreen},
     DoctorsResultScreen: {screen: DoctorsResult},
     ReserveScreen: ReserveStackNavigator,
+    HomeScreen:{screen:HomeScreen}
 }, {
     defaultNavigationOptions: {
         gesturesEnabled: false,
@@ -51,7 +53,8 @@ const SearchMedicalCenterNavigator = createStackNavigator({
     DetailsForMedicalCenterScreen: {screen: DetailsForMedicalCenterScreen},
     MedicalCenterResultScreen: {screen: MedicalCentersResult},
     SearchDoctorScreen: SearchDoctorNavigator,
-    ReserveScreen: ReserveStackNavigator
+    ReserveScreen: ReserveStackNavigator,
+    MapScreen:{screen:MapScreen}
 
 }, {
     defaultNavigationOptions: {
