@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {NavigationActions} from 'react-navigation';
 import {
     StyleSheet,
     View,
@@ -323,6 +324,7 @@ export default class HomeScreen extends Component {
                         {this.state.medicalCenters.map((value, index) =>
                             <View key={index}>
                                 <Marker
+
                                     title={value.Title}
                                     onCalloutPress={() => this.setState({selectedMedicalCenter: value}, () => {
                                         this.setState({visible: true})
@@ -358,10 +360,7 @@ export default class HomeScreen extends Component {
                                         text="جستجوی پزشک"
                                         onPress={async () => {
                                             this.setState({visible: false})
-                                            console.log(JSON.stringify(this.state.selectedMedicalCenter))
-                                            // await AsyncStorage.setItem('MedicalCenterFromMap',
-                                            //     JSON.stringify(this.state.selectedMedicalCenter))
-                                            this.props.navigation.navigate('SearchDoctorScreen',
+                                            this.props.navigation.navigate('MapSearchDoctorScreen',
                                                 {medicalCenter: this.state.selectedMedicalCenter})
                                         }}
                                     />
@@ -371,7 +370,8 @@ export default class HomeScreen extends Component {
                                         text="اطلاعات بیشتر"
                                         onPress={async () => {
                                             await this.setState({visible: false})
-                                            await this.goToDetailsScreen(this.state.selectedMedicalCenter)
+                                            this.props.navigation.navigate('DetailsForMedicalCenterScreen',
+                                                {medicalCenter: this.state.selectedMedicalCenter,backRoute:'HomeScreen'})
                                         }
                                         }
                                     />
@@ -393,12 +393,12 @@ export default class HomeScreen extends Component {
                     </MapView>
 
 
-                    <Modal style={{opacity: 0.7}}
-                           width={300}
-                           visible={this.state.progressModalVisible}
-                           modalAnimation={new SlideAnimation({
-                               slideFrom: 'bottom'
-                           })}
+                    < Modal style={{opacity: 0.7}}
+                            width={300}
+                            visible={this.state.progressModalVisible}
+                            modalAnimation={new SlideAnimation({
+                                slideFrom: 'bottom'
+                            })}
                     >
                         <ModalContent style={[styles.modalContent, {backgroundColor: 'rgba(47,246,246,0.02)'}]}>
                             <ActivityIndicator animating={true} size="small" color={"#23b9b9"}/>

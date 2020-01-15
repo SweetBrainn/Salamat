@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {
     ActivityIndicator,
-    Alert,
     AsyncStorage,
     StatusBar,
     StyleSheet,
@@ -10,10 +9,7 @@ import {
     Keyboard,
     View
 } from 'react-native';
-import {SearchableFlatList, SearchableSectionList} from "react-native-searchable-list";
-import CheckAlert from "react-native-awesome-alert"
 import {
-    ActionSheet,
     Button,
     Body,
     Container,
@@ -102,11 +98,8 @@ export default class SearchMedicalCenter extends Component {
     async componentWillMount(): void {
         const token = await AsyncStorage.getItem('token');
         const baseUrl = await AsyncStorage.getItem('baseUrl');
-        alert(JSON.stringify(this.props.navigation.state))
-
         if (typeof this.props.navigation.getParam('medicalCenter') !== "undefined" &&
-            this.props.navigation.getParam('medicalCenter') != null &&
-            typeof this.props.navigation.getParam('medicalCenter') != '') {
+            this.props.navigation.getParam('medicalCenter') != null) {
             const medicalCenter = this.props.navigation.getParam('medicalCenter');
             try {
                 const length = medicalCenter.Title.length;

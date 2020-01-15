@@ -40,7 +40,7 @@ const SearchDoctorNavigator = createStackNavigator({
     DetailsScreen: {screen: DetailsScreen},
     DoctorsResultScreen: {screen: DoctorsResult},
     ReserveScreen: ReserveStackNavigator,
-    HomeScreen:{screen:HomeScreen}
+    HomeScreen: {screen: HomeScreen}
 }, {
     defaultNavigationOptions: {
         gesturesEnabled: false,
@@ -54,7 +54,7 @@ const SearchMedicalCenterNavigator = createStackNavigator({
     MedicalCenterResultScreen: {screen: MedicalCentersResult},
     SearchDoctorScreen: SearchDoctorNavigator,
     ReserveScreen: ReserveStackNavigator,
-    MapScreen:{screen:MapScreen}
+    MapScreen: {screen: MapScreen}
 
 }, {
     defaultNavigationOptions: {
@@ -128,9 +128,22 @@ const SplashStackNavigator = createStackNavigator({
     }
 });
 
+const NavigateBetweenMapAndHome = createStackNavigator({
+    HomeScreen: {screen: HomeScreen},
+    MapSearchDoctorScreen: SearchDoctorNavigator,
+    MapSearchMedicalCenterScreen: SearchMedicalCenterNavigator
+}, {
+    defaultNavigationOptions: {
+        header: null,
+        gesturesEnabled: false,
+    }
+});
+
+
 const AppDrawerNavigator = createDrawerNavigator({
     RegisterScreen: {screen: RegisterScreen},
-    HomeScreen: {screen: HomeScreen},
+    // HomeScreen: {screen: HomeScreen},
+    HomeScreen: NavigateBetweenMapAndHome,
     ReserveScreen: ReserveStackNavigator,
     HistoryScreen: HistoryStackNavigator,
     ProfileScreen: {screen: ProfileScreen},

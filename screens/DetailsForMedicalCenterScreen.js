@@ -56,6 +56,7 @@ export default class DetailsForMedicalCenterScreen extends Component {
         var token = await AsyncStorage.getItem('token');
         var baseUrl = await AsyncStorage.getItem('baseUrl')
         const medicalCenter = this.props.navigation.getParam('medicalCenter');
+        console.log(JSON.stringify(this.props.navigation.state))
         await this.setState({baseUrl: baseUrl, token: token, selectedMedicalCenter: medicalCenter}, () => {
             this.getMedicalCenterDetails()
         })
@@ -107,7 +108,13 @@ export default class DetailsForMedicalCenterScreen extends Component {
     }
 
     onBackPressed() {
-        this.props.navigation.goBack()
+        let backRoute = this.props.navigation.getParam('backRoute')
+        console.log(backRoute)
+        if (backRoute === 'HomeScreen') {
+            this.props.navigation.push('HomeScreen');
+        } else {
+            this.props.navigation.goBack(null)
+        }
     }
 
     getInitialState() {

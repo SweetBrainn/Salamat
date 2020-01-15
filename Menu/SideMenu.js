@@ -60,11 +60,17 @@ export default class SideMenu extends Component {
     generateFullName() {
         var routes = (this.props.navigation.state['routes'])
         var homeRoute = routes[1]
-        var params = homeRoute['params']
-        var user = params['user']
+        var firstRoute = homeRoute['routes']
+        var firstElement = firstRoute[0]
+        var firstParam = firstElement['params']
+        console.log('homeRoute--------------------->', JSON.stringify(homeRoute))
+        console.log('firstRoute--------------------->', JSON.stringify(firstRoute))
+        console.log('firstElement--------------------->', JSON.stringify(firstElement))
+        console.log('firstParam--------------------->', JSON.stringify(firstParam))
+        var user = firstParam['user']
         var userInfo = user['userInfo']
         var fullName = userInfo['first_name'] + ' ' + userInfo['last_name']
-        this.setState({fullName: fullName, user: userInfo, baseUrl: params['baseUrl']})
+        this.setState({fullName: fullName, user: userInfo, baseUrl: firstParam['baseUrl']})
     }
 
     render() {

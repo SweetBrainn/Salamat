@@ -51,7 +51,7 @@ export default class SearchMedicalCenter extends Component {
 
 
     async goToDetailsScreen(value) {
-        this.props.navigation.navigate('DetailsForMedicalCenterScreen', {medicalCenter: value, doctor: null})
+        this.props.navigation.navigate('DetailsForMedicalCenterScreen', {medicalCenter: value, doctor: null,backRoute:'SearchMedicalCenter'})
     }
 
 
