@@ -20,13 +20,15 @@ import {
     Card, Tab, Accordion
 } from 'native-base';
 import Modal, {ModalButton, ModalContent, ModalFooter, ModalTitle, SlideAnimation} from "react-native-modals";
-// import ImagePicker from 'react-native-image-picker';
 
 
 const options = {
-    title: 'My Title',
-    takePhotoButtonTitle: 'take photo',
-    chooseFromLibraryButtonTitle: 'from library'
+    title: 'Select Avatar',
+    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+    },
 };
 
 export default class ReserveScreen extends Component {
@@ -46,6 +48,10 @@ export default class ReserveScreen extends Component {
             zipCode: '',
             patientPassword: '',
             selectedStartDate: null,
+            red: '#db1c09',
+            green: '#00b452',
+            phoneNumberValidation: null,
+            phoneNumberBackgroundColor: 'rgba(255,255,255,0)',
             minDate: new Date(),
             startDateModalVisible: false,
             imageFromDevice: null,
@@ -69,6 +75,20 @@ export default class ReserveScreen extends Component {
         return date;
     }
 
+    phoneNumberValidation(value) {
+        const regex = RegExp('^(\\+98|0)?9\\d{9}$');
+        let phone = new String(value)
+        let status = regex.test(phone);
+        if (status) {
+            this.setState({phoneNumberValidation: true, phoneNumberBackgroundColor: this.state.green})
+            return status;
+        } else {
+            this.setState({phoneNumberValidation: false, phoneNumberBackgroundColor: this.state.red})
+            return status;
+        }
+    }
+
+
     render() {
 
 
@@ -83,43 +103,42 @@ export default class ReserveScreen extends Component {
                 <Content padder style={styles.content}>
                     <View style={styles.body}>
                         <View style={styles.card}>
-                            <Card>
+                            <Card style={{
+                                backgroundColor: 'rgba(234,234,234,0.21)',
+                                borderWidth: 1,
+                                borderBottomColor: '#1a8787'
+                            }}>
                                 <CardItem bordered style={[styles.row,
                                     {
                                         flexDirection: 'column',
                                         justifyContent: 'center',
                                         alignContent: 'center',
-                                        backgroundColor: '#fff',
-                                        borderBottomColor: '#1a8787'
+                                        backgroundColor: '#23b9b9',
+                                        borderBottomColor: '#fff',
+                                        borderBottomWidth: '#fff'
                                     }]}>
                                     {this.state.imageFromDevice != null ?
                                         <Thumbnail large source={{uri: this.state.imageFromDevice}}/> :
                                         <Button style={{
-                                            backgroundColor: 'rgba(195,195,195,0.56)',
+                                            backgroundColor: 'rgba(195,195,195,0.4)',
                                             width: 75,
                                             height: 75,
                                             borderRadius: 75 / 2,
                                             justifyContent: 'center'
                                         }}
                                                 onPress={() => {
-                                                    // ImagePicker.showImagePicker(options, (response) => {
-                                                    //     console.log('Response = ', response);
-                                                    //
-                                                    //     if (response.didCancel) {
-                                                    //         console.log('User cancelled image picker');
-                                                    //     } else if (response.error) {
-                                                    //         console.log('ImagePicker Error: ', response.error);
-                                                    //     } else if (response.customButton) {
-                                                    //         console.log('User tapped custom button: ',
-                                                    //             response.customButton);
-                                                    //     } else {
-                                                    //         const source = {uri: response.uri};
-                                                    //         this.setState({
-                                                    //             imageFromDevice: source,
-                                                    //         });
+                                                    // imagePicker.default.open({
+                                                    //     cancelTitle: 'انصراف',
+                                                    //     takePhoto: {
+                                                    //         title: 'تصویر جدید',
+                                                    //         config: { /* Config object to ImagePickerIOS.openCameraDialog() */}
+                                                    //     },
+                                                    //     chooseFromLibrary: {
+                                                    //         title: 'انتخاب از آلبوم تصاویر',
+                                                    //         config: { /* Config object to ImagePickerIOS.openSelectDialog() */}
                                                     //     }
                                                     // });
-                                                    alert('clicked')
+
                                                 }
                                                 }
                                         >
@@ -180,28 +199,32 @@ export default class ReserveScreen extends Component {
                                     <TextInput
                                         keyboardType={'numeric'}
                                         value={this.state.cellPhone}
-                                        onChangeText={(text) => this.setState({cellPhone: text})}
-                                        style={[styles.textInput]}
+                                        onChangeText={(text) => this.setState({cellPhone: text}, () => {
+                                            this.phoneNumberValidation(text)
+                                        })}
+                                        style={[styles.textInput,
+                                            {backgroundColor: this.state.phoneNumberBackgroundColor, color: '#fff'}]}
                                         multiline={false}
                                     />
                                 </CardItem>
                                 <CardItem style={[styles.row]}>
                                     <Text style={[styles.label, {}]}>تاریخ تولد</Text>
                                     <Button
+                                        bordered
                                         onPress={async () => {
                                             Keyboard.dismiss()
                                             await this.setState({startDateModalVisible: true})
                                         }}
-                                        bordered
+
                                         style={{
                                             textAlign: 'center',
                                             justifyContent: 'center',
                                             alignItems: 'center',
                                             borderRadius: 2,
                                             flex: 3,
-                                            borderWidth: 1,
-                                            borderColor: '#fff',
-
+                                            borderWidth: 0,
+                                            backgroundColor: 'rgba(255,255,255,0)',
+                                            borderColor: 'rgba(255,255,255,0)'
                                         }}>
                                         <Text style={{
                                             padding: 1,
@@ -212,6 +235,7 @@ export default class ReserveScreen extends Component {
                                             color: '#23b9b9',
                                             borderWidth: 1,
                                             borderColor: '#23b9b9',
+
 
                                         }}>{this.state.selectedStartDate == null ? 'انتخاب تاریخ' :
                                             this.state.selectedStartDate.format('jYYYY-jM-jD')}</Text>
@@ -403,6 +427,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     row: {
+        backgroundColor: 'rgba(255,255,255,0)',
         width: '100%',
         flex: 1,
         marginBottom: 5,
@@ -418,8 +443,11 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginLeft: 10,
         borderRadius: 3,
-        borderColor: '#eeeeee',
+        // borderColor: '#eeeeee',
+        // borderWidth: 1,
+        color: '#23b9b9',
         borderWidth: 1,
+        borderColor: '#23b9b9',
     },
     label: {
         padding: 1,

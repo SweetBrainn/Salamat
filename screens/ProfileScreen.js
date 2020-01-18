@@ -113,14 +113,14 @@ export default class ProfileScreen extends Component {
                                    }}
                                    defaultSource={require(
                                        'D:\\E\\react native projects\\salamat\\assets\\images\\account.png')}
-                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/> :
+                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895allcb.jpg'}}/> :
                             <Image style={styles.avatar}
                                    onLoadEnd={() => {
                                        this.setState({animated: !this.state.animated})
                                    }}
                                    defaultSource={require(
                                        'D:\\E\\react native projects\\salamat\\assets\\images\\hijab.png')}
-                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bf895acb.jpg'}}/>
+                                   source={{uri: 'https://i.pinimg.com/564x/f3/25/82/f32582233e16aecb8d7f4062bfll895acb.jpg'}}/>
                         }
                         <ActivityIndicator size={'small'} color={'gray'} animating={this.state.animated}/>
                         <View style={styles.body}>
@@ -201,7 +201,12 @@ export default class ProfileScreen extends Component {
                                     </Text>
                                 </View>
                                 {/*<View style={{padding: 5, margin: 5, marginTop: 10}}>*/}
-                                <Accordion style={{margin: 5, flexDirection: 'column', flex: 1}}
+                                <Accordion style={{
+                                    margin: 5,
+                                    flexDirection: 'column',
+                                    flex: 1,
+
+                                }}
                                            dataArray={this.state.insurancesForShow}
                                            headerStyle={{
                                                backgroundColor: "rgba(35,185,185,0.72)",
@@ -212,9 +217,9 @@ export default class ProfileScreen extends Component {
                                                flexDirection: 'row-reverse',
                                                backfaceVisibility: 'hidden',
                                                borderColor: '#23b9b9',
-                                               borderWidth: 1
-
+                                               borderWidth: 1,
                                            }}
+
 
                                            iconStyle={{color: "white"}}
                                            expandedIconStyle={{color: "white"}}
