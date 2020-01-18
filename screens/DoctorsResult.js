@@ -88,7 +88,7 @@ export default class DoctorsResult extends Component {
     render() {
         return (
             <Container>
-                <StatusBar  translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
+                <StatusBar translucent backgroundColor={"#219e9e"} barStyle={"light-content"}/>
                 <Header style={styles.header}>
                     <Left>
                         <Button transparent style={styles.headerMenuIcon}
@@ -129,7 +129,6 @@ export default class DoctorsResult extends Component {
                 </Header>
                 <Root>
                     <Content scrollEnabled={false} padder style={styles.content}>
-
 
 
                         {
@@ -198,10 +197,18 @@ export default class DoctorsResult extends Component {
                                                 marginRight: 1
                                             }}>{item.Description}</Text>
                                         </Body>
-                                        <Right>
-                                            <Thumbnail circular
-                                                       source={{uri: 'http://shahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
-                                        </Right>
+                                        {item.Gender !== 'زن' ? <Right>
+                                                <Thumbnail circular
+                                                           defaultSource={require(
+                                                               'D:\\E\\react native projects\\salamat\\assets\\images\\doctor.png')}
+                                                           source={{uri: 'http://sshahresalem.tehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
+                                            </Right> :
+                                            <Right>
+                                                <Thumbnail circular
+                                                           defaultSource={require(
+                                                               '\'D:\\\\E\\\\react native projects\\\\salamat\\\\assets\\\\images\\\\veil.png\'')}
+                                                           source={{uri: 'http://shahresalem.tsehran.ir/Portals/0/Image/1397/%D8%AE%D8%A8%D8%B1/hamayesh/roze%20pezeshk/3.JPG'}}/>
+                                            </Right>}
                                     </ListItem>
                                 </View>
                             )) : null}

@@ -200,7 +200,8 @@ export default class MedicalCentersResult extends Component {
                                         </Body>
                                         <Right>
                                             <Thumbnail circular
-                                                       source={{uri: 'http://shahresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(37).JPG'}}/>
+                                                       defaultSource={require('D:\\E\\react native projects\\salamat\\assets\\images\\cross.png')}
+                                                       source={{uri: 'http://shashresalem.tehran.ir/Portals/0/UltraPhotoGallery/2633/206/2.sh%20(37).JPG'}}/>
                                         </Right>
                                     </ListItem>
                                 </View>
